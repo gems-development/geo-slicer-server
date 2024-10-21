@@ -2,6 +2,7 @@
 using DataAccess.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.PostgreSql.Migrations
 {
     [DbContext(typeof(PostgreApplicationContext))]
-    partial class PostgreApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20241021095646_add_index_test")]
+    partial class add_index_test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,10 +49,6 @@ namespace DataAccess.PostgreSql.Migrations
                         .HasColumnType("geometry");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Fragment");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Fragment"), "GIST");
 
                     b.HasIndex("GeometryOriginalId");
 

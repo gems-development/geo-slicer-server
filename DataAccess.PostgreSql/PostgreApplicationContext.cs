@@ -19,5 +19,14 @@ namespace DataAccess.PostgreSql
                 "Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin",
                 o => o.UseNetTopologySuite());
         }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GeometryOriginal>()
+                .HasIndex(g => g.Data).HasMethod("GIST");
+            
+            modelBuilder.Entity<GeometryFragment>()
+                .HasIndex(g => g.Fragment).HasMethod("GIST");
+        }
     }
 }

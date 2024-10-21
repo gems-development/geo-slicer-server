@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.PostgreSql.Migrations
 {
     [DbContext(typeof(PostgreApplicationContext))]
-    [Migration("20241021055551_after_delete_appsettings")]
-    partial class after_delete_appsettings
+    [Migration("20241021100013_add_gist_index_geometry_fragment")]
+    partial class add_gist_index_geometry_fragment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,9 @@ namespace DataAccess.PostgreSql.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.0-rc.2.24474.1")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
@@ -47,6 +50,10 @@ namespace DataAccess.PostgreSql.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Fragment");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Fragment"), "GIST");
+
                     b.HasIndex("GeometryOriginalId");
 
                     b.ToTable("GeometryFragments");
@@ -65,6 +72,10 @@ namespace DataAccess.PostgreSql.Migrations
                         .HasColumnType("geometry");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Data");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Data"), "GIST");
 
                     b.ToTable("GeometryOriginals");
                 });
