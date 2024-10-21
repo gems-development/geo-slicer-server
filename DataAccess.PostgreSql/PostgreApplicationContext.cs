@@ -14,7 +14,8 @@ namespace DataAccess.PostgreSql
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(
+            optionsBuilder.UseLazyLoadingProxies()
+                .UseNpgsql(
                 "Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin",
                 o => o.UseNetTopologySuite());
         }
