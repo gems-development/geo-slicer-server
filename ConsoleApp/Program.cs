@@ -10,14 +10,14 @@ namespace GeoSlicerServer
 
         static void Main(string[] args)
         {
-            using (PostgreApplicationContext db = new PostgreApplicationContext())
+            /*using (PostgreApplicationContext db = new PostgreApplicationContext())
             {
                 //db.Database.EnsureCreated();
                 GeometryOriginal geometryOriginal = new GeometryOriginal();
                 geometryOriginal.Data = Polygon.Empty;
                 db.GeometryOriginals.Add(geometryOriginal);
                 db.SaveChanges();
-            }
+            }*/
         }
 }
 
