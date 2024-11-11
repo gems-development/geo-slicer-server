@@ -1,24 +1,40 @@
-﻿using DataAccess.PostgreSql;
+﻿using System;
+using System.CommandLine;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using ConsoleApp.Controllers;
+using DataAccess.PostgreSql;
 using Entities;
 using NetTopologySuite.Geometries;
 
 
-namespace GeoSlicerServer
+namespace ConsoleApp
 {
     class Program
     {
-
-        static void Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
-            /*using (PostgreApplicationContext db = new PostgreApplicationContext())
-            {
-                //db.Database.EnsureCreated();
-                GeometryOriginal geometryOriginal = new GeometryOriginal();
-                geometryOriginal.Data = Polygon.Empty;
-                db.GeometryOriginals.Add(geometryOriginal);
-                db.SaveChanges();
-            }*/
-        }
-}
+            var fileOption = new Option<FileInfo?>(
+                name: "--file",
+                description: "The file to read and display on the console.");
 
+            var rootCommand = new RootCommand("Sample app for System.CommandLine");
+            rootCommand.AddOption(fileOption);
+
+            rootCommand.SetHandler((file) => 
+                { 
+                    ReadFile(file!); 
+                },
+                fileOption);
+
+            return await rootCommand.InvokeAsync(args);
+        }
+
+        static void ReadFile(FileInfo file)
+        {
+            File.ReadLines(file.FullName).ToList()
+                .ForEach(line => Console.WriteLine(line));
+        }
+    }
 }
