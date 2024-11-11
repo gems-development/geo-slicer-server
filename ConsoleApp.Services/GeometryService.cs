@@ -1,30 +1,27 @@
-﻿using ConsoleApp.IRepositories;
-using ConsoleApp.IServices;
+﻿using System.Collections.Generic;
+using ConsoleApp.IRepositories;
 using DomainModels;
 using ISlicers;
 
 namespace ConsoleApp.Services
 {
-    public class GeometryService<TGeometry, TKey, TSliceType> : IGeometryService<TGeometry, TKey>
+    public class GeometryService<TGeometry, TSliceType>
     {
-        private ISaveRepository<GeometryWithFragments<TGeometry, TSliceType>, TKey> _repository;
-        
         private ISlicer<TGeometry, TSliceType> _slicer;
 
         public GeometryService(
-            ISaveRepository<GeometryWithFragments<TGeometry, TSliceType>, TKey> repository,
             ISlicer<TGeometry, TSliceType> slicer)
         {
-            _repository = repository;
             _slicer = slicer;
         }
 
         //todo добавить обработку ошибок
-        public TKey Save(TGeometry geometry)
+        public GeometryWithFragments<TGeometry, TSliceType> ToGeometryWithFragments(TGeometry geometry)
         {
+            IEnumerable<TSliceType> fragments = _slicer.Slice(geometry);
             GeometryWithFragments<TGeometry, TSliceType> geometryWithFragments =
-                new GeometryWithFragments<TGeometry, TSliceType>(geometry, _slicer);
-            return _repository.Save(geometryWithFragments);
+                new GeometryWithFragments<TGeometry, TSliceType>(geometry, fragments);
+            return geometryWithFragments;
         }
     }
 }

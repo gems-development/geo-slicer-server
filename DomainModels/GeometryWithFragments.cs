@@ -9,10 +9,10 @@ namespace DomainModels
         public TK Data { get; private set; }
         public IEnumerable<TV> GeometryFragments { get; private set; }
         
-        public GeometryWithFragments(TK data, ISlicer <TK, TV> slicer)
+        public GeometryWithFragments(TK data, IEnumerable<TV> geometryFragments)
         {
             Data = data;
-            GeometryFragments = slicer.Slice(data);
+            GeometryFragments = geometryFragments;
         }
     }
 }
