@@ -5,11 +5,13 @@
         <TargetFramework>net8.0</TargetFramework>
         <LangVersion>8</LangVersion>
         <Nullable>enable</Nullable>
-        <RootNamespace>GeoSlicerServer</RootNamespace>
+        <RootNamespace>ConsoleApp</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ConsoleApp.Controllers\ConsoleApp.Controllers.csproj" />
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
+      <ProjectReference Include="..\Entities\Entities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
