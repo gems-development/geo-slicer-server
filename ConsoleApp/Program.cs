@@ -3,7 +3,7 @@ using Entities;
 using NetTopologySuite.Geometries;
 
 
-namespace GeoSlicerServer
+namespace ConsoleApp
 {
     class Program
     {
