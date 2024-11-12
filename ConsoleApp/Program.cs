@@ -18,9 +18,13 @@ namespace ConsoleApp
     {
         static async Task<int> Main(string[] args)
         {
+            var rootCommand = new RootCommand("rootCommand")
+            {
+                Name = "geosaver"
+            };
             var filesInfo = new Option<FileInfo[]>(
                 aliases: new[] { "-fs", "--files" },
-                description: "Files to save")
+                description: "Files to save in {save}")
             {
                 IsRequired = true,
                 Arity = ArgumentArity.OneOrMore,
@@ -40,7 +44,7 @@ namespace ConsoleApp
             {
                 Arity = ArgumentArity.ZeroOrOne
             };
-            var save = new RootCommand("save: Command, which is used to save geometries from {--file} in database");
+            var save = new Command("save", "Save geometries from {--files} in database");
             save.AddOption(filesInfo);
             save.AddOption(validateOption);
             save.AddOption(fixOption);
@@ -65,10 +69,49 @@ namespace ConsoleApp
                     }
                 },
                 filesInfo, validateOption);
-
-            return await save.InvokeAsync(args);
+            //add connection string for db
+            //"Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin"
+            //--host localhost --port 5432 --username postgres --password admin
+            //save only after connect
+            //flag to control connection?
+            var hostOption = new Option<string>(
+                aliases: new[] { "-h", "--hst", "--host" },
+                description: "Option to set hostname")
+            {
+                Arity = ArgumentArity.ExactlyOne
+            };
+            var portOption = new Option<long>(
+                aliases: new[] { "-p", "--prt", "--port" },
+                description: "Option to set port")
+            {
+                Arity = ArgumentArity.ExactlyOne
+            };
+            var usernameOption = new Option<string>(
+                aliases: new[] { "-u", "--usr", "--usrnm", "--usrname", "--user", "--name", "--usernm", "--username" },
+                description: "Option to set username")
+            {
+                Arity = ArgumentArity.ExactlyOne
+            };
+            var passwordOption = new Option<string>(
+                aliases: new[] { "-pd", "--pswrd", "--passwd", "--password" },
+                description: "Option to set password")
+            {
+                Arity = ArgumentArity.ExactlyOne
+            };
+            var connect = new Command("connect", "Connect to database using given arguments");
+            connect.AddOption(hostOption);
+            connect.AddOption(portOption);
+            connect.AddOption(usernameOption);
+            connect.AddOption(passwordOption);
+            connect.SetHandler((host, port, username, password) =>
+            {
+                Console.WriteLine(host + "|" + port + "|" + username + "|" + password);
+            }, hostOption, portOption, usernameOption, passwordOption);
+            rootCommand.Add(save);
+            rootCommand.Add(connect);
+            return await rootCommand.InvokeAsync(args);
         }
-        //add connection string for db
+        
 
         static void ReadFile(FileInfo file)
         {
