@@ -18,6 +18,7 @@ namespace ConsoleApp
     {
         static async Task<int> Main(string[] args)
         {
+            bool isConnected = false;
             var rootCommand = new RootCommand("rootCommand")
             {
                 Name = "geosaver"
@@ -50,13 +51,17 @@ namespace ConsoleApp
             save.AddOption(fixOption);
             save.AddValidator(commandResult =>
             {
+                if (!isConnected)
+                {
+                    commandResult.ErrorMessage = "Can not connect to database";
+                }
                 var validateOptionCommandResult = commandResult.FindResultFor(validateOption);
                 var fixOptionCommandResult = commandResult.FindResultFor(fixOption);
                 if (!(fixOptionCommandResult is null) &&
                     (fixOptionCommandResult.GetValueOrDefault() is null ||
                      !(fixOptionCommandResult.GetValueOrDefault() is null) && fixOptionCommandResult.GetValueOrDefault()!.ToString() == true.ToString())
                     && (validateOptionCommandResult is null || !(validateOptionCommandResult.GetValueOrDefault() is null) &&
-                    validateOptionCommandResult.GetValueOrDefault()!.ToString() == false.ToString()))
+                        validateOptionCommandResult.GetValueOrDefault()!.ToString() == false.ToString()))
                 {
                     commandResult.ErrorMessage = "Can not fix geometry without validation";
                 }
@@ -69,11 +74,10 @@ namespace ConsoleApp
                     }
                 },
                 filesInfo, validateOption);
-            //add connection string for db
-            //"Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin"
-            //--host localhost --port 5432 --username postgres --password admin
-            //save only after connect
-            //flag to control connection?
+            //geosaver connect --host localhost --port 5432 --username postgres --password admin
+            //flag to control connection: isConnected
+            //need to change connection check method after adding real database connection
+            //add disconnect command
             var hostOption = new Option<string>(
                 aliases: new[] { "-h", "--hst", "--host" },
                 description: "Option to set hostname")
@@ -105,6 +109,7 @@ namespace ConsoleApp
             connect.AddOption(passwordOption);
             connect.SetHandler((host, port, username, password) =>
             {
+                isConnected = true;
                 Console.WriteLine(host + "|" + port + "|" + username + "|" + password);
             }, hostOption, portOption, usernameOption, passwordOption);
             rootCommand.Add(save);
@@ -112,7 +117,6 @@ namespace ConsoleApp
             return await rootCommand.InvokeAsync(args);
         }
         
-
         static void ReadFile(FileInfo file)
         {
             File.ReadLines(file.FullName).ToList()
