@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.PostgreSql
 {
-    public sealed class PostgreApplicationContext : DbContext, IDbContext
+    public sealed class PostgreApplicationContext : GeometryDbContext
     {
-        public DbSet<GeometryOriginal> GeometryOriginals { get; set; }
-        public DbSet<GeometryFragment> GeometryFragments { get; set; }
+        public override DbSet<GeometryOriginal> GeometryOriginals { get; set; }
+        public override DbSet<GeometryFragment> GeometryFragments { get; set; }
 
         /*public PostgreApplicationContext(DbContextOptions<PostgreApplicationContext> options)
             : base(options) {}*/
