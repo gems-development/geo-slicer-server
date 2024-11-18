@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.CommandLine;
-using System.CommandLine.Parsing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ConsoleApp.Controllers;
 using DataAccess.PostgreSql;
-using Entities;
+using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 
 
 namespace ConsoleApp
@@ -18,7 +15,12 @@ namespace ConsoleApp
     {
         static async Task<int> Main(string[] args)
         {
-            bool isConnected = false;
+            //Console usage example:
+            //geosaver connect --host localhost --port 5432  --database demo --username postgres --password admin
+            //geosaver save -fs a.txt b.txt
+            
+            //application context will be declared in dependency container
+            PostgreApplicationContext? applicationContext = null;
             var rootCommand = new RootCommand("rootCommand")
             {
                 Name = "geosaver"
@@ -51,16 +53,20 @@ namespace ConsoleApp
             save.AddOption(fixOption);
             save.AddValidator(commandResult =>
             {
-                if (!isConnected)
+                if (applicationContext == null || !applicationContext.Database.CanConnect())
                 {
+                    Console.WriteLine(applicationContext);
+                    // Console.WriteLine(applicationContext!.Database.CanConnect());
                     commandResult.ErrorMessage = "Can not connect to database";
                 }
                 var validateOptionCommandResult = commandResult.FindResultFor(validateOption);
                 var fixOptionCommandResult = commandResult.FindResultFor(fixOption);
                 if (!(fixOptionCommandResult is null) &&
                     (fixOptionCommandResult.GetValueOrDefault() is null ||
-                     !(fixOptionCommandResult.GetValueOrDefault() is null) && fixOptionCommandResult.GetValueOrDefault()!.ToString() == true.ToString())
-                    && (validateOptionCommandResult is null || !(validateOptionCommandResult.GetValueOrDefault() is null) &&
+                     !(fixOptionCommandResult.GetValueOrDefault() is null) &&
+                     fixOptionCommandResult.GetValueOrDefault()!.ToString() == true.ToString())
+                    && (validateOptionCommandResult is null ||
+                        !(validateOptionCommandResult.GetValueOrDefault() is null) &&
                         validateOptionCommandResult.GetValueOrDefault()!.ToString() == false.ToString()))
                 {
                     commandResult.ErrorMessage = "Can not fix geometry without validation";
@@ -71,13 +77,10 @@ namespace ConsoleApp
                     foreach (var o in files)
                     {
                         Console.WriteLine(o + "|" + validate);
+                        ReadPolygonFromGeojsonFile(o);
                     }
                 },
                 filesInfo, validateOption);
-            //geosaver connect --host localhost --port 5432 --username postgres --password admin
-            //flag to control connection: isConnected
-            //need to change connection check method after adding real database connection
-            //add disconnect command
             var hostOption = new Option<string>(
                 aliases: new[] { "-h", "--hst", "--host" },
                 description: "Option to set hostname")
@@ -87,6 +90,12 @@ namespace ConsoleApp
             var portOption = new Option<long>(
                 aliases: new[] { "-p", "--prt", "--port" },
                 description: "Option to set port")
+            {
+                Arity = ArgumentArity.ExactlyOne
+            };
+            var databaseOption = new Option<string>(
+                aliases: new[] { "-d", "--dtbs", "--dtbase", "--database" },
+                description: "Option to set database name")
             {
                 Arity = ArgumentArity.ExactlyOne
             };
@@ -105,22 +114,34 @@ namespace ConsoleApp
             var connect = new Command("connect", "Connect to database using given arguments");
             connect.AddOption(hostOption);
             connect.AddOption(portOption);
+            connect.AddOption(databaseOption);
             connect.AddOption(usernameOption);
             connect.AddOption(passwordOption);
-            connect.SetHandler((host, port, username, password) =>
+            connect.SetHandler((host, port, database, username, password) =>
             {
-                isConnected = true;
-                Console.WriteLine(host + "|" + port + "|" + username + "|" + password);
-            }, hostOption, portOption, usernameOption, passwordOption);
+                if (applicationContext != null && applicationContext.Database.CanConnect()) return;
+                applicationContext =
+                    new PostgreApplicationContext(
+                        $"Host={host};Port={port};Database={database};Username={username};Password={password}");
+                Console.WriteLine(applicationContext.Database.CanConnect()
+                    ? "Connection succeeded!"
+                    : "Connection failed.");
+            }, hostOption, portOption, databaseOption, usernameOption, passwordOption);
             rootCommand.Add(save);
             rootCommand.Add(connect);
             return await rootCommand.InvokeAsync(args);
         }
-        
-        static void ReadFile(FileInfo file)
+
+        static Polygon ReadPolygonFromGeojsonFile(FileInfo file)
         {
-            File.ReadLines(file.FullName).ToList()
-                .ForEach(line => Console.WriteLine(line));
+            return ReadGeometryFromFile<Polygon>(file.FullName);
+        }
+
+        private static T ReadGeometryFromFile<T>(string path) where T : class
+        {
+            string geoJson = File.ReadAllText(path);
+            var geometry = new GeoJsonReader().Read<T>(geoJson);
+            return geometry;
         }
     }
 }

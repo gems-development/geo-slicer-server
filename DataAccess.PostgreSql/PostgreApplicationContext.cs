@@ -8,16 +8,17 @@ namespace DataAccess.PostgreSql
     {
         public DbSet<GeometryOriginal> GeometryOriginals { get; set; }
         public DbSet<GeometryFragment> GeometryFragments { get; set; }
+        private readonly string _connectionString;
 
-        /*public PostgreApplicationContext(DbContextOptions<PostgreApplicationContext> options)
-            : base(options) {}*/
+        public PostgreApplicationContext(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies()
-                .UseNpgsql(
-                "Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin",
-                o => o.UseNetTopologySuite());
+                .UseNpgsql(_connectionString, o => o.UseNetTopologySuite());
         }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
