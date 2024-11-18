@@ -11,11 +11,14 @@
     <ItemGroup>
       <ProjectReference Include="..\ConsoleApp.Controllers\ConsoleApp.Controllers.csproj" />
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
+      <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp\DataAccess.Repositories.ConsoleApp.csproj" />
       <ProjectReference Include="..\Entities\Entities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.0-rc.2.24474.1" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-rc.2.24473.5" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0-rc.2.24473.5" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0-rc.2" />
     </ItemGroup>
 

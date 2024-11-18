@@ -7,12 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ConsoleApp.IRepositories\ConsoleApp.IRepositories.csproj" />
       <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
+      <ProjectReference Include="..\Services.Interfaces\Services.Interfaces.csproj" />
+      <ProjectReference Include="..\Slicers.Interfaces\Slicers.Interfaces.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0-rc.2.24473.5" />
     </ItemGroup>
 
 </Project>

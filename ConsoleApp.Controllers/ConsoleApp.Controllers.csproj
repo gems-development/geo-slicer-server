@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\IGeometryFixers\IGeometryFixers.csproj" />
-      <ProjectReference Include="..\IGeometryValidators\IGeometryValidators.csproj" />
-      <ProjectReference Include="..\ConsoleApp.IRepositories\ConsoleApp.IRepositories.csproj" />
+      <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp.Interfaces\DataAccess.Repositories.ConsoleApp.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.Interfaces\Services.Interfaces.csproj" />
+      <ProjectReference Include="..\Services\Services.csproj" />
     </ItemGroup>
 
 </Project>

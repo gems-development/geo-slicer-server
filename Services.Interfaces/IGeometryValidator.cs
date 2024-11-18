@@ -1,6 +1,4 @@
-﻿using GeometryValidateErrors;
-
-namespace IGeometryValidators
+﻿namespace Services.Interfaces
 {
     public interface IGeometryValidator<TGeometry>
     {

@@ -1,6 +1,4 @@
-﻿using System;
-using GeometryValidateErrors;
-namespace IGeometryFixers
+﻿namespace Services.Interfaces
 {
     public abstract class IGeometryFixer<TGeometry>
     {

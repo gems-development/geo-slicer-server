@@ -1,26 +1,24 @@
-﻿using System;
-using IGeometryFixers;
-using IGeometryValidators;
-using ConsoleApp.IRepositories;
-using GeometryValidateErrors;
+﻿using DataAccess.Repositories.ConsoleApp.Interfaces;
+using DomainModels;
+using Services.Interfaces;
 
 namespace ConsoleApp.Controllers
 {
-    public class GeometryController<TGeometryIn, TGeometryOut, TKey>
+    public class GeometryController<TGeometryIn, TSliceType, TKey>
     {
-        private Func<TGeometryIn, TGeometryOut> GeometryService { get; set; }
-        private ISaveRepository<TGeometryOut, TKey> SaveRepository { get; set; }
+        private IGeometryWithFragmentsCreator<TGeometryIn, TSliceType> GeometryWithFragmentsCreator{ get; set; }
+        private IRepository<GeometryWithFragments<TGeometryIn, TSliceType>, TKey> Repository { get; set; }
         private IGeometryValidator<TGeometryIn> GeometryValidator { get; set; }
         private IGeometryFixer<TGeometryIn> GeometryFixer { get; set; }
 
         public GeometryController(
-            Func<TGeometryIn, TGeometryOut> geometryService,
-            ISaveRepository<TGeometryOut, TKey> saveRepository, 
+            IGeometryWithFragmentsCreator<TGeometryIn, TSliceType> geometryWithFragmentsCreator,
+            IRepository<GeometryWithFragments<TGeometryIn, TSliceType>, TKey> repository, 
             IGeometryValidator<TGeometryIn> geometryValidator, 
             IGeometryFixer<TGeometryIn> geometryFixer)
         {
-            GeometryService = geometryService;
-            SaveRepository = saveRepository;
+            GeometryWithFragmentsCreator = geometryWithFragmentsCreator;
+            Repository = repository;
             GeometryValidator = geometryValidator;
             GeometryFixer = geometryFixer;
         }
@@ -30,8 +28,9 @@ namespace ConsoleApp.Controllers
         {
             GeometryValidateError geometryValidateError = GeometryValidator.ValidateGeometry(geometry);
             geometry = GeometryFixer.FixGeometry(geometry, geometryValidateError);
-            TGeometryOut geometryOut = GeometryService(geometry);
-            return SaveRepository.Save(geometryOut);
+            GeometryWithFragments<TGeometryIn, TSliceType> geometryOut =
+                GeometryWithFragmentsCreator.ToGeometryWithFragments(geometry);
+            return Repository.Save(geometryOut);
         }
     }
 }

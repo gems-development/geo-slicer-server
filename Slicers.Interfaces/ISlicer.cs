@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ISlicers
+namespace Slicers.Interfaces
 {
     public interface ISlicer<TK, TV>
     {

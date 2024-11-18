@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
-using ConsoleApp.IRepositories;
 using DomainModels;
-using ISlicers;
+using Services.Interfaces;
+using Slicers.Interfaces;
 
-namespace ConsoleApp.Services
+namespace Services
 {
-    public class GeometryService<TGeometry, TSliceType>
+    public class GeometryWithFragmentsCreator<TGeometry, TSliceType> : IGeometryWithFragmentsCreator<TGeometry, TSliceType>
     {
         private ISlicer<TGeometry, TSliceType> _slicer;
 
-        public GeometryService(
+        public GeometryWithFragmentsCreator(
             ISlicer<TGeometry, TSliceType> slicer)
         {
             _slicer = slicer;

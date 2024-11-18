@@ -1,10 +1,10 @@
-﻿using ConsoleApp.IRepositories;
+﻿using DataAccess.Repositories.ConsoleApp.Interfaces;
 using DomainModels;
 using NetTopologySuite.Geometries;
 
-namespace ConsoleApp.Repositories
+namespace DataAccess.Repositories.ConsoleApp
 {
-    public class MockSaveRepository : ISaveRepository<GeometryWithFragments<Polygon, Polygon>, int>
+    public class MockRepository : IRepository<GeometryWithFragments<Polygon, Polygon>, int>
     {
         private int _i = 0;
         public int Save(GeometryWithFragments<Polygon, Polygon> polygon)

@@ -1,8 +1,8 @@
-﻿namespace GeometryValidateErrors
+﻿namespace Services.Interfaces
 {
     public enum GeometryValidateError
     {
         GeometryValid,
-        GeometryHasRepeatingPoints,
+        GeometryHasRepeatingPoints
     }
 }

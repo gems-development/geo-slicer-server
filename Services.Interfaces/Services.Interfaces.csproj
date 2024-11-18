@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ConsoleApp.IRepositories\ConsoleApp.IRepositories.csproj" />
       <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
     </ItemGroup>
 
