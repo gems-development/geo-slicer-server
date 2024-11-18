@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp.Interfaces\DataAccess.Repositories.ConsoleApp.Interfaces.csproj" />
+      <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
       <ProjectReference Include="..\Services.Interfaces\Services.Interfaces.csproj" />
       <ProjectReference Include="..\Services\Services.csproj" />
     </ItemGroup>
