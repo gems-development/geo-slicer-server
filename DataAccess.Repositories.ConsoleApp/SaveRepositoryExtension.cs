@@ -1,0 +1,20 @@
+using DataAccess.Repositories.ConsoleApp.Interfaces;
+using DomainModels;
+using Microsoft.Extensions.DependencyInjection;
+using NetTopologySuite.Geometries;
+
+namespace DataAccess.Repositories.ConsoleApp
+{
+    public static class SaveRepositoryExtension
+    {
+        public static void AddToServiceCollection(
+            this SaveRepository saveRepository, 
+            IServiceCollection serviceCollection)
+        {
+            serviceCollection
+                .AddTransient<IRepository<
+                        GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>, int>, 
+                    SaveRepository>();
+        }
+    }
+}

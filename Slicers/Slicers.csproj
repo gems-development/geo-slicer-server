@@ -6,4 +6,16 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
+      <ProjectReference Include="..\Slicers.Interfaces\Slicers.Interfaces.csproj" />
+      <ProjectReference Include="..\Utils\Utils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="GeoSlicer" Version="1.0.0" />
+      <PackageReference Include="GeoSlicer.Utils" Version="1.0.0" />
+      <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+    </ItemGroup>
+
 </Project>
