@@ -9,8 +9,10 @@
     <ItemGroup>
       <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp.Interfaces\DataAccess.Repositories.ConsoleApp.Interfaces.csproj" />
       <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
-      <ProjectReference Include="..\Services.Interfaces\Services.Interfaces.csproj" />
-      <ProjectReference Include="..\Services\Services.csproj" />
+      <ProjectReference Include="..\Services.Creators.Interfaces\Services.Creators.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.Creators\Services.Creators.csproj" />
+      <ProjectReference Include="..\Services.Fixers.Interfaces\Services.Fixers.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.Validators.Interfaces\Services.Validators.Interfaces.csproj" />
     </ItemGroup>
 
 </Project>

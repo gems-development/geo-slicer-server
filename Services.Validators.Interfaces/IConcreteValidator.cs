@@ -1,6 +1,6 @@
-using GeometryValidateErrors;
+using Services.ValidateErrors;
 
-namespace IGeometryValidators
+namespace Services.Validators.Interfaces
 {
     public interface IConcreteValidator<TGeometry>
     {

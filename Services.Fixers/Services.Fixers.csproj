@@ -4,16 +4,14 @@
         <TargetFramework>net8.0</TargetFramework>
         <LangVersion>8</LangVersion>
         <Nullable>enable</Nullable>
-        <RootNamespace>Services.Creators.Interfaces</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
+      <ProjectReference Include="..\Services.Fixers.Interfaces\Services.Fixers.Interfaces.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="GeoSlicer.Utils" Version="1.0.1" />
-      <PackageReference Include="NetTopologySuite" Version="2.5.0" />
     </ItemGroup>
 
 </Project>

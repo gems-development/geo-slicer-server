@@ -1,5 +1,6 @@
-﻿namespace Services.Interfaces
-using NetTopologySuite.Geometries;
+﻿using Services.ValidateErrors;
+
+namespace Services.Validators.Interfaces
 {
     public interface IGeometryValidator<TGeometry>
     {

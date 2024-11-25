@@ -1,4 +1,4 @@
-﻿namespace Services.Interfaces
+﻿namespace Services.ValidateErrors
 {
     public enum GeometryValidateError
     {

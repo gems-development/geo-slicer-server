@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using DomainModels;
-using Services.Interfaces;
+using Services.Creators.Interfaces;
 using Slicers.Interfaces;
 
-namespace Services
+namespace Services.Creators
 {
     public class GeometryWithFragmentsCreator<TGeometry, TSliceType> : IGeometryWithFragmentsCreator<TGeometry, TSliceType>
     {

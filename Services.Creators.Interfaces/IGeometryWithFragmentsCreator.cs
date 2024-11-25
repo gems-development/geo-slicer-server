@@ -1,5 +1,5 @@
 using DomainModels;
-namespace Services.Interfaces
+namespace Services.Creators.Interfaces
 {
     public interface IGeometryWithFragmentsCreator<TGeometry, TSliceType>
     {

@@ -1,6 +1,9 @@
 ﻿using DataAccess.Repositories.ConsoleApp.Interfaces;
 using DomainModels;
-using Services.Interfaces;
+using Services.Creators.Interfaces;
+using Services.Fixers.Interfaces;
+using Services.ValidateErrors;
+using Services.Validators.Interfaces;
 
 namespace ConsoleApp.Controllers
 {
@@ -26,8 +29,8 @@ namespace ConsoleApp.Controllers
         //todo обработку ошибок
         public TKey SaveGeometry(TGeometryIn geometry)
         {
-            GeometryValidateError geometryValidateError = GeometryValidator.ValidateGeometry(geometry);
-            geometry = GeometryFixer.FixGeometry(geometry, geometryValidateError);
+            GeometryValidateError[] geometryValidateErrors = GeometryValidator.ValidateGeometry(geometry);
+            geometry = GeometryFixer.FixGeometry(geometry, geometryValidateErrors);
             GeometryWithFragments<TGeometryIn, TSliceType> geometryOut =
                 GeometryWithFragmentsCreator.ToGeometryWithFragments(geometry);
             return Repository.Save(geometryOut);

@@ -1,9 +1,7 @@
-using System;
 using Microsoft.Extensions.DependencyInjection;
-using NetTopologySuite.Geometries;
-using Services.Interfaces;
+using Services.Creators.Interfaces;
 
-namespace Services
+namespace Services.Creators
 {
     public static class GeometryWithFragmentsCreatorExtension
     {

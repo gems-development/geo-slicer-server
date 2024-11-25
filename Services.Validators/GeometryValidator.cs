@@ -1,7 +1,8 @@
-using GeometryValidateErrors;
 using NetTopologySuite.Geometries;
+using Services.ValidateErrors;
+using Services.Validators.Interfaces;
 
-namespace IGeometryValidators
+namespace Services.Validators
 {
     public class GeometryValidator : IGeometryValidator<Polygon>
     {

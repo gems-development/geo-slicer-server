@@ -1,9 +1,10 @@
-using GeometryValidateErrors;
 using GeoSlicer.Utils.Intersectors.CoordinateComparators;
 using GeoSlicer.Utils.Validators;
 using NetTopologySuite.Geometries;
+using Services.ValidateErrors;
+using Services.Validators.Interfaces;
 
-namespace IGeometryValidators
+namespace Services.Validators
 {
     public class RepeatingPointsGeometryValidator : IConcreteValidator<Polygon>
     {

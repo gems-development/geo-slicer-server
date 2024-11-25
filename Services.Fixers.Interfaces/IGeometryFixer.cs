@@ -1,6 +1,7 @@
-﻿namespace Services.Interfaces
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using Services.ValidateErrors;
+
+namespace Services.Fixers.Interfaces
 {
     public abstract class IGeometryFixer<TGeometry>
     {
