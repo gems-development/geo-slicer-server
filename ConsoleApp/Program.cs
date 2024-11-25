@@ -1,10 +1,8 @@
 ﻿using System;
 using System.CommandLine;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.PostgreSql;
-using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 

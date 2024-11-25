@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using ConsoleApp.IRepositories;
 using DataAccess.Interfaces;
+using DataAccess.Repositories.ConsoleApp.Interfaces;
 using DomainModels;
 using Entities;
 using GeoSlicer.Utils;
 using NetTopologySuite.Geometries;
 using Utils;
 
-namespace ConsoleApp.Repositories
+namespace DataAccess.Repositories.ConsoleApp
 {
-    public class SaveRepository : ISaveRepository<GeometryWithFragments<Polygon, Polygon>, int>
+    public class SaveRepository : IRepository<GeometryWithFragments<Polygon, Polygon>, int>
     {
         private readonly GeometryDbContext _dbContext;
 
