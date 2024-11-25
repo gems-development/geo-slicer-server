@@ -7,4 +7,10 @@
         <RootNamespace>ConsoleApp.IRepositories</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="GeoSlicer" Version="1.0.0" />
+      <PackageReference Include="GeoSlicer.Utils" Version="1.0.1" />
+      <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+    </ItemGroup>
+
 </Project>
