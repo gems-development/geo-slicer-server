@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GeometryValidateErrors;
 namespace IGeometryFixers
 {
     public abstract class IGeometryFixer<TGeometry>
     {
-        public TGeometry FixGeometry(TGeometry geometry, GeometryValidateError geometryValidateError)
+        public TGeometry FixGeometry(TGeometry geometry, GeometryValidateError[] geometryValidateErrors)
         {
-            if (geometryValidateError == GeometryValidateError.GeometryValid)
+            if (geometryValidateErrors.All(error => error == GeometryValidateError.GeometryValid))
                 return geometry;
-            return Fix(geometry, geometryValidateError);
+            //удалить валидные из массива ошибок
+            return Fix(geometry, geometryValidateErrors);
         }
 
-        protected abstract TGeometry Fix(TGeometry geometry, GeometryValidateError geometryValidateError);
+        protected abstract TGeometry Fix(TGeometry geometry, GeometryValidateError[] geometryValidateErrors);
     }
 }

@@ -11,4 +11,9 @@
       <ProjectReference Include="..\GeometryValidateErrors\GeometryValidateErrors.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="GeoSlicer.Utils" Version="1.0.1" />
+      <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+    </ItemGroup>
+
 </Project>
