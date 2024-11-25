@@ -4,6 +4,7 @@ namespace Services.Fixers.Interfaces
 {
     public interface IFixerFactory<TGeometry>
     {
-        public IConcreteFixer<TGeometry> GetFixer(GeometryValidateError geometryValidateError);
+        //Возвращает null в случае если на эту ошибку нет fixer
+        public IConcreteFixer<TGeometry>? GetFixer(GeometryValidateError geometryValidateError);
     }
 }

@@ -4,16 +4,16 @@ using Services.Validators.Interfaces;
 
 namespace Services.Validators
 {
-    public class GeometryValidator : IGeometryValidator<Polygon>
+    public class GeometryValidator<TGeometry> : IGeometryValidator<TGeometry>
     {
-        private IConcreteValidator<Polygon>[] _validators;
+        private IConcreteValidator<TGeometry>[] _validators;
         
-        public GeometryValidator(IConcreteValidator<Polygon>[] validators)
+        public GeometryValidator(IConcreteValidator<TGeometry>[] validators)
         {
             _validators = validators;
         }
 
-        public GeometryValidateError[] ValidateGeometry(Polygon geometry)
+        public GeometryValidateError[] ValidateGeometry(TGeometry geometry)
         {
             GeometryValidateError[] validateErrors = new GeometryValidateError[_validators.Length];
             for (int i = 0; i < _validators.Length; i++)

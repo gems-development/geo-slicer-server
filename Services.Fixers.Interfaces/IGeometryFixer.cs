@@ -9,7 +9,10 @@ namespace Services.Fixers.Interfaces
         {
             if (geometryValidateErrors.All(error => error == GeometryValidateError.GeometryValid))
                 return geometry;
-            //удалить валидные из массива ошибок
+            
+            geometryValidateErrors =
+                geometryValidateErrors.Where(a => a != GeometryValidateError.GeometryValid).ToArray();
+            
             return Fix(geometry, geometryValidateErrors);
         }
 
