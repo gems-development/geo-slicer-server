@@ -76,8 +76,8 @@ namespace ConsoleApp
                 {
                     foreach (var o in files)
                     {
-                        Console.WriteLine(o + "|" + validate);
-                        ReadPolygonFromGeojsonFile(o);
+                        var polygon = ReadPolygonFromGeojsonFile(o);
+                        // Call controller method to save polygon
                     }
                 },
                 filesInfo, validateOption);
