@@ -2,8 +2,8 @@
 
 namespace Slicers.Interfaces
 {
-    public interface ISlicer<TK, TV>
+    public interface ISlicer<TGeometry, TSlicedType>
     {
-        IEnumerable<TV> Slice(TK polygon);
+        IEnumerable<TSlicedType> Slice(TGeometry polygon);
     }
 }

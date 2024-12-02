@@ -4,6 +4,6 @@ namespace Services.Validators.Interfaces
 {
     public interface IConcreteValidator<TGeometry>
     {
-        public GeometryValidateError ValidateGeometry(TGeometry polygon);
+        GeometryValidateError ValidateGeometry(TGeometry polygon);
     }
 }

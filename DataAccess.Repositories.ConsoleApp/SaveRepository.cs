@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DataAccess.Interfaces;
 using DataAccess.Repositories.ConsoleApp.Interfaces;
 using DomainModels;
 using Entities;
-using GeoSlicer.Utils;
+using Microsoft.EntityFrameworkCore.Storage;
 using NetTopologySuite.Geometries;
-using Utils;
 
 namespace DataAccess.Repositories.ConsoleApp
 {
@@ -18,6 +16,10 @@ namespace DataAccess.Repositories.ConsoleApp
 
         private double _epsilon = 1E-14;
 
+        private IDbContextTransaction? _transaction;
+
+        private string _savePointName = "savePoint";
+
         public SaveRepository(GeometryDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -25,22 +27,52 @@ namespace DataAccess.Repositories.ConsoleApp
         
         public int Save(GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>> objectToSave)
         {
-            GeometryOriginal geometryOriginal = new GeometryOriginal
+            try
             {
-                Data = objectToSave.Data
-            };
-            _dbContext.GeometryOriginals.Add(geometryOriginal);
-
-            IEnumerable<GeometryFragment> fragments = objectToSave.GeometryFragments.Select(fragmentWithNonRenderingBorder =>
-                new GeometryFragment
+                GeometryOriginal geometryOriginal = new GeometryOriginal
                 {
-                    Fragment = fragmentWithNonRenderingBorder.Fragment,
-                    GeometryOriginal = geometryOriginal,
-                    NonRenderingBorder = fragmentWithNonRenderingBorder.NonRenderingBorder
-                });
-            _dbContext.GeometryFragments.AddRange(fragments);
-            _dbContext.SaveChanges();
-            return geometryOriginal.Id;
+                    Data = objectToSave.Data
+                };
+                _dbContext.GeometryOriginals.Add(geometryOriginal);
+
+                IEnumerable<GeometryFragment> fragments = objectToSave.GeometryFragments.Select(
+                    fragmentWithNonRenderingBorder =>
+                        new GeometryFragment
+                        {
+                            Fragment = fragmentWithNonRenderingBorder.Fragment,
+                            GeometryOriginal = geometryOriginal,
+                            NonRenderingBorder = fragmentWithNonRenderingBorder.NonRenderingBorder
+                        });
+                _dbContext.GeometryFragments.AddRange(fragments);
+                _dbContext.SaveChanges();
+                return geometryOriginal.Id;
+            }
+            catch (Exception ex)
+            { 
+                RollbackTransaction();
+                throw new ApplicationException("Error while saving geometry: " + ex.Message, ex);
+            }
+        }
+
+        public void StartTransaction()
+        {
+            _transaction = _dbContext.Database.BeginTransaction();
+            _transaction.CreateSavepoint(_savePointName);
+        }
+
+        public void CommitTransaction()
+        {
+            _transaction!.Commit();
+            _transaction = null;
+        }
+
+        public void RollbackTransaction()
+        {
+            if (_transaction != null)
+            {
+                _transaction.RollbackToSavepoint(_savePointName);
+                _transaction = null;
+            }
         }
     }
 }
