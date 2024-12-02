@@ -85,5 +85,10 @@ namespace ConsoleApp.Controllers
         {
             Repository.CommitTransaction();
         }
+        
+        public void RollbackTransaction()
+        {
+            Repository.RollbackTransaction();
+        }
     }
 }

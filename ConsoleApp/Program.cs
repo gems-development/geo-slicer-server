@@ -84,8 +84,10 @@ namespace ConsoleApp
                     //start transaction
                     foreach (var o in files)
                     {
+                        //check file reading error
+                        //if error - rollback
                         var polygon = ReadPolygonFromGeojsonFile(o);
-                        // Call controller method to save polygon and get error list
+                        //call controller method to save polygon and get error list
                     }
                     //commit transaction
                 },
