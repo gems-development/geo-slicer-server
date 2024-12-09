@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ConsoleApp.Controllers.Parameters
+namespace ConsoleApp.Controllers.Helpers
 {
     public enum Parameter
     {
