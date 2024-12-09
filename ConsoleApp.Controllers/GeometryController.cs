@@ -29,7 +29,7 @@ namespace ConsoleApp.Controllers
             GeometryFixer = geometryFixer;
         }
         
-        public TKey SaveGeometry(TGeometryIn geometry, out string validateResult, Dictionary<Parameter,bool> parameters)
+        public TKey SaveGeometry(TGeometryIn geometry, out string validateResult, Dictionary<Parameter, bool> parameters)
         {
             validateResult = "";
             try

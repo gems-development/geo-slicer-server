@@ -27,7 +27,7 @@ namespace Services.Fixers
             LinearRing[] newHoles = new LinearRing[holes.Length];
             for (int i = 0; i < holes.Length; i++)
             {
-                LinearRing hole = new LinearRing(_repeatingPointsValidator.Fix<LinearRing>(holes[i], creator));
+                LinearRing hole = _repeatingPointsValidator.Fix<LinearRing>(holes[i], creator);
                 newHoles[i] = hole;
             }
 
