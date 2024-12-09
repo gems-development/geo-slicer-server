@@ -14,11 +14,9 @@ namespace DataAccess.Repositories.ConsoleApp
     {
         private readonly GeometryDbContext _dbContext;
 
-        private double _epsilon = 1E-14;
-
         private IDbContextTransaction? _transaction;
 
-        private string _savePointName = "savePoint";
+        private const string SavePointName = "savePoint";
 
         public SaveRepository(GeometryDbContext dbContext)
         {
@@ -57,7 +55,7 @@ namespace DataAccess.Repositories.ConsoleApp
         public void StartTransaction()
         {
             _transaction = _dbContext.Database.BeginTransaction();
-            _transaction.CreateSavepoint(_savePointName);
+            _transaction.CreateSavepoint(SavePointName);
         }
 
         public void CommitTransaction()
@@ -70,7 +68,7 @@ namespace DataAccess.Repositories.ConsoleApp
         {
             if (_transaction != null)
             {
-                _transaction.RollbackToSavepoint(_savePointName);
+                _transaction.RollbackToSavepoint(SavePointName);
                 _transaction = null;
             }
         }
