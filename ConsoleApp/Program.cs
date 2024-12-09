@@ -1,9 +1,20 @@
-﻿using System.CommandLine;
+﻿using System;
+using System.Collections.Generic;
+using System.CommandLine;
 using System.IO;
 using System.Threading.Tasks;
+using ConsoleApp.Controllers;
+using ConsoleApp.Controllers.Parameters;
 using DataAccess.PostgreSql;
+using DataAccess.Repositories.ConsoleApp;
+using DomainModels;
+using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
+using Services.Creators;
+using Services.Fixers;
+using Services.Validators;
+using Slicers;
 
 
 namespace ConsoleApp
@@ -14,9 +25,6 @@ namespace ConsoleApp
         {
             //Console usage example:
             //geosaver save Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -v -f
-            
-            //application context will be declared in dependency container
-            PostgreApplicationContext? applicationContext = null;
             var rootCommand = new RootCommand("rootCommand")
             {
                 Name = "geosaver"
@@ -50,7 +58,8 @@ namespace ConsoleApp
             {
                 Arity = ArgumentArity.ZeroOrOne
             };
-            var save = new Command("save", "Save geometries from {--files} in database using {--connectionString} to connect.");
+            var save = new Command("save",
+                "Save geometries from {--files} in database using {--connectionString} to connect.");
             save.AddOption(stringOption);
             save.AddOption(filesInfo);
             save.AddOption(validateOption);
@@ -70,28 +79,56 @@ namespace ConsoleApp
                     commandResult.ErrorMessage = "Can not fix geometry without validation.";
                 }
             });
-            save.SetHandler((connectionString, files, validate) =>
+            save.SetHandler((connectionString, files, validate, fix) =>
                 {
+                    IServiceCollection serviceCollection = new ServiceCollection();
+                    serviceCollection.AddGeometryDbContext(connectionString);
+                    serviceCollection.AddSaveRepository();
+                    serviceCollection.AddGeometryFixer();
+                    serviceCollection.AddGeometryValidator();
+                    serviceCollection.AddSlicers();
+                    serviceCollection.AddGeometryWithFragmentsCreator();
+                    serviceCollection.AddGeometryController();
+                    using var serviceProvider = serviceCollection.BuildServiceProvider();
+
+                    var applicationContext = serviceProvider.GetService<PostgreApplicationContext>();
+                    var geometryController = serviceProvider
+                        .GetService<GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
                     if (applicationContext == null)
                     {
-                        //error
+                        throw new NullReferenceException("Application context is null");
                     }
-                    applicationContext = new PostgreApplicationContext(connectionString);
+                    if (geometryController == null)
+                    {
+                        throw new NullReferenceException("Geometry controller is null");
+                    }
                     if (!applicationContext.Database.CanConnect())
                     {
-                        //error
+                        throw new Exception("Can not connect to database");
                     }
-                    //start transaction
+                    geometryController.StartTransaction();
                     foreach (var o in files)
                     {
-                        //check file reading error
-                        //if error - rollback
-                        var polygon = ReadPolygonFromGeojsonFile(o);
-                        //call controller method to save polygon and get error list
+                        string errors;
+                        try
+                        {
+                            var polygon = ReadPolygonFromGeojsonFile(o);
+                            geometryController.SaveGeometry(polygon, out errors, new Dictionary<Parameter, bool>
+                            {
+                                {Parameter.Validate, validate},
+                                {Parameter.Fix, fix}
+                            });
+                        }
+                        catch (Exception e)
+                        {
+                            geometryController.RollbackTransaction();
+                            throw new Exception(o.FullName + ":" + "\n" + e.Message);
+                        }
+                        Console.WriteLine(o.FullName + ":" + "\n" + errors);
                     }
-                    //commit transaction
+                    geometryController.CommitTransaction();
                 },
-                stringOption, filesInfo, validateOption);
+                stringOption, filesInfo, validateOption, fixOption);
             rootCommand.Add(save);
             return await rootCommand.InvokeAsync(args);
         }
@@ -109,4 +146,3 @@ namespace ConsoleApp
         }
     }
 }
-

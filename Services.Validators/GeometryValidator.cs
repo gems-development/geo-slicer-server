@@ -17,13 +17,13 @@ namespace Services.Validators
 
         public GeometryValidateError[] ValidateGeometry(TGeometry geometry)
         {
-            GeometryValidateError[] validateErrors = new GeometryValidateError[_validators.Length];
+            HashSet<GeometryValidateError> validateErrors = new HashSet<GeometryValidateError>(_validators.Length);
             for (int i = 0; i < _validators.Length; i++)
             {
-                validateErrors[i] = _validators[i].ValidateGeometry(geometry);
+                validateErrors.Add(_validators[i].ValidateGeometry(geometry));
             }
 
-            return validateErrors;
+            return validateErrors.ToArray();
         }
     }
 }
