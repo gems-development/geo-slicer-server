@@ -23,11 +23,11 @@ namespace Services.Fixers
             LinearRing shell = geometry.Shell;
             LinearRing[] holes = geometry.Holes;
 
-            LinearRing newShell = new LinearRing(_repeatingPointsValidator.Fix<>(shell, creator));
+            LinearRing newShell = _repeatingPointsValidator.Fix<LinearRing>(shell, creator);
             LinearRing[] newHoles = new LinearRing[holes.Length];
             for (int i = 0; i < holes.Length; i++)
             {
-                LinearRing hole = new LinearRing(_repeatingPointsValidator.Fix<>(holes[i], creator));
+                LinearRing hole = new LinearRing(_repeatingPointsValidator.Fix<LinearRing>(holes[i], creator));
                 newHoles[i] = hole;
             }
 

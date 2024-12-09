@@ -50,7 +50,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fixers", "Fixers", "{8136FD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Validators", "Validators", "{DA3E3C23-269F-4A5D-AAC6-77D77AD155B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp.Controllers.Commands", "ConsoleApp\ConsoleApp.Controllers.Commands\ConsoleApp.Controllers.Commands.csproj", "{C12554FC-C6ED-4F61-9910-5FA5818FFA99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp.Controllers.Parameters", "ConsoleApp\ConsoleApp.Controllers.Parameters\ConsoleApp.Controllers.Parameters.csproj", "{C12554FC-C6ED-4F61-9910-5FA5818FFA99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

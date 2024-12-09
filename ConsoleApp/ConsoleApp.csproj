@@ -13,6 +13,9 @@
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
       <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp\DataAccess.Repositories.ConsoleApp.csproj" />
       <ProjectReference Include="..\Entities\Entities.csproj" />
+      <ProjectReference Include="..\Services.Fixers\Services.Fixers.csproj" />
+      <ProjectReference Include="..\Services.Validators\Services.Validators.csproj" />
+      <ProjectReference Include="..\Slicers\Slicers.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,6 +26,12 @@
       <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0-rc.2" />
       <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="ConsoleApp.Controllers.Parameters\Parameter.cs">
+        <Link>ConsoleApp.Controllers.Commands\Parameter.cs</Link>
+      </Compile>
     </ItemGroup>
 
 </Project>

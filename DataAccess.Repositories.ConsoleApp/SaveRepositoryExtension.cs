@@ -7,14 +7,11 @@ namespace DataAccess.Repositories.ConsoleApp
 {
     public static class SaveRepositoryExtension
     {
-        public static void AddToServiceCollection(
-            this SaveRepository saveRepository, 
-            IServiceCollection serviceCollection)
+        public static void AddSaveRepository(this IServiceCollection serviceCollection)
         {
-            serviceCollection
-                .AddTransient<IRepository<
-                        GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>, int>, 
-                    SaveRepository>();
+            serviceCollection.AddTransient<IRepository<
+                    GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>, int>,
+                SaveRepository>();
         }
     }
 }

@@ -1,15 +1,17 @@
+using DomainModels;
 using Microsoft.Extensions.DependencyInjection;
+using NetTopologySuite.Geometries;
 
 namespace ConsoleApp.Controllers
 {
     public static class GeometryControllerExtension
     {
-        public static void AddToServiceCollection<TGeometryIn, TSliceType, TKey>(
-            this GeometryController<TGeometryIn, TSliceType, TKey> geometryController,
-            IServiceCollection serviceCollection)
+        public static void AddGeometryController(
+            this IServiceCollection serviceCollection)
         {
             serviceCollection
-                .AddTransient<GeometryController<TGeometryIn, TSliceType, TKey>>();
+                .AddTransient<GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>,
+                    GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
         }
     }
 }

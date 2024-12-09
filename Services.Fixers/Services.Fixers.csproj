@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="GeoSlicer.Utils" Version="1.0.4" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0-rc.2.24473.5" />
     </ItemGroup>
 
 </Project>

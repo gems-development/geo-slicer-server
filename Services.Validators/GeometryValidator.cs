@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using NetTopologySuite.Geometries;
 using Services.ValidateErrors;
 using Services.Validators.Interfaces;
@@ -8,20 +10,20 @@ namespace Services.Validators
     {
         private IConcreteValidator<TGeometry>[] _validators;
         
-        public GeometryValidator(IConcreteValidator<TGeometry>[] validators)
+        public GeometryValidator(IEnumerable<IConcreteValidator<TGeometry>> validators)
         {
-            _validators = validators;
+            _validators = validators.ToArray();
         }
 
         public GeometryValidateError[] ValidateGeometry(TGeometry geometry)
         {
-            GeometryValidateError[] validateErrors = new GeometryValidateError[_validators.Length];
+            HashSet<GeometryValidateError> validateErrors = new HashSet<GeometryValidateError>(_validators.Length);
             for (int i = 0; i < _validators.Length; i++)
             {
-                validateErrors[i] = _validators[i].ValidateGeometry(geometry);
+                validateErrors.Add(_validators[i].ValidateGeometry(geometry));
             }
 
-            return validateErrors;
+            return validateErrors.ToArray();
         }
     }
 }

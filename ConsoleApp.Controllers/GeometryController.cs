@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
-using ConsoleApp.Controllers.Commands;
+using System.Collections.Generic;
+using ConsoleApp.Controllers.Parameters;
 using DataAccess.Repositories.ConsoleApp.Interfaces;
 using DomainModels;
 using Services.Creators.Interfaces;
@@ -29,47 +29,47 @@ namespace ConsoleApp.Controllers
             GeometryFixer = geometryFixer;
         }
         
-        public TKey SaveGeometry(TGeometryIn geometry, out string validateResult, Command[]? commands = null)
+        public TKey SaveGeometry(TGeometryIn geometry, out string validateResult, Dictionary<Parameter,bool> parameters)
         {
             validateResult = "";
             try
             {
                 GeometryValidateError[]? geometryValidateErrors = null;
                 
-                bool validatedGeometry = ValidateGeometry(commands, ref geometryValidateErrors, geometry, ref validateResult);
-                geometry = FixGeometry(commands, validatedGeometry, geometry, geometryValidateErrors);
+                bool validatedGeometry = ValidateGeometry(parameters[Parameter.Validate], ref geometryValidateErrors, geometry, ref validateResult);
+                geometry = FixGeometry(parameters[Parameter.Fix], validatedGeometry, geometry, geometryValidateErrors);
 
                 GeometryWithFragments<TGeometryIn, TSliceType> geometryOut =
                     GeometryWithFragmentsCreator.ToGeometryWithFragments(geometry);
 
                 return Repository.Save(geometryOut);
             }
-            catch
+            catch (Exception e)
             { 
                 Repository.RollbackTransaction();
-                throw;
+                throw new Exception(validateResult + "\n" + e.Message, e);
             }
         }
 
         private bool ValidateGeometry(
-            Command[]? commands, ref GeometryValidateError[]? geometryValidateErrors, TGeometryIn geometry, ref string result)
+            bool parameter, ref GeometryValidateError[]? geometryValidateErrors, TGeometryIn geometry, ref string result)
         {
-            if (commands != null && commands.Any(a => a == Command.Validate))
+            if (parameter)
             {
                 geometryValidateErrors = GeometryValidator.ValidateGeometry(geometry);
-                result = result + "Validate errors: " + string.Join(" ", geometryValidateErrors);
+                result = result + "Validate errors: " + string.Join("\n", geometryValidateErrors);
                 return true;
             }
             return false;
         }
 
         private TGeometryIn FixGeometry(
-            Command[]? commands, bool validatedGeometry, TGeometryIn geometry, GeometryValidateError[]? geometryValidateErrors)
+            bool parameter, bool validatedGeometry, TGeometryIn geometry, GeometryValidateError[]? geometryValidateErrors)
         {
-            if (commands != null && commands.Any(a => a == Command.Fix))
+            if (parameter)
             {
                 if (!validatedGeometry)
-                    throw new ApplicationException("geometry was not validated, but a fix command was sent");
+                    throw new ApplicationException("geometry was not validated, but a fix parameter was sent");
                 geometry = GeometryFixer.FixGeometry(geometry, geometryValidateErrors!);
             }
 
