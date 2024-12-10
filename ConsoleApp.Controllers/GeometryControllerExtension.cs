@@ -1,5 +1,6 @@
 using DomainModels;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using NetTopologySuite.Geometries;
 
 namespace ConsoleApp.Controllers
@@ -10,7 +11,7 @@ namespace ConsoleApp.Controllers
             this IServiceCollection serviceCollection)
         {
             serviceCollection
-                .AddSingleton<GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>,
+                .AddTransient<GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>,
                     GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
         }
     }

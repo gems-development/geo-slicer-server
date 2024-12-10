@@ -10,6 +10,7 @@ namespace Services.Validators
         public static void AddConcreteValidator(
             this IServiceCollection serviceCollection)
         {
+            //todo убрать зависимость на EpsilonCoordinateComparator
             serviceCollection.AddTransient<ICoordinateComparator, EpsilonCoordinateComparator>();
             // serviceCollection.AddTransient<ICoordinateComparator, RefCoordinateComparator>();
 

@@ -12,8 +12,8 @@ namespace DataAccess.Repositories.ConsoleApp
     {
         public static void AddSaveRepository(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<GeometryDbContext>(provider => provider.GetRequiredService<GeometryDbContext>());
-            serviceCollection.AddSingleton<IRepository<
+            //serviceCollection.AddSingleton<GeometryDbContext>(provider => provider.GetRequiredService<GeometryDbContext>());
+            serviceCollection.AddTransient<IRepository<
                     GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>, int>,
                 SaveRepository>();
         }

@@ -92,21 +92,11 @@ namespace ConsoleApp
                     serviceCollection.AddGeometryWithFragmentsCreator();
                     serviceCollection.AddGeometryController();
                     using var serviceProvider = serviceCollection.BuildServiceProvider();
-
-                    var applicationContext = serviceProvider.GetService<GeometryDbContext>();
                     var geometryController = serviceProvider
                         .GetService<GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
-                    if (applicationContext == null)
-                    {
-                        throw new NullReferenceException("Application context is null");
-                    }
                     if (geometryController == null)
                     {
                         throw new NullReferenceException("Geometry controller is null");
-                    }
-                    if (!applicationContext.Database.CanConnect())
-                    {
-                        throw new Exception("Can not connect to database");
                     }
                     geometryController.StartTransaction();
                     foreach (var o in files)
