@@ -1,3 +1,6 @@
+using System;
+using DataAccess.Interfaces;
+using DataAccess.PostgreSql;
 using DataAccess.Repositories.ConsoleApp.Interfaces;
 using DomainModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +12,8 @@ namespace DataAccess.Repositories.ConsoleApp
     {
         public static void AddSaveRepository(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddTransient<IRepository<
+            serviceCollection.AddSingleton<GeometryDbContext>(provider => provider.GetRequiredService<GeometryDbContext>());
+            serviceCollection.AddSingleton<IRepository<
                     GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>, int>,
                 SaveRepository>();
         }

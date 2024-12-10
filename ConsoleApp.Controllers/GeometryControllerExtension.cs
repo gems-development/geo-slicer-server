@@ -10,7 +10,7 @@ namespace ConsoleApp.Controllers
             this IServiceCollection serviceCollection)
         {
             serviceCollection
-                .AddTransient<GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>,
+                .AddSingleton<GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>,
                     GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
         }
     }

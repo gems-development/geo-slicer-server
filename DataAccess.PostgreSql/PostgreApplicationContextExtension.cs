@@ -9,7 +9,7 @@ namespace DataAccess.PostgreSql
         public static void AddGeometryDbContext(
             this IServiceCollection serviceCollection, string connectionString)
         {
-            serviceCollection.AddTransient<GeometryDbContext>(provider => new PostgreApplicationContext(connectionString));
+            serviceCollection.AddSingleton<GeometryDbContext>(provider => new PostgreApplicationContext(connectionString));
         }
     }
 }

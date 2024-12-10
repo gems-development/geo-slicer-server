@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using ConsoleApp.Controllers.Helpers;
 using ConsoleApp.Controllers;
+using DataAccess.Interfaces;
 using DataAccess.PostgreSql;
 using DataAccess.Repositories.ConsoleApp;
 using DomainModels;
@@ -24,7 +25,7 @@ namespace ConsoleApp
         static async Task<int> Main(string[] args)
         {
             //Console usage example:
-            //geosaver save Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -v -f
+            //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -v -fx
             var rootCommand = new RootCommand("rootCommand")
             {
                 Name = "geosaver"
@@ -85,13 +86,14 @@ namespace ConsoleApp
                     serviceCollection.AddGeometryDbContext(connectionString);
                     serviceCollection.AddSaveRepository();
                     serviceCollection.AddGeometryFixer();
+                    serviceCollection.AddConcreteValidator();
                     serviceCollection.AddGeometryValidator();
                     serviceCollection.AddSlicers();
                     serviceCollection.AddGeometryWithFragmentsCreator();
                     serviceCollection.AddGeometryController();
                     using var serviceProvider = serviceCollection.BuildServiceProvider();
 
-                    var applicationContext = serviceProvider.GetService<PostgreApplicationContext>();
+                    var applicationContext = serviceProvider.GetService<GeometryDbContext>();
                     var geometryController = serviceProvider
                         .GetService<GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
                     if (applicationContext == null)
