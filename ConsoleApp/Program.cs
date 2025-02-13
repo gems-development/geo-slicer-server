@@ -25,7 +25,7 @@ namespace ConsoleApp
         static async Task<int> Main(string[] args)
         {
             //Console usage example:
-            //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -v -fx
+            //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt
             var rootCommand = new RootCommand("rootCommand")
             {
                 Name = "geosaver"
@@ -39,48 +39,17 @@ namespace ConsoleApp
             };
             var filesInfo = new Option<FileInfo[]>(
                 aliases: new[] { "-fs", "--files" },
-                description: "Files to save in {save}.")
+                description: "Input file names")
             {
                 IsRequired = true,
                 Arity = ArgumentArity.OneOrMore,
                 AllowMultipleArgumentsPerToken = true
             };
-            var validateOption = new Option<bool>(
-                aliases: new[] { "-v", "--val", "--valid", "--validate" },
-                description: "Option to enable geometry validation.",
-                getDefaultValue: () => false)
-            {
-                Arity = ArgumentArity.ZeroOrOne
-            };
-            var fixOption = new Option<bool>(
-                aliases: new[] { "-fx", "--fix" },
-                description: "Option to enable geometry fix after validation.",
-                getDefaultValue: () => false)
-            {
-                Arity = ArgumentArity.ZeroOrOne
-            };
             var save = new Command("save",
                 "Save geometries from {--files} in database using {--connectionString} to connect.");
             save.AddOption(stringOption);
             save.AddOption(filesInfo);
-            save.AddOption(validateOption);
-            save.AddOption(fixOption);
-            save.AddValidator(commandResult =>
-            {
-                var validateOptionCommandResult = commandResult.FindResultFor(validateOption);
-                var fixOptionCommandResult = commandResult.FindResultFor(fixOption);
-                if (!(fixOptionCommandResult is null) &&
-                    (fixOptionCommandResult.GetValueOrDefault() is null ||
-                     !(fixOptionCommandResult.GetValueOrDefault() is null) &&
-                     fixOptionCommandResult.GetValueOrDefault()!.ToString() == true.ToString())
-                    && (validateOptionCommandResult is null ||
-                        !(validateOptionCommandResult.GetValueOrDefault() is null) &&
-                        validateOptionCommandResult.GetValueOrDefault()!.ToString() == false.ToString()))
-                {
-                    commandResult.ErrorMessage = "Can not fix geometry without validation.";
-                }
-            });
-            save.SetHandler((connectionString, files, validate, fix) =>
+            save.SetHandler((connectionString, files) =>
                 {
                     IServiceCollection serviceCollection = new ServiceCollection();
                     serviceCollection.AddGeometryDbContext(connectionString);
@@ -107,8 +76,8 @@ namespace ConsoleApp
                             var polygon = ReadPolygonFromGeojsonFile(o);
                             geometryController.SaveGeometry(polygon, out errors, new Dictionary<Parameter, bool>
                             {
-                                {Parameter.Validate, validate},
-                                {Parameter.Fix, fix}
+                                {Parameter.Validate, true},
+                                {Parameter.Fix, true}
                             });
                         }
                         catch (Exception e)
@@ -120,14 +89,22 @@ namespace ConsoleApp
                     }
                     geometryController.CommitTransaction();
                 },
-                stringOption, filesInfo, validateOption, fixOption);
+                stringOption, filesInfo);
+            var validate = new Command("validate",
+                "Validate geometries from {--files}.");
+            validate.AddOption(filesInfo);
+            validate.SetHandler(files =>
+            {
+                //validate files
+            }, filesInfo);
             rootCommand.Add(save);
+            rootCommand.Add(validate);
             return await rootCommand.InvokeAsync(args);
         }
 
         static Polygon ReadPolygonFromGeojsonFile(FileInfo file)
         {
-            return ReadGeometryFromFile<Polygon>(file.FullName);
+            return (Polygon)ReadGeometryFromFile<MultiPolygon>(file.FullName)[0];
         }
 
         private static T ReadGeometryFromFile<T>(string path) where T : class
