@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ConsoleApp.Controllers.Helpers\ConsoleApp.Controllers.Helpers.csproj" />
+      <ProjectReference Include="..\ConsoleApp.Services\ConsoleApp.Services.csproj" />
       <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp.Interfaces\DataAccess.Repositories.ConsoleApp.Interfaces.csproj" />
       <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
       <ProjectReference Include="..\Services.Creators.Interfaces\Services.Creators.Interfaces.csproj" />

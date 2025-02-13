@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using ConsoleApp.Controllers.Helpers;
 using ConsoleApp.Controllers;
-using DataAccess.Interfaces;
+using ConsoleApp.Services;
 using DataAccess.PostgreSql;
 using DataAccess.Repositories.ConsoleApp;
 using DomainModels;
@@ -14,6 +14,7 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Services.Creators;
 using Services.Fixers;
+using Services.ValidateErrors;
 using Services.Validators;
 using Slicers;
 
@@ -26,6 +27,7 @@ namespace ConsoleApp
         {
             //Console usage example:
             //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt
+            //geosaver validate -fs a.txt b.txt
             var rootCommand = new RootCommand("rootCommand")
             {
                 Name = "geosaver"
@@ -59,6 +61,7 @@ namespace ConsoleApp
                     serviceCollection.AddGeometryValidator();
                     serviceCollection.AddSlicers();
                     serviceCollection.AddGeometryWithFragmentsCreator();
+                    serviceCollection.AddCorrectionService();
                     serviceCollection.AddGeometryController();
                     using var serviceProvider = serviceCollection.BuildServiceProvider();
                     var geometryController = serviceProvider
@@ -95,7 +98,33 @@ namespace ConsoleApp
             validate.AddOption(filesInfo);
             validate.SetHandler(files =>
             {
-                //validate files
+                IServiceCollection serviceCollection = new ServiceCollection();
+                serviceCollection.AddGeometryFixer();
+                serviceCollection.AddConcreteValidator();
+                serviceCollection.AddGeometryValidator();
+                serviceCollection.AddCorrectionService();
+                using var serviceProvider = serviceCollection.BuildServiceProvider();
+                var correctionService = serviceProvider
+                    .GetService<CorrectionService<Polygon>>();
+                if (correctionService == null)
+                {
+                    throw new NullReferenceException("Correction service is null");
+                }
+                foreach (var o in files)
+                {
+                    string errors = "";
+                    GeometryValidateError[]? geometryValidateErrors = null;
+                    try
+                    {
+                        var polygon = ReadPolygonFromGeojsonFile(o);
+                        correctionService.ValidateGeometry(true, ref geometryValidateErrors, polygon, ref errors);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(o.FullName + ":" + "\n" + e.Message);
+                    }
+                    Console.WriteLine(o.FullName + ":" + "\n" + errors);
+                }
             }, filesInfo);
             rootCommand.Add(save);
             rootCommand.Add(validate);

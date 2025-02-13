@@ -11,6 +11,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ConsoleApp.Controllers.Helpers\ConsoleApp.Controllers.Helpers.csproj" />
       <ProjectReference Include="..\ConsoleApp.Controllers\ConsoleApp.Controllers.csproj" />
+      <ProjectReference Include="..\ConsoleApp.Services\ConsoleApp.Services.csproj" />
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
       <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp\DataAccess.Repositories.ConsoleApp.csproj" />
       <ProjectReference Include="..\Entities\Entities.csproj" />

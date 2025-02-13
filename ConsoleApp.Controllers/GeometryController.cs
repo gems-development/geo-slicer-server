@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using ConsoleApp.Controllers.Helpers;
+using ConsoleApp.Services;
 using DataAccess.Repositories.ConsoleApp.Interfaces;
 using DomainModels;
 using Services.Creators.Interfaces;
-using Services.Fixers.Interfaces;
 using Services.ValidateErrors;
-using Services.Validators.Interfaces;
 
 namespace ConsoleApp.Controllers
 {
@@ -14,19 +13,16 @@ namespace ConsoleApp.Controllers
     {
         private IGeometryWithFragmentsCreator<TGeometryIn, TSliceType> GeometryWithFragmentsCreator{ get; set; }
         private IRepository<GeometryWithFragments<TGeometryIn, TSliceType>, TKey> Repository { get; set; }
-        private IGeometryValidator<TGeometryIn> GeometryValidator { get; set; }
-        private IGeometryFixer<TGeometryIn> GeometryFixer { get; set; }
+        private CorrectionService<TGeometryIn> CorrectionService { get; set; }
 
         public GeometryController(
             IGeometryWithFragmentsCreator<TGeometryIn, TSliceType> geometryWithFragmentsCreator,
-            IRepository<GeometryWithFragments<TGeometryIn, TSliceType>, TKey> repository, 
-            IGeometryValidator<TGeometryIn> geometryValidator, 
-            IGeometryFixer<TGeometryIn> geometryFixer)
+            IRepository<GeometryWithFragments<TGeometryIn, TSliceType>, TKey> repository,
+            CorrectionService<TGeometryIn> correctionService)
         {
             GeometryWithFragmentsCreator = geometryWithFragmentsCreator;
             Repository = repository;
-            GeometryValidator = geometryValidator;
-            GeometryFixer = geometryFixer;
+            CorrectionService = correctionService;
         }
         
         public TKey SaveGeometry(TGeometryIn geometry, out string validateResult, Dictionary<Parameter, bool> parameters)
@@ -54,26 +50,13 @@ namespace ConsoleApp.Controllers
         private bool ValidateGeometry(
             bool parameter, ref GeometryValidateError[]? geometryValidateErrors, TGeometryIn geometry, ref string result)
         {
-            if (parameter)
-            {
-                geometryValidateErrors = GeometryValidator.ValidateGeometry(geometry);
-                result = result + "Validate errors: " + string.Join("\n", geometryValidateErrors);
-                return true;
-            }
-            return false;
+            return CorrectionService.ValidateGeometry(parameter, ref geometryValidateErrors, geometry, ref result);
         }
 
         private TGeometryIn FixGeometry(
             bool parameter, bool validatedGeometry, TGeometryIn geometry, GeometryValidateError[]? geometryValidateErrors)
         {
-            if (parameter)
-            {
-                if (!validatedGeometry)
-                    throw new ApplicationException("geometry was not validated, but a fix parameter was sent");
-                geometry = GeometryFixer.FixGeometry(geometry, geometryValidateErrors!);
-            }
-
-            return geometry;
+            return CorrectionService.FixGeometry(parameter, validatedGeometry, geometry, geometryValidateErrors);
         }
 
         public void StartTransaction()
