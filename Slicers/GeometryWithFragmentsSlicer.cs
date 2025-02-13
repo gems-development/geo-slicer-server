@@ -28,7 +28,7 @@ namespace Slicers
             IEnumerable<Polygon> polygonFragments = _slicer.Slice(polygon);
             
             
-            IEnumerable<LineString> originalLines = PolygonUtils.GetAllLines(polygon);
+            ISet<LineString> originalLines = PolygonUtils.GetAllLinesSet(polygon);
 
             CoordinateSequence[] allRingsCoordinates =
                 new[] { polygon.Shell.CoordinateSequence }
