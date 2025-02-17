@@ -23,7 +23,7 @@ namespace Services.Validators
                 var answer = _validators[i].ValidateGeometry(geometry);
                 if (answer != GeometryValidateError.GeometryValid)
                 {
-                    validateErrors.Add(_validators[i].ValidateGeometry(geometry));
+                    validateErrors.Add(answer);
                 }
             }
             if (!validateErrors.Any())
