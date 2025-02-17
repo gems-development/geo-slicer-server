@@ -65,7 +65,7 @@ namespace ConsoleApp
                     IServiceCollection serviceCollection = new ServiceCollection();
                     serviceCollection.AddGeometryDbContext(connectionString);
                     serviceCollection.AddSaveRepository();
-                    serviceCollection.AddAlgorithms(_EPSILON_COORDINATE_COMPARATOR, _EPSILON, _MAXIMUM_NUMBER_OF_POINTS);
+                    serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon, points);
                     serviceCollection.AddGeometryFixer();
                     serviceCollection.AddGeometryValidator();
                     serviceCollection.AddSlicers();
@@ -104,7 +104,7 @@ namespace ConsoleApp
             validate.SetHandler(files =>
             {
                 IServiceCollection serviceCollection = new ServiceCollection();
-                serviceCollection.AddAlgorithms(_EPSILON_COORDINATE_COMPARATOR, _EPSILON, _MAXIMUM_NUMBER_OF_POINTS);
+                serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon);
                 serviceCollection.AddGeometryFixer();
                 serviceCollection.AddGeometryValidator();
                 serviceCollection.AddCorrectionService();
