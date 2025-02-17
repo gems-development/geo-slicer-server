@@ -25,15 +25,15 @@ namespace ConsoleApp.Controllers
             CorrectionService = correctionService;
         }
         
-        public TKey SaveGeometry(TGeometryIn geometry, out string validateResult, Dictionary<Parameter, bool> parameters)
+        public TKey SaveGeometry(TGeometryIn geometry, out string validateResult)
         {
             validateResult = "";
             try
             {
                 GeometryValidateError[]? geometryValidateErrors = null;
                 
-                bool validatedGeometry = ValidateGeometry(parameters[Parameter.Validate], ref geometryValidateErrors, geometry, ref validateResult);
-                geometry = FixGeometry(parameters[Parameter.Fix], validatedGeometry, geometry, geometryValidateErrors);
+                bool validatedGeometry = ValidateGeometry(ref geometryValidateErrors, geometry, ref validateResult);
+                geometry = FixGeometry(validatedGeometry, geometry, geometryValidateErrors);
 
                 GeometryWithFragments<TGeometryIn, TSliceType> geometryOut =
                     GeometryWithFragmentsCreator.ToGeometryWithFragments(geometry);
@@ -48,15 +48,15 @@ namespace ConsoleApp.Controllers
         }
 
         private bool ValidateGeometry(
-            bool parameter, ref GeometryValidateError[]? geometryValidateErrors, TGeometryIn geometry, ref string result)
+            ref GeometryValidateError[]? geometryValidateErrors, TGeometryIn geometry, ref string result)
         {
-            return CorrectionService.ValidateGeometry(parameter, ref geometryValidateErrors, geometry, ref result);
+            return CorrectionService.ValidateGeometry(ref geometryValidateErrors, geometry, ref result);
         }
 
         private TGeometryIn FixGeometry(
-            bool parameter, bool validatedGeometry, TGeometryIn geometry, GeometryValidateError[]? geometryValidateErrors)
+            bool validatedGeometry, TGeometryIn geometry, GeometryValidateError[]? geometryValidateErrors)
         {
-            return CorrectionService.FixGeometry(parameter, validatedGeometry, geometry, geometryValidateErrors);
+            return CorrectionService.FixGeometry(validatedGeometry, geometry, geometryValidateErrors);
         }
 
         public void StartTransaction()

@@ -92,11 +92,7 @@ namespace ConsoleApp
                         try
                         {
                             var polygon = ReadPolygonFromGeojsonFile(o);
-                            geometryController.SaveGeometry(polygon, out errors, new Dictionary<Parameter, bool>
-                            {
-                                {Parameter.Validate, true},
-                                {Parameter.Fix, true}
-                            });
+                            geometryController.SaveGeometry(polygon, out errors);
                         }
                         catch (Exception e)
                         {
@@ -114,9 +110,9 @@ namespace ConsoleApp
             validate.SetHandler(files =>
             {
                 IServiceCollection serviceCollection = new ServiceCollection();
-                serviceCollection.AddGeometryFixer();
-                serviceCollection.AddConcreteValidator();
-                serviceCollection.AddGeometryValidator();
+                var coordinateComparator = new EpsilonCoordinateComparator(_EPSILON_COORDINATE_COMPARATOR);
+                serviceCollection.AddGeometryFixer(coordinateComparator);
+                serviceCollection.AddGeometryValidator(coordinateComparator);
                 serviceCollection.AddCorrectionService();
                 using var serviceProvider = serviceCollection.BuildServiceProvider();
                 var correctionService = serviceProvider
@@ -132,7 +128,7 @@ namespace ConsoleApp
                     try
                     {
                         var polygon = ReadPolygonFromGeojsonFile(o);
-                        correctionService.ValidateGeometry(true, ref geometryValidateErrors, polygon, ref errors);
+                        correctionService.ValidateGeometry(ref geometryValidateErrors, polygon, ref errors);
                     }
                     catch (Exception e)
                     {
