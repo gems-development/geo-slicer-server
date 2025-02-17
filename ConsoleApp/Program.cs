@@ -28,7 +28,6 @@ namespace ConsoleApp
     {
         private const double EpsilonCoordinateComparator = 1e-8;
         private const double Epsilon = 1e-15;
-        private const int MaximumNumberOfPoints = 1490;
         static async Task<int> Main(string[] args)
         {
             //Console usage example:
@@ -79,7 +78,7 @@ namespace ConsoleApp
                         new LinesIntersector(coordinateComparator, lineService, Epsilon), lineService,
                         coordinateComparator, new ContainsChecker(lineService, Epsilon), Epsilon);
                     
-                    Slicer slicer = new Slicer(lineService, Math.Max(MaximumNumberOfPoints, points), weilerAthertonAlghorithm);
+                    Slicer slicer = new Slicer(lineService, points, weilerAthertonAlghorithm);
                     serviceCollection.AddSlicers(slicer);
                     serviceCollection.AddGeometryWithFragmentsCreator();
                     serviceCollection.AddCorrectionService();
