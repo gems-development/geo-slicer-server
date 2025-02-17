@@ -20,9 +20,16 @@ namespace Services.Validators
             HashSet<GeometryValidateError> validateErrors = new HashSet<GeometryValidateError>(_validators.Length);
             for (int i = 0; i < _validators.Length; i++)
             {
-                validateErrors.Add(_validators[i].ValidateGeometry(geometry));
+                var answer = _validators[i].ValidateGeometry(geometry);
+                if (answer != GeometryValidateError.GeometryValid)
+                {
+                    validateErrors.Add(_validators[i].ValidateGeometry(geometry));
+                }
             }
-
+            if (!validateErrors.Any())
+            {
+                validateErrors.Add(GeometryValidateError.GeometryValid);
+            }
             return validateErrors.ToArray();
         }
     }
