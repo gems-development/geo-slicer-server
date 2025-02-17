@@ -11,7 +11,7 @@ namespace Services.Fixers
         private readonly IDictionary<GeometryValidateError, IConcreteFixer<Polygon>> _concreteFixers =
             new Dictionary<GeometryValidateError, IConcreteFixer<Polygon>>();
 
-        public FixerFactory(EpsilonCoordinateComparator epsilonCoordinateComparator)
+        public FixerFactory(ICoordinateComparator epsilonCoordinateComparator)
         {
             _concreteFixers[GeometryValidateError.GeometryHasRepeatingPoints] =
                 new RepeatingPointsFixer(epsilonCoordinateComparator);

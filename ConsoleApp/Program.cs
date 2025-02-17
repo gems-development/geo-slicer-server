@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.CommandLine;
 using System.IO;
 using System.Threading.Tasks;
-using ConsoleApp.Controllers.Helpers;
 using ConsoleApp.Controllers;
 using ConsoleApp.Services;
 using DataAccess.PostgreSql;
 using DataAccess.Repositories.ConsoleApp;
 using DomainModels;
-using GeoSlicer.DivideAndRuleSlicers.OppositesSlicer;
-using GeoSlicer.Utils;
-using GeoSlicer.Utils.Intersectors;
-using GeoSlicer.Utils.Intersectors.CoordinateComparators;
-using GeoSlicer.Utils.PolygonClippingAlghorithm;
+using GeoSlicer.Config;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
@@ -30,7 +24,7 @@ namespace ConsoleApp
     {
         private const double _EPSILON_COORDINATE_COMPARATOR = 1e-8;
         private const double _EPSILON = 1e-15;
-        private const int _MAXIMUM_NUMBER_OF_POINTS = 1490;
+        private const int _MAXIMUM_NUMBER_OF_POINTS = 1550;
         static async Task<int> Main(string[] args)
         {
             //Console usage example:
@@ -64,17 +58,10 @@ namespace ConsoleApp
                     IServiceCollection serviceCollection = new ServiceCollection();
                     serviceCollection.AddGeometryDbContext(connectionString);
                     serviceCollection.AddSaveRepository();
-                    var coordinateComparator = new EpsilonCoordinateComparator(_EPSILON_COORDINATE_COMPARATOR);
-                    serviceCollection.AddGeometryFixer(coordinateComparator);
-                    serviceCollection.AddGeometryValidator(coordinateComparator);
-                    LineService lineService = new LineService(_EPSILON, coordinateComparator);
-                    
-                    WeilerAthertonAlghorithm weilerAthertonAlghorithm = new WeilerAthertonAlghorithm(
-                        new LinesIntersector(coordinateComparator, lineService, _EPSILON), lineService,
-                        coordinateComparator, new ContainsChecker(lineService, _EPSILON), _EPSILON);
-                    
-                    Slicer slicer = new Slicer(lineService, _MAXIMUM_NUMBER_OF_POINTS, weilerAthertonAlghorithm);
-                    serviceCollection.AddSlicers(slicer);
+                    serviceCollection.AddAlgorithms(_EPSILON_COORDINATE_COMPARATOR, _EPSILON, _MAXIMUM_NUMBER_OF_POINTS);
+                    serviceCollection.AddGeometryFixer();
+                    serviceCollection.AddGeometryValidator();
+                    serviceCollection.AddSlicers();
                     serviceCollection.AddGeometryWithFragmentsCreator();
                     serviceCollection.AddCorrectionService();
                     serviceCollection.AddGeometryController();
@@ -110,9 +97,9 @@ namespace ConsoleApp
             validate.SetHandler(files =>
             {
                 IServiceCollection serviceCollection = new ServiceCollection();
-                var coordinateComparator = new EpsilonCoordinateComparator(_EPSILON_COORDINATE_COMPARATOR);
-                serviceCollection.AddGeometryFixer(coordinateComparator);
-                serviceCollection.AddGeometryValidator(coordinateComparator);
+                serviceCollection.AddAlgorithms(_EPSILON_COORDINATE_COMPARATOR, _EPSILON, _MAXIMUM_NUMBER_OF_POINTS);
+                serviceCollection.AddGeometryFixer();
+                serviceCollection.AddGeometryValidator();
                 serviceCollection.AddCorrectionService();
                 using var serviceProvider = serviceCollection.BuildServiceProvider();
                 var correctionService = serviceProvider

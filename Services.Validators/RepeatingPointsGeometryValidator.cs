@@ -10,7 +10,7 @@ namespace Services.Validators
     {
         private readonly ICoordinateComparator _coordinateComparator;
 
-        public RepeatingPointsGeometryValidator(EpsilonCoordinateComparator epsilonCoordinateComparator)
+        public RepeatingPointsGeometryValidator(ICoordinateComparator epsilonCoordinateComparator)
         {
             _coordinateComparator = epsilonCoordinateComparator;
         }

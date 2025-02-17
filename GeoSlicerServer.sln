@@ -54,6 +54,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp.Controllers.Help
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp.Services", "ConsoleApp.Services\ConsoleApp.Services.csproj", "{4DB609FC-577B-4D18-9A25-0486212007C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoSlicer.Config", "GeoSlicer.Config\GeoSlicer.Config.csproj", "{C69722AF-AE7C-4E65-BE03-033C3C0429BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +142,10 @@ Global
 		{4DB609FC-577B-4D18-9A25-0486212007C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DB609FC-577B-4D18-9A25-0486212007C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DB609FC-577B-4D18-9A25-0486212007C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C69722AF-AE7C-4E65-BE03-033C3C0429BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C69722AF-AE7C-4E65-BE03-033C3C0429BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C69722AF-AE7C-4E65-BE03-033C3C0429BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C69722AF-AE7C-4E65-BE03-033C3C0429BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3C29B269-654D-4E7C-8952-E37AE8143A03} = {A8162F36-C1F5-49D3-A1DF-AFD41731DD31}

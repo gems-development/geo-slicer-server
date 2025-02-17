@@ -8,9 +8,9 @@ namespace Services.Fixers
     public static class GeometryFixerExtension
     {
         public static void AddGeometryFixer(
-            this IServiceCollection serviceCollection, EpsilonCoordinateComparator epsilonCoordinateComparator)
+            this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddTransient<IFixerFactory<Polygon>>(provider => new FixerFactory(epsilonCoordinateComparator));
+            serviceCollection.AddTransient<IFixerFactory<Polygon>, FixerFactory>();
             serviceCollection.AddTransient<IGeometryFixer<Polygon>, GeometryFixer<Polygon>>();
         }
     }

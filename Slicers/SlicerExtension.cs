@@ -9,10 +9,10 @@ namespace Slicers
     public static class SlicerExtension
     {
         public static void AddSlicers(
-            this IServiceCollection serviceCollection, Slicer slicer)
+            this IServiceCollection serviceCollection)
         {
             serviceCollection
-                .AddTransient<ISlicer<Polygon, Polygon>>(provider => new OppositesSlicerAdapter(slicer));
+                .AddTransient<ISlicer<Polygon, Polygon>, OppositesSlicerAdapter>();
             
             serviceCollection
                 .AddTransient<
