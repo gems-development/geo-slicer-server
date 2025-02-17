@@ -10,9 +10,9 @@ namespace Services.Validators
     {
         private readonly ICoordinateComparator _coordinateComparator;
 
-        public RepeatingPointsGeometryValidator(ICoordinateComparator coordinateComparator)
+        public RepeatingPointsGeometryValidator(EpsilonCoordinateComparator epsilonCoordinateComparator)
         {
-            _coordinateComparator = coordinateComparator;
+            _coordinateComparator = epsilonCoordinateComparator;
         }
 
         public GeometryValidateError ValidateGeometry(Polygon polygon)

@@ -11,10 +11,10 @@ namespace Services.Fixers
         private readonly IDictionary<GeometryValidateError, IConcreteFixer<Polygon>> _concreteFixers =
             new Dictionary<GeometryValidateError, IConcreteFixer<Polygon>>();
 
-        public FixerFactory(double epsilon = 1e-14)
+        public FixerFactory(EpsilonCoordinateComparator epsilonCoordinateComparator)
         {
             _concreteFixers[GeometryValidateError.GeometryHasRepeatingPoints] =
-                new RepeatingPointsFixer(new EpsilonCoordinateComparator(epsilon));
+                new RepeatingPointsFixer(epsilonCoordinateComparator);
         }
 
         public IConcreteFixer<Polygon>? GetFixer(GeometryValidateError geometryValidateError)
