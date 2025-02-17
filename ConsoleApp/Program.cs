@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.CommandLine;
 using System.IO;
 using System.Threading.Tasks;
-using ConsoleApp.Controllers.Helpers;
 using ConsoleApp.Controllers;
 using ConsoleApp.Services;
 using DataAccess.PostgreSql;
@@ -28,13 +26,13 @@ namespace ConsoleApp
 {
     class Program
     {
-        private const double _EPSILON_COORDINATE_COMPARATOR = 1e-8;
-        private const double _EPSILON = 1e-15;
-        private const int _MAXIMUM_NUMBER_OF_POINTS = 1490;
+        private const double EpsilonCoordinateComparator = 1e-8;
+        private const double Epsilon = 1e-15;
+        private const int MaximumNumberOfPoints = 1490;
         static async Task<int> Main(string[] args)
         {
             //Console usage example:
-            //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt
+            //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -maxp 1500
             //geosaver validate -fs a.txt b.txt
             var rootCommand = new RootCommand("rootCommand")
             {
@@ -55,25 +53,33 @@ namespace ConsoleApp
                 Arity = ArgumentArity.OneOrMore,
                 AllowMultipleArgumentsPerToken = true
             };
+            var numberOfPointsOption = new Option<int>(
+                aliases: new[] { "-maxp", "--maxNumberOfPointsInFragment" },
+                description: "Option to set maximum number of points in fragment after slicing.")
+            {
+                IsRequired = true,
+                Arity = ArgumentArity.ExactlyOne
+            };
             var save = new Command("save",
                 "Save geometries from {--files} in database using {--connectionString} to connect.");
             save.AddOption(stringOption);
             save.AddOption(filesInfo);
-            save.SetHandler((connectionString, files) =>
+            save.AddOption(numberOfPointsOption);
+            save.SetHandler((connectionString, files, points) =>
                 {
                     IServiceCollection serviceCollection = new ServiceCollection();
                     serviceCollection.AddGeometryDbContext(connectionString);
                     serviceCollection.AddSaveRepository();
-                    var coordinateComparator = new EpsilonCoordinateComparator(_EPSILON_COORDINATE_COMPARATOR);
+                    var coordinateComparator = new EpsilonCoordinateComparator(EpsilonCoordinateComparator);
                     serviceCollection.AddGeometryFixer(coordinateComparator);
                     serviceCollection.AddGeometryValidator(coordinateComparator);
-                    LineService lineService = new LineService(_EPSILON, coordinateComparator);
+                    LineService lineService = new LineService(Epsilon, coordinateComparator);
                     
                     WeilerAthertonAlghorithm weilerAthertonAlghorithm = new WeilerAthertonAlghorithm(
-                        new LinesIntersector(coordinateComparator, lineService, _EPSILON), lineService,
-                        coordinateComparator, new ContainsChecker(lineService, _EPSILON), _EPSILON);
+                        new LinesIntersector(coordinateComparator, lineService, Epsilon), lineService,
+                        coordinateComparator, new ContainsChecker(lineService, Epsilon), Epsilon);
                     
-                    Slicer slicer = new Slicer(lineService, _MAXIMUM_NUMBER_OF_POINTS, weilerAthertonAlghorithm);
+                    Slicer slicer = new Slicer(lineService, Math.Max(MaximumNumberOfPoints, points), weilerAthertonAlghorithm);
                     serviceCollection.AddSlicers(slicer);
                     serviceCollection.AddGeometryWithFragmentsCreator();
                     serviceCollection.AddCorrectionService();
@@ -103,14 +109,14 @@ namespace ConsoleApp
                     }
                     geometryController.CommitTransaction();
                 },
-                stringOption, filesInfo);
+                stringOption, filesInfo, numberOfPointsOption);
             var validate = new Command("validate",
                 "Validate geometries from {--files}.");
             validate.AddOption(filesInfo);
             validate.SetHandler(files =>
             {
                 IServiceCollection serviceCollection = new ServiceCollection();
-                var coordinateComparator = new EpsilonCoordinateComparator(_EPSILON_COORDINATE_COMPARATOR);
+                var coordinateComparator = new EpsilonCoordinateComparator(EpsilonCoordinateComparator);
                 serviceCollection.AddGeometryFixer(coordinateComparator);
                 serviceCollection.AddGeometryValidator(coordinateComparator);
                 serviceCollection.AddCorrectionService();
