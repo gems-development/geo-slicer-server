@@ -22,13 +22,12 @@ namespace ConsoleApp
 {
     class Program
     {
-        private const double _EPSILON_COORDINATE_COMPARATOR = 1e-8;
-        private const double _EPSILON = 1e-15;
-        private const int _MAXIMUM_NUMBER_OF_POINTS = 1550;
+        private const double EpsilonCoordinateComparator = 1e-8;
+        private const double Epsilon = 1e-15;
         static async Task<int> Main(string[] args)
         {
             //Console usage example:
-            //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt
+            //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -maxp 1500
             //geosaver validate -fs a.txt b.txt
             var rootCommand = new RootCommand("rootCommand")
             {
@@ -49,11 +48,19 @@ namespace ConsoleApp
                 Arity = ArgumentArity.OneOrMore,
                 AllowMultipleArgumentsPerToken = true
             };
+            var numberOfPointsOption = new Option<int>(
+                aliases: new[] { "-maxp", "--maxNumberOfPointsInFragment" },
+                description: "Option to set maximum number of points in fragment after slicing.")
+            {
+                IsRequired = true,
+                Arity = ArgumentArity.ExactlyOne
+            };
             var save = new Command("save",
                 "Save geometries from {--files} in database using {--connectionString} to connect.");
             save.AddOption(stringOption);
             save.AddOption(filesInfo);
-            save.SetHandler((connectionString, files) =>
+            save.AddOption(numberOfPointsOption);
+            save.SetHandler((connectionString, files, points) =>
                 {
                     IServiceCollection serviceCollection = new ServiceCollection();
                     serviceCollection.AddGeometryDbContext(connectionString);
@@ -90,7 +97,7 @@ namespace ConsoleApp
                     }
                     geometryController.CommitTransaction();
                 },
-                stringOption, filesInfo);
+                stringOption, filesInfo, numberOfPointsOption);
             var validate = new Command("validate",
                 "Validate geometries from {--files}.");
             validate.AddOption(filesInfo);
