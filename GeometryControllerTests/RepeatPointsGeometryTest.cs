@@ -20,6 +20,7 @@ public class RepeatPointsGeometryTest
 {
     private Polygon _testRepeatPointsPolygon = ReadGeometryFromFile<Polygon>("TestFiles\\sampleRepeatPoints.geojson");
     private Polygon _testOriginalPolygon = ReadGeometryFromFile<Polygon>("TestFiles\\sample.geojson");
+    private Polygon _testHoleNotInPolygon = ReadGeometryFromFile<Polygon>("TestFiles\\sampleHoleOutside.geojson");
     
     private const double EpsilonCoordinateComparator = 1e-8;
     private const double Epsilon = 1e-15;
@@ -31,10 +32,8 @@ public class RepeatPointsGeometryTest
         _output = output;
     }
 
-    [Fact]
-    public void Test()
+    public GeometryController<Polygon, Polygon, Polygon> GetGeometryController()
     {
-        //Arrange
         var mockCreator = new Mock<IGeometryWithFragmentsCreator<Polygon, Polygon>>();
         mockCreator.Setup(a => a.ToGeometryWithFragments(It.IsAny<Polygon>()))
             .Returns<Polygon>(input => new GeometryWithFragments<Polygon, Polygon>(input, Array. Empty<Polygon>())); 
@@ -50,11 +49,31 @@ public class RepeatPointsGeometryTest
         serviceCollection.AddCorrectionService();
         using var serviceProvider = serviceCollection.BuildServiceProvider();
         var correctionService = serviceProvider.GetService<CorrectionService<Polygon>>();
-        var geometryController = new GeometryController<Polygon, Polygon, Polygon>(mockCreator.Object, mockRepository.Object, correctionService!);
+        return new GeometryController<Polygon, Polygon, Polygon>(mockCreator.Object, mockRepository.Object, correctionService!);
+    }
+
+    [Fact]
+    public void TestRepeatingPoints()
+    {
+        //Arrange
+        var geometryController = GetGeometryController();
         //Act
         var resultPolygon = geometryController.SaveGeometry(_testRepeatPointsPolygon, out string message);
-        _output.WriteLine(message);
+        //Assert
         Assert.Equal(_testOriginalPolygon, resultPolygon);
+        Assert.Equal("Validate errors: GeometryHasRepeatingPoints", message);
+    }
+    
+    [Fact]
+    public void TestHoleNotInPolygon()
+    {
+        //Arrange
+        var geometryController = GetGeometryController();
+        string message = string.Empty;
+        //Act + assert
+        Exception exception = Assert.Throws<Exception>(() => geometryController.SaveGeometry(_testHoleNotInPolygon, out message));
+        Assert.Equal("Validate errors: HoleOutsideShell\nThere is no fixer for the error HoleOutsideShell", exception.Message);
+        Assert.Equal("Validate errors: HoleOutsideShell", message);
     }
     
     private static T ReadGeometryFromFile<T>(string path) where T : class
