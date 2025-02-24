@@ -1,18 +1,15 @@
-﻿using DataAccess.Interfaces;
-using Microsoft.EntityFrameworkCore.Storage;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using NetTopologySuite.Operation.Union;
 
 namespace DataAccess.Repositories.GeometryUnion;
 
 public static class GeometryUnifier
 {
-    public static Polygon Union(IEnumerable<Polygon> objectsToUnify)
+    public static Geometry Union(IEnumerable<Polygon> objectsToUnify)
     {
         try
         {
-            var result = (Polygon)UnaryUnionOp.Union(objectsToUnify);
-            return result;
+            return (MultiPolygon)UnaryUnionOp.Union(objectsToUnify);
         }
         catch (Exception ex)
         {

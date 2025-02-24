@@ -22,8 +22,8 @@ namespace ConsoleApp
 {
     class Program
     {
-        private const double EpsilonCoordinateComparator = 1e-8;
-        private const double Epsilon = 1e-15;
+        private const double EpsilonCoordinateComparator = 1e-7;
+        private const double Epsilon = 1e-14;
         static async Task<int> Main(string[] args)
         {
             //Console usage example:
