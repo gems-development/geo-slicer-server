@@ -29,4 +29,10 @@
       <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="TestFiles\*.geojson">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

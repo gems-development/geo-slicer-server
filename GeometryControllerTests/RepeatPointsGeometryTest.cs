@@ -9,9 +9,7 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Services.Creators.Interfaces;
 using Services.Fixers;
-using Services.Fixers.Interfaces;
 using Services.Validators;
-using Services.Validators.Interfaces;
 using Xunit.Abstractions;
 
 namespace GeometryControllerTests;
