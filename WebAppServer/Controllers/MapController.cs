@@ -21,13 +21,13 @@ public class MapController : ControllerBase
     [Route($"{{coordinate:{nameof(Point)}}}")]
     public async Task<IActionResult> GetByClick([FromBody] Point coordinate)
     {
-        return Ok(await _mediator.Send(new ClickQuery(coordinate)));
+        return Ok(/*await _mediator.Send(new ClickQuery(coordinate))*/);
     }
     
     [HttpGet(Name = "Area")]
     [Route($"{{coordinateLeftBottom:{nameof(Point)}, coordinateRightTop:{nameof(Point)}}}")]
     public async Task<IActionResult> GetByArea([FromBody] Point coordinateLeftBottom, [FromBody] Point coordinateRightTop)
     {
-        return Ok(await _mediator.Send(new AreaQuery(coordinateLeftBottom, coordinateRightTop)));
+        return Ok(/*await _mediator.Send(new AreaQuery(coordinateLeftBottom, coordinateRightTop))*/);
     }
 }

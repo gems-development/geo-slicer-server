@@ -22,8 +22,8 @@ namespace ConsoleApp
 {
     class Program
     {
-        private const double EpsilonCoordinateComparator = 1e-8;
-        private const double Epsilon = 1e-15;
+        private const double EpsilonCoordinateComparator = 1e-7;
+        private const double Epsilon = 1e-14;
         static async Task<int> Main(string[] args)
         {
             //Console usage example:
@@ -138,7 +138,9 @@ namespace ConsoleApp
 
         static Polygon ReadPolygonFromGeojsonFile(FileInfo file)
         {
-            return (Polygon)ReadGeometryFromFile<MultiPolygon>(file.FullName)[0];
+            var polygon = (Polygon)ReadGeometryFromFile<MultiPolygon>(file.FullName)[0];
+            polygon.SRID = 0;
+            return polygon;
         }
 
         private static T ReadGeometryFromFile<T>(string path) where T : class
