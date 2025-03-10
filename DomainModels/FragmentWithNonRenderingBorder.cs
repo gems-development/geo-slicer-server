@@ -2,8 +2,8 @@ namespace DomainModels
 {
     public class FragmentWithNonRenderingBorder<TFragmentType, TNonRenderingBorderType>
     {
-        public TFragmentType Fragment { get;  set; }
-        public TNonRenderingBorderType NonRenderingBorder { get;  set; }
+        public TFragmentType Fragment { get;  set; } = default!;
+        public TNonRenderingBorderType NonRenderingBorder { get;  set; } = default!;
 
         public FragmentWithNonRenderingBorder() {}
 
