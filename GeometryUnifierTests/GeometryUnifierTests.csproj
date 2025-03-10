@@ -28,4 +28,10 @@
       <ProjectReference Include="..\DataAccess.Repositories.GeometryUnion\DataAccess.Repositories.GeometryUnion.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="TestFiles\*.geojson">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
