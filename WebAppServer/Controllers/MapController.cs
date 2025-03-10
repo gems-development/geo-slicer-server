@@ -18,15 +18,16 @@ public class MapController : ControllerBase
     }
 
     [HttpGet(Name = "Click")]
-    [Route($"{{coordinate:{nameof(Coordinate)}}}")]
-    public async Task<IActionResult> GetByClick([FromBody] Coordinate coordinate)
+    [Route($"{{coordinate:{nameof(Point)}}}")]
+    public async Task<IActionResult> GetByClick([FromBody] Point coordinate)
     {
-        return Ok(await _mediator.Send(coordinate));
+        return Ok(await _mediator.Send(new ClickQuery(coordinate)));
     }
     
     [HttpGet(Name = "Area")]
-    public async Task<IActionResult> GetByArea()
+    [Route($"{{coordinateLeftBottom:{nameof(Point)}, coordinateRightTop:{nameof(Point)}}}")]
+    public async Task<IActionResult> GetByArea([FromBody] Point coordinateLeftBottom, [FromBody] Point coordinateRightTop)
     {
-        return Ok();
+        return Ok(await _mediator.Send(new AreaQuery(coordinateLeftBottom, coordinateRightTop)));
     }
 }
