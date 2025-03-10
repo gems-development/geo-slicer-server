@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
-      <ProjectReference Include="..\DataAccess.Repositories.GeometryUnion\DataAccess.Repositories.GeometryUnion.csproj" />
     </ItemGroup>
 
 </Project>
