@@ -6,14 +6,14 @@ namespace WebAppUseCases.Services;
 
 public class AreaService<TGeometry> : IAreaService<TGeometry> where TGeometry : Geometry
 {
-    private IGeometryRepository<TGeometry> _geometryRepository;
+    private readonly IGeometryRepository<TGeometry> _geometryRepository;
 
     public AreaService(IGeometryRepository<TGeometry> geometryRepository)
     {
         _geometryRepository = geometryRepository;
     }
 
-    public Task<TGeometry> GetGeometryByRectangle(Point pointLeftBottom, Point pointRightTop)
+    public Task<TGeometry> GetGeometryByRectangle(Point pointLeftBottom, Point pointRightTop, CancellationToken cancellationToken)
     {
         Coordinate coordinateLeftTop = new Coordinate(pointLeftBottom.X, pointRightTop.Y);
         Coordinate coordinateRightBottom = new Coordinate(pointRightTop.X, pointLeftBottom.Y);
@@ -26,6 +26,6 @@ public class AreaService<TGeometry> : IAreaService<TGeometry> where TGeometry : 
             pointLeftBottom.Coordinate
         });
         
-        return _geometryRepository.GetGeometryByLinearRing(ring);
+        return _geometryRepository.GetGeometryByLinearRing(ring, cancellationToken);
     }
 }

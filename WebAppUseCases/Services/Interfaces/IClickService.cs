@@ -4,5 +4,5 @@ namespace WebAppUseCases.Services.Interfaces;
 
 public interface IClickService<TInfo>
 {
-    Task<IEnumerable<TInfo>> GetInfoByClick(Point point);
+    Task<IEnumerable<TInfo>> GetInfoByClick(Point point, CancellationToken cancellationToken);
 }

@@ -4,5 +4,5 @@ namespace WebAppUseCases.Repositories.Interfaces;
 
 public interface IGeometryRepository<TGeometry> where TGeometry : Geometry
 {
-    Task<TGeometry> GetGeometryByLinearRing(LinearRing ring);
+    Task<TGeometry> GetGeometryByLinearRing(LinearRing ring, CancellationToken cancellationToken);
 }

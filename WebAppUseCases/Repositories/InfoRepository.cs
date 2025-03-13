@@ -14,12 +14,12 @@ public class InfoRepository : IInfoRepository<string>
         _geometryDbContext = geometryDbContext;
     }
 
-    public async Task<IEnumerable<string>> GetInfoByClick(Point point)
+    public async Task<IEnumerable<string>> GetInfoByClick(Point point, CancellationToken cancellationToken)
     {
         var res = await _geometryDbContext.GeometryFragments
             .Where(g => g.Fragment.Intersects(point))
             .Select(g => g.GeometryOriginalId)
-            .ToHashSetAsync();
+            .ToHashSetAsync(cancellationToken: cancellationToken);
         return res.Select(g => g.ToString()).AsEnumerable();
     }
 }

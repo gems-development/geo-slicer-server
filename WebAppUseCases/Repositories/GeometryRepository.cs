@@ -14,12 +14,12 @@ public class GeometryRepository : IGeometryRepository<Geometry>
         _geometryDbContext = geometryDbContext;
     }
     
-    public async Task<Geometry> GetGeometryByLinearRing(LinearRing ring)
+    public async Task<Geometry> GetGeometryByLinearRing(LinearRing ring, CancellationToken cancellationToken)
     {
         var res = await _geometryDbContext.GeometryOriginals
             .Where(g => g.Data.Intersects(ring))
             .Select(g => g.Data.Intersection(ring))
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: cancellationToken);
         return new GeometryCollection(res);
     }
 }

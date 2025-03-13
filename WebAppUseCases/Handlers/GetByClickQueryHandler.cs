@@ -17,6 +17,6 @@ public class GetByClickQueryHandler : IRequestHandler<GetByClickQuery, IEnumerab
 
     public Task<IEnumerable<string>> Handle(GetByClickQuery request, CancellationToken cancellationToken)
     {
-        return _service.GetInfoByClick(request.Point);
+        return _service.GetInfoByClick(request.Point, cancellationToken);
     }
 }

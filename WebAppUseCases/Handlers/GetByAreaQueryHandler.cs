@@ -17,6 +17,6 @@ public class GetByAreaQueryHandler : IRequestHandler<GetByAreaQuery, MultiPolygo
 
     public Task<MultiPolygon> Handle(GetByAreaQuery request, CancellationToken cancellationToken)
     {
-        return _service.GetGeometryByRectangle(request.PointLeftBottom, request.PointRightTop);
+        return _service.GetGeometryByRectangle(request.PointLeftBottom, request.PointRightTop, cancellationToken);
     }
 }
