@@ -16,6 +16,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
+        <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
     </ItemGroup>
 
@@ -29,6 +30,7 @@
       <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
       <ProjectReference Include="..\WebAppUseCases\WebAppUseCases.csproj" />
+      <ProjectReference Include="..\WebAppUtils\WebAppUtils.csproj" />
     </ItemGroup>
 
 </Project>
