@@ -13,8 +13,19 @@ public class AreaService<TGeometry> : IAreaService<TGeometry> where TGeometry : 
         _geometryRepository = geometryRepository;
     }
 
-    public async Task<TGeometry> GetGeometryByRectangle(Point pointLeftBottom, Point pointRightTop)
+    public Task<TGeometry> GetGeometryByRectangle(Point pointLeftBottom, Point pointRightTop)
     {
-        return await _geometryRepository.GetGeometryByRectangle(pointLeftBottom, pointRightTop);
+        Coordinate coordinateLeftTop = new Coordinate(pointLeftBottom.X, pointRightTop.Y);
+        Coordinate coordinateRightBottom = new Coordinate(pointRightTop.X, pointLeftBottom.Y);
+        LinearRing ring = new LinearRing(new []
+        {
+            pointLeftBottom.Coordinate,
+            coordinateLeftTop,
+            pointRightTop.Coordinate,
+            coordinateRightBottom, 
+            pointLeftBottom.Coordinate
+        });
+        
+        return _geometryRepository.GetGeometryByLinearRing(ring);
     }
 }

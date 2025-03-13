@@ -1,4 +1,5 @@
 using DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using WebAppUseCases.Repositories.Interfaces;
 
@@ -15,6 +16,10 @@ public class InfoRepository : IInfoRepository<string>
 
     public async Task<IEnumerable<string>> GetInfoByClick(Point point)
     {
-        throw new NotImplementedException();
+        var res = await _geometryDbContext.GeometryFragments
+            .Where(g => g.Fragment.Intersects(point))
+            .Select(g => g.GeometryOriginalId)
+            .ToHashSetAsync();
+        return res.Select(g => g.ToString()).AsEnumerable();
     }
 }

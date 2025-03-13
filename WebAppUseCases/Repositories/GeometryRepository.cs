@@ -1,10 +1,11 @@
 using DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using WebAppUseCases.Repositories.Interfaces;
 
 namespace WebAppUseCases.Repositories;
 
-public class GeometryRepository : IGeometryRepository<MultiPolygon>
+public class GeometryRepository : IGeometryRepository<Geometry>
 {
     private GeometryDbContext _geometryDbContext;
 
@@ -13,8 +14,12 @@ public class GeometryRepository : IGeometryRepository<MultiPolygon>
         _geometryDbContext = geometryDbContext;
     }
     
-    public async Task<MultiPolygon> GetGeometryByRectangle(Point pointLeftBottom, Point pointRightTop)
+    public async Task<Geometry> GetGeometryByLinearRing(LinearRing ring)
     {
-        throw new NotImplementedException();
+        var res = await _geometryDbContext.GeometryOriginals
+            .Where(g => g.Data.Intersects(ring))
+            .Select(g => g.Data.Intersection(ring))
+            .ToArrayAsync();
+        return new GeometryCollection(res);
     }
 }
