@@ -7,6 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 
+//make controllers scoped
+//add repos in DC
+//add services in DC
+//move DC filling to different class
 builder.Services.AddControllers();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddEndpointsApiExplorer();

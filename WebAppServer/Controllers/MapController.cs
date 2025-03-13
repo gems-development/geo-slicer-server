@@ -16,17 +16,17 @@ public class MapController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet(Name = "Click")]
-    [Route($"{{coordinate:{nameof(Point)}}}")]
-    public async Task<IActionResult> GetByClick([FromBody] Point coordinate)
+    [HttpGet("Click")]
+    // [Route($"{{coordinate:{nameof(Point)}}}")]
+    public async Task<IActionResult> GetByClick([FromBody] Point coordinate, CancellationToken token)
     {
-        return Ok(await _mediator.Send(new GetByClickQuery(coordinate)));
+        return Ok(await _mediator.Send(new GetByClickQuery(coordinate), token));
     }
     
-    [HttpGet(Name = "Area")]
-    [Route($"{{coordinateLeftBottom:{nameof(Point)}, coordinateRightTop:{nameof(Point)}}}")]
-    public async Task<IActionResult> GetByArea([FromBody] Point coordinateLeftBottom, [FromBody] Point coordinateRightTop)
+    [HttpGet("Area")]
+    // [Route($"{{coordinateLeftBottom:{nameof(Point)}, coordinateRightTop:{nameof(Point)}}}")]
+    public async Task<IActionResult> GetByArea([FromBody](Point coordinateLeftBottom, Point coordinateRightTop) coordinates, CancellationToken token)
     {
-        return Ok(await _mediator.Send(new GetByAreaQuery(coordinateLeftBottom, coordinateRightTop)));
+        return Ok(await _mediator.Send(new GetByAreaQuery(coordinates.coordinateLeftBottom, coordinates.coordinateRightTop), token));
     }
 }

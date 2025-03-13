@@ -6,20 +6,17 @@ using WebAppUseCases.Services;
 
 namespace WebAppUseCases.Handlers;
 
-public class GetByClickQueryHandler : IRequestHandler<GetByClickQuery, IEnumerable<long>>
+public class GetByClickQueryHandler : IRequestHandler<GetByClickQuery, IEnumerable<string>>
 {
-    private readonly GeometryDbContext _context;
-    private readonly ClickService _service;
+    private readonly ClickService<string> _service;
 
-    public GetByClickQueryHandler(GeometryDbContext context)
+    public GetByClickQueryHandler(ClickService<string> service)
     {
-        _context = context;
-        _service = new ClickService();
+        _service = service;
     }
 
-    public Task<IEnumerable<long>> Handle(GetByClickQuery request, CancellationToken cancellationToken)
+    public Task<IEnumerable<string>> Handle(GetByClickQuery request, CancellationToken cancellationToken)
     {
-        return _service
-        throw new NotImplementedException();
+        return _service.GetInfoByClick(request.Point);
     }
 }
