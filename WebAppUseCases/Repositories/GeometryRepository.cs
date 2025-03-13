@@ -22,4 +22,10 @@ public class GeometryRepository : IGeometryRepository<Geometry>
             .ToArrayAsync();
         return new GeometryCollection(res);
     }
+    
+    public Task<Geometry> GetSimplifiedGeometryByLinearRing(LinearRing ring, double tolerance)
+    {
+        return _geometryDbContext.Database.SqlQueryRaw<Geometry>(
+            "SELECT ST_INTERSECTION(ST_SimplifyPreserveTopology(ST_Collect(SELECT f.\"Data\" AS \"Value\" FROM \"GeometryOriginals\" AS f WHERE ST_Intersects(f.\"Data\", {0})), {1})), {0}) AS \"Value\"", ring, tolerance).FirstOrDefaultAsync()!;
+    }
 }
