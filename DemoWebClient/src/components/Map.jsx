@@ -16,6 +16,7 @@ export default function MyMap() {
 
     const mapContainer = useRef(null);
     const map = useRef(null);
+    const renderScreenRequest = useRef(null);
     const lng = 0;
     const lat = 0;
     const zoom = 5;
@@ -28,27 +29,28 @@ export default function MyMap() {
         let south = bounds.getSouth();
 
 
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://localhost:5148/geometry/byRectangle", false);
+        if (renderScreenRequest.current != null) {
+            renderScreenRequest.current.abort();
+        }
+        renderScreenRequest.current = new XMLHttpRequest();
+        let xhr = renderScreenRequest.current;
+        xhr.open("POST", "http://localhost:5148/geometry/byRectangle", true);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-        xhr.send(JSON.stringify([west, east, south, north]));
-        map.current.getSource("main").setData(JSON.parse(xhr.response));
+        xhr.send(JSON.stringify([west, south, east, north]));
+        xhr.onload = function() {
+            map.current.getSource("main").setData(JSON.parse(xhr.response));
+        };
+        
     }
 
     function showInfo(e) {
-        // Считаем пересечение по прямоугольнику, в 100 раз меньше экрана
-        const rectangeScaleMultiplier = 0.01;
-        let bounds = map.current.getBounds();
-        let dx = (bounds.getEast() - bounds.getWest()) * rectangeScaleMultiplier;
-        let dy = (bounds.getNorth() - bounds.getSouth()) * rectangeScaleMultiplier
-
         let x = e.lngLat.lng;
         let y = e.lngLat.lat;
 
         let xhr = new XMLHttpRequest();
         xhr.open("POST", "http://localhost:5148/geometry/info/byClick", false);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-        xhr.send(JSON.stringify([x - dx, x + dx, y - dy, y + dy]));
+        xhr.send(JSON.stringify([x, y]));
         alert(xhr.response.replace("},{", "},\n{"));
     }
 
