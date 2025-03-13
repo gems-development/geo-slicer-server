@@ -6,20 +6,19 @@ using WebAppUseCases.Services;
 
 namespace WebAppUseCases.Handlers;
 
-public class GetByClickQueryHandler : IRequestHandler<GetByClickQuery, IEnumerable<long>>
+public class GetByAreaQueryHandler : IRequestHandler<GetByAreaQuery, IEnumerable<MultiPolygon>>
 {
     private readonly GeometryDbContext _context;
     private readonly ClickService _service;
 
-    public GetByClickQueryHandler(GeometryDbContext context)
+    public GetByAreaQueryHandler(GeometryDbContext context, ClickService service)
     {
         _context = context;
-        _service = new ClickService();
+        _service = service;
     }
 
-    public Task<IEnumerable<long>> Handle(GetByClickQuery request, CancellationToken cancellationToken)
+    public Task<IEnumerable<MultiPolygon>> Handle(GetByAreaQuery request, CancellationToken cancellationToken)
     {
-        return _service
         throw new NotImplementedException();
     }
 }

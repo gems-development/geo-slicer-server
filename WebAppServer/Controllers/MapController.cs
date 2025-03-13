@@ -2,6 +2,7 @@ using DataAccess.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
+using WebAppUseCases.Requests;
 
 namespace WebAppServer.Controllers;
 
@@ -9,11 +10,9 @@ namespace WebAppServer.Controllers;
 [Route("[controller]")]
 public class MapController : ControllerBase
 {
-    private readonly GeometryDbContext _context;
     private readonly Mediator _mediator;
-    public MapController(GeometryDbContext context, Mediator mediator)
+    public MapController(Mediator mediator)
     {
-        _context = context;
         _mediator = mediator;
     }
 
@@ -21,13 +20,13 @@ public class MapController : ControllerBase
     [Route($"{{coordinate:{nameof(Point)}}}")]
     public async Task<IActionResult> GetByClick([FromBody] Point coordinate)
     {
-        return Ok(/*await _mediator.Send(new ClickQuery(coordinate))*/);
+        return Ok(await _mediator.Send(new GetByClickQuery(coordinate)));
     }
     
     [HttpGet(Name = "Area")]
     [Route($"{{coordinateLeftBottom:{nameof(Point)}, coordinateRightTop:{nameof(Point)}}}")]
     public async Task<IActionResult> GetByArea([FromBody] Point coordinateLeftBottom, [FromBody] Point coordinateRightTop)
     {
-        return Ok(/*await _mediator.Send(new AreaQuery(coordinateLeftBottom, coordinateRightTop))*/);
+        return Ok(await _mediator.Send(new GetByAreaQuery(coordinateLeftBottom, coordinateRightTop)));
     }
 }

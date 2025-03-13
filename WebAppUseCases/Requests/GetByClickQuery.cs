@@ -1,6 +1,6 @@
+using MediatR;
+using NetTopologySuite.Geometries;
+
 namespace WebAppUseCases.Requests;
 
-public class GetByClickQuery
-{
-    
-}
+public record GetByClickQuery(Point Point) : IRequest<IEnumerable<long>>;
