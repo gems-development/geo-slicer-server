@@ -4,7 +4,7 @@ using WebAppUseCases.Repositories.Interfaces;
 
 namespace WebAppUseCases.Repositories;
 
-public class GeometryRepository<TGeometry> : IGeometryRepository<TGeometry> where TGeometry : Geometry
+public class GeometryRepository : IGeometryRepository<MultiPolygon>
 {
     private GeometryDbContext _geometryDbContext;
 
@@ -13,7 +13,7 @@ public class GeometryRepository<TGeometry> : IGeometryRepository<TGeometry> wher
         _geometryDbContext = geometryDbContext;
     }
     
-    public async Task<TGeometry> GetGeometryByRectangle(Point pointLeftBottom, Point pointRightTop)
+    public async Task<MultiPolygon> GetGeometryByRectangle(Point pointLeftBottom, Point pointRightTop)
     {
         throw new NotImplementedException();
     }

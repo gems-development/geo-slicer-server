@@ -4,7 +4,7 @@ using WebAppUseCases.Repositories.Interfaces;
 
 namespace WebAppUseCases.Repositories;
 
-public class InfoRepository<TInfo> : IInfoRepository<TInfo>
+public class InfoRepository : IInfoRepository<string>
 {
     private GeometryDbContext _geometryDbContext;
 
@@ -13,7 +13,7 @@ public class InfoRepository<TInfo> : IInfoRepository<TInfo>
         _geometryDbContext = geometryDbContext;
     }
 
-    public async Task<IEnumerable<TInfo>> GetInfoByClick(Point point)
+    public async Task<IEnumerable<string>> GetInfoByClick(Point point)
     {
         throw new NotImplementedException();
     }
