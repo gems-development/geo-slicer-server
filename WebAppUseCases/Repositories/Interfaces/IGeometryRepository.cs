@@ -4,5 +4,5 @@ namespace WebAppUseCases.Repositories.Interfaces;
 
 public interface IGeometryRepository<TGeometry> where TGeometry : Geometry
 {
-    Task<TGeometry> GetGeometryByRectangle(Point pointLeftBottom, Point pointRightTop);
+    Task<TGeometry> GetGeometryByLinearRing(LinearRing ring);
 }

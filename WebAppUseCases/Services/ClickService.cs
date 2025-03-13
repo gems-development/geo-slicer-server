@@ -13,8 +13,8 @@ public class ClickService<TInfo> : IClickService<TInfo>
         _repository = repository;
     }
 
-    public async Task<IEnumerable<TInfo>> GetInfoByClick(Point point)
+    public Task<IEnumerable<TInfo>> GetInfoByClick(Point point)
     {
-        return await _repository.GetInfoByClick(point);
+        return _repository.GetInfoByClick(point);
     }
 }
