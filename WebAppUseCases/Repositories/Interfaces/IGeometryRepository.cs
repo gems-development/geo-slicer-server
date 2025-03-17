@@ -4,5 +4,6 @@ namespace WebAppUseCases.Repositories.Interfaces;
 
 public interface IGeometryRepository<TGeometry> where TGeometry : Geometry
 {
-    Task<TGeometry> GetGeometryByLinearRing(LinearRing ring);
+    Task<TGeometry> GetGeometryByPolygon(Polygon ring);
+    Task<TGeometry> GetSimplifiedGeometryByPolygon(Polygon polygon, double tolerance);
 }

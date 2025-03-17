@@ -26,11 +26,13 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ConsoleApp.Controllers\ConsoleApp.Controllers.csproj" />
+      <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
       <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp.Interfaces\DataAccess.Repositories.ConsoleApp.Interfaces.csproj" />
       <ProjectReference Include="..\GeoSlicer.Config\GeoSlicer.Config.csproj" />
       <ProjectReference Include="..\Services.Creators.Interfaces\Services.Creators.Interfaces.csproj" />
       <ProjectReference Include="..\Services.Fixers\Services.Fixers.csproj" />
       <ProjectReference Include="..\Services.Validators\Services.Validators.csproj" />
+      <ProjectReference Include="..\WebAppUseCases\WebAppUseCases.csproj" />
     </ItemGroup>
 
     <ItemGroup>

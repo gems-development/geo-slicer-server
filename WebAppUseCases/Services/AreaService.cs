@@ -26,6 +26,10 @@ public class AreaService<TGeometry> : IAreaService<TGeometry> where TGeometry : 
             pointLeftBottom.Coordinate
         });
         
-        return _geometryRepository.GetGeometryByLinearRing(ring);
+        Polygon polygon = new Polygon(ring);
+        
+        double rectangleLength = pointRightTop.X - pointLeftBottom.X;
+        
+        return _geometryRepository.GetGeometryByPolygon(polygon);
     }
 }
