@@ -36,7 +36,7 @@ export default function MyMap() {
         let xhr = renderScreenRequest.current;
         xhr.open("POST", "http://localhost:5148/geometry/byRectangle", true);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-        xhr.send(JSON.stringify([west, south, east, north]));
+        xhr.send(JSON.stringify([{"x": west, "y": south}, {"x": east, "y": north}]));
         xhr.onload = function() {
             map.current.getSource("main").setData(JSON.parse(xhr.response));
         };
@@ -50,7 +50,7 @@ export default function MyMap() {
         let xhr = new XMLHttpRequest();
         xhr.open("POST", "http://localhost:5148/geometry/info/byClick", false);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-        xhr.send(JSON.stringify([x, y]));
+        xhr.send(JSON.stringify({"x": x, "y": y}));
         alert(xhr.response.replace("},{", "},\n{"));
     }
 
