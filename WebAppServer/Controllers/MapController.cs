@@ -11,21 +11,23 @@ namespace WebAppServer.Controllers;
 [Route("[controller]")]
 public class MapController : ControllerBase
 {
-    private readonly Mediator _mediator;
-    public MapController(Mediator mediator)
+    private readonly IMediator _mediator;
+    public MapController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [HttpGet("Click")]
+    [HttpPost("Click")]
     public async Task<IActionResult> GetByClick([FromBody] PointDecor coordinate, CancellationToken token)
     {
+        return Ok(coordinate.X + " " + coordinate.Y);
         return Ok(await _mediator.Send(new GetByClickQuery(coordinate), token));
     }
     
-    [HttpGet("Area")]
-    public async Task<IActionResult> GetByArea([FromBody](PointDecor coordinateLeftBottom, PointDecor coordinateRightTop) coordinates, CancellationToken token)
+    [HttpPost("Area")]
+    public async Task<IActionResult> GetByArea([FromBody]PointDecor[] coordinates, CancellationToken token)
     {
-        return Ok(await _mediator.Send(new GetByAreaQuery(coordinates.coordinateLeftBottom, coordinates.coordinateRightTop), token));
+        return Ok(coordinates[0].X + " " + coordinates[0].Y + "|" + coordinates[1].X + " " + coordinates[1].Y);
+        return Ok(await _mediator.Send(new GetByAreaQuery(coordinates[0], coordinates[1]), token));
     }
 }
