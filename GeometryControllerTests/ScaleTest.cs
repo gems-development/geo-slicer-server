@@ -1,4 +1,5 @@
 using DataAccess.PostgreSql;
+using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using WebAppUseCases.Repositories;
@@ -44,5 +45,23 @@ public class ScaleTest
         string geoJson = File.ReadAllText(path);
         var geometry = new GeoJsonReader().Read<T>(geoJson);
         return geometry;
+    }
+
+    [Fact]
+    public void ParseKazan()
+    {
+        var featureCollection = ReadGeometryFromFile<FeatureCollection>("TestFiles\\kazan.geojson");
+        var polygons = featureCollection
+            .Select(a => (MultiPolygon) a.Geometry)
+            .First()
+            .Geometries
+            .Select(b => (Polygon) b)
+            .ToList();
+        var geoJsonWriter = new GeoJsonWriter();
+        for (int i = 0; i < polygons.Count; i++)
+        {
+            String polygonJson = geoJsonWriter.Write(polygons[i]);
+            File.WriteAllText($"parseKazan\\kazan{i}.geojson", polygonJson);
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using GeoSlicer.Utils.Intersectors.CoordinateComparators;
 using GeoSlicer.Utils.Validators;
 using NetTopologySuite.Geometries;
@@ -31,6 +32,7 @@ namespace Services.Validators
             {
                 if (!repeatingPointsValidator.IsValid(hole))
                 {
+                    Console.WriteLine(repeatingPointsValidator.GetErrorsString(hole));
                     return GeometryValidateError.GeometryHasRepeatingPoints;
                 }
             }
