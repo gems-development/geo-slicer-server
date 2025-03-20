@@ -1,21 +1,20 @@
-using DataAccess.Interfaces;
 using MediatR;
 using NetTopologySuite.Geometries;
 using WebAppUseCases.Requests;
-using WebAppUseCases.Services;
+using WebAppUseCases.Services.Interfaces;
 
 namespace WebAppUseCases.Handlers;
 
-public class GetByAreaQueryHandler : IRequestHandler<GetByAreaQuery, MultiPolygon>
+public class GetByAreaQueryHandler : IRequestHandler<GetByAreaQuery, Geometry>
 {
-    private readonly AreaService<MultiPolygon> _service;
+    private readonly IAreaService<Geometry> _service;
 
-    public GetByAreaQueryHandler(AreaService<MultiPolygon> service)
+    public GetByAreaQueryHandler(IAreaService<Geometry> service)
     {
         _service = service;
     }
 
-    public Task<MultiPolygon> Handle(GetByAreaQuery request, CancellationToken cancellationToken)
+    public Task<Geometry> Handle(GetByAreaQuery request, CancellationToken cancellationToken)
     {
         return _service.GetGeometryByRectangle(request.PointLeftBottom, request.PointRightTop, cancellationToken);
     }

@@ -1,9 +1,11 @@
+using System.Reflection;
 using DataAccess.Interfaces;
 using DataAccess.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
+using WebAppUseCases.Handlers;
 using WebAppUseCases.Repositories;
 using WebAppUseCases.Repositories.Interfaces;
 using WebAppUseCases.Services;
@@ -15,6 +17,7 @@ public static class DependencyContainerFiller
 {
     public static void Fill(ref WebApplicationBuilder builder, IConfigurationRoot configuration)
     {
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(GetByAreaQueryHandler)));
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddSingleton<GeometryDbContext>(_ => new PostgreApplicationContext(connectionString!));
         builder.Services.AddSingleton<IInfoRepository<string>, InfoRepository>();
