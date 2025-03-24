@@ -1,8 +1,8 @@
 using NetTopologySuite.Geometries;
-using WebAppUseCases.Repositories.Interfaces;
-using WebAppUseCases.Services.Interfaces;
+using WebApp.UseCases.Repositories.Interfaces;
+using WebApp.UseCases.Services.Interfaces;
 
-namespace WebAppUseCases.Services;
+namespace WebApp.UseCases.Services;
 
 public class ClickService<TInfo> : IClickService<TInfo>
 {

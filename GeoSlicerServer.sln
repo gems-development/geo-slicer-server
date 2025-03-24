@@ -58,9 +58,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoSlicer.Config", "GeoSlic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C7D0D336-06F7-41A4-A763-B3070F975683}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppServer", "WebAppServer\WebAppServer.csproj", "{E7663F3E-F1A1-462B-84AB-C043F65304C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.Server", "WebApp.Server\WebApp.Server.csproj", "{E7663F3E-F1A1-462B-84AB-C043F65304C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppUseCases", "WebAppUseCases\WebAppUseCases.csproj", "{A19A2A85-54FC-4A56-B333-52F75F2AA855}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.UseCases", "WebApp.UseCases\WebApp.UseCases.csproj", "{A19A2A85-54FC-4A56-B333-52F75F2AA855}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConsoleApp", "ConsoleApp", "{AF321874-3F7C-43E1-BBAE-DF926ED1C9D7}"
 EndProject
@@ -72,7 +72,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "Benchmarks\Be
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApp", "WebApp", "{BD550E80-D8BD-40F0-9E35-803302E8FA6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppUtils", "WebAppUtils\WebAppUtils.csproj", "{38141E71-77A4-4556-A18C-DEC2998C83F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.Utils", "WebApp.Utils\WebApp.Utils.csproj", "{38141E71-77A4-4556-A18C-DEC2998C83F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,6 @@
 using NetTopologySuite.Geometries;
 
-namespace WebAppUseCases.Services.Interfaces;
+namespace WebApp.UseCases.Services.Interfaces;
 
 public interface IAreaService<TGeometry> where TGeometry : Geometry
 {

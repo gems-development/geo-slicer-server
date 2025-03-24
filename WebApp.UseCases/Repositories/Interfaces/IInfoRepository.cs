@@ -1,6 +1,6 @@
 using NetTopologySuite.Geometries;
 
-namespace WebAppUseCases.Repositories.Interfaces;
+namespace WebApp.UseCases.Repositories.Interfaces;
 
 public interface IInfoRepository<TInfo>
 {

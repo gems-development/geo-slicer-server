@@ -32,7 +32,7 @@
       <ProjectReference Include="..\Services.Creators.Interfaces\Services.Creators.Interfaces.csproj" />
       <ProjectReference Include="..\Services.Fixers\Services.Fixers.csproj" />
       <ProjectReference Include="..\Services.Validators\Services.Validators.csproj" />
-      <ProjectReference Include="..\WebAppUseCases\WebAppUseCases.csproj" />
+      <ProjectReference Include="..\WebApp.UseCases\WebApp.UseCases.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,9 +1,9 @@
 using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
-using WebAppUseCases.Repositories.Interfaces;
+using WebApp.UseCases.Repositories.Interfaces;
 
-namespace WebAppUseCases.Repositories;
+namespace WebApp.UseCases.Repositories;
 
 public class InfoRepository : IInfoRepository<string>
 {

@@ -1,8 +1,8 @@
 using NetTopologySuite.Geometries;
-using WebAppUseCases.Repositories.Interfaces;
-using WebAppUseCases.Services.Interfaces;
+using WebApp.UseCases.Repositories.Interfaces;
+using WebApp.UseCases.Services.Interfaces;
 
-namespace WebAppUseCases.Services;
+namespace WebApp.UseCases.Services;
 
 public class AreaService<TGeometry> : IAreaService<TGeometry> where TGeometry : Geometry
 {
@@ -30,6 +30,6 @@ public class AreaService<TGeometry> : IAreaService<TGeometry> where TGeometry : 
         
         double rectangleLength = pointRightTop.X - pointLeftBottom.X;
         
-        return _geometryRepository.GetGeometryByPolygon(polygon);
+        return _geometryRepository.GetGeometryByPolygonLinq(polygon);
     }
 }

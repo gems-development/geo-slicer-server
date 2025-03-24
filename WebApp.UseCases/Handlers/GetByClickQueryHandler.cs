@@ -1,10 +1,10 @@
 using DataAccess.Interfaces;
 using MediatR;
 using NetTopologySuite.Geometries;
-using WebAppUseCases.Requests;
-using WebAppUseCases.Services;
+using WebApp.UseCases.Requests;
+using WebApp.UseCases.Services;
 
-namespace WebAppUseCases.Handlers;
+namespace WebApp.UseCases.Handlers;
 
 public class GetByClickQueryHandler : IRequestHandler<GetByClickQuery, IEnumerable<string>>
 {

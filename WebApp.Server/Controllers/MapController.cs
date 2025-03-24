@@ -2,10 +2,10 @@ using DataAccess.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
-using WebAppUseCases.Requests;
-using WebAppUtils;
+using WebApp.UseCases.Requests;
+using WebApp.Utils;
 
-namespace WebAppServer.Controllers;
+namespace WebApp.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]

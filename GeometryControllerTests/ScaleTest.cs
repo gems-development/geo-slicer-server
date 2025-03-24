@@ -2,7 +2,7 @@ using DataAccess.PostgreSql;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
-using WebAppUseCases.Repositories;
+using WebApp.UseCases.Repositories;
 
 namespace GeometryControllerTests;
 
