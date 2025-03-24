@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAppUseCases.Requests;
@@ -18,14 +19,12 @@ public class MapController : ControllerBase
     [HttpPost("byClick")]
     public async Task<IActionResult> GetByClick([FromBody] PointDto coordinate, CancellationToken token)
     {
-        // return Ok(coordinate.X + " " + coordinate.Y);
         return Ok(await _mediator.Send(new GetByClickQuery(coordinate.CreatePoint()), token));
     }
     
     [HttpPost("byRectangle")]
-    public async Task<IActionResult> GetByArea([FromBody]PointDto[] coordinates, CancellationToken token)
+    public async Task<IActionResult> GetByArea([FromBody][Length(2, 2)] PointDto[] coordinates, CancellationToken token)
     {
-        // return Ok(coordinates[0].X + " " + coordinates[0].Y + "|" + coordinates[1].X + " " + coordinates[1].Y);
         return Ok(await _mediator.Send(new GetByAreaQuery(coordinates[0].CreatePoint(), coordinates[1].CreatePoint()), token));
     }
 }

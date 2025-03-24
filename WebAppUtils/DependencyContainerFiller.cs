@@ -1,4 +1,3 @@
-using System.Reflection;
 using DataAccess.Interfaces;
 using DataAccess.PostgreSql;
 using Microsoft.AspNetCore.Builder;

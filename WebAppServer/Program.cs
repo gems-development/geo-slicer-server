@@ -1,23 +1,28 @@
 using WebAppUtils;
+using WebAppUtils.ExceptionHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
 
-//add exception handler
-//OperationCanceledException
+builder.Services.AddExceptionHandler<OperationCanceledExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
     options.AddPolicy(
-        "default", 
+        "default",
         policyBuilder => policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
     ));
 
 DependencyContainerFiller.Fill(ref builder, configuration);
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
