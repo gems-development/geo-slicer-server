@@ -138,7 +138,7 @@ namespace ConsoleApp
 
         static Polygon ReadPolygonFromGeojsonFile(FileInfo file)
         {
-            var polygon = (Polygon)ReadGeometryFromFile<Polygon>(file.FullName);
+            var polygon = (Polygon)ReadGeometryFromFile<MultiPolygon>(file.FullName).Geometries[0];
             polygon.SRID = 0;
             return polygon;
         }

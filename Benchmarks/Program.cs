@@ -20,7 +20,8 @@ namespace Benchmarks
             //BenchmarkRunner.Run<GeometryUnifierBench>(config);
             //BenchmarkRunner.Run<GeometryInnerClickBench>(config);
             //BenchmarkRunner.Run<GeometryOuterClickBench>(config);
-            BenchmarkRunner.Run<GeometryRepositoryBench>(config);
+            BenchmarkRunner.Run<SearchGeometryIntersectsScreenBench>(config);
+            //BenchmarkRunner.Run<GetGeometryIntersectionScreenBench>(config);
         }
     }
 }

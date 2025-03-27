@@ -23,15 +23,6 @@ public class GeometryRepository : IGeometryRepository<Geometry>
         return new GeometryCollection(res);
     }
 
-    public Task<Geometry> GetGeometryByPolygonEnumerateFragments(Polygon polygon)
-    {
-        string sql = @"SELECT get_intersecting_geometry_by_search_fragments({0}) AS ""Value""";
-        
-        return _geometryDbContext.Database
-            .SqlQueryRaw<Geometry>(sql, polygon)
-            .FirstAsync();
-    }
-
     public Task<Geometry> GetSimplifiedGeometryByPolygon(Polygon polygon, double tolerance)
     {
         return _geometryDbContext.Database.SqlQueryRaw<Geometry>(
