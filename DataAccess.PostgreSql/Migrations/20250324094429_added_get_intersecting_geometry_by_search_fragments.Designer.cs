@@ -2,6 +2,7 @@
 using DataAccess.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.PostgreSql.Migrations
 {
     [DbContext(typeof(PostgreApplicationContext))]
-    partial class PostgreApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250324094429_added_get_intersecting_geometry_by_search_fragments")]
+    partial class added_get_intersecting_geometry_by_search_fragments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

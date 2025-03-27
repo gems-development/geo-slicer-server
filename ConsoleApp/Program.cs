@@ -91,7 +91,7 @@ namespace ConsoleApp
                         catch (Exception e)
                         {
                             geometryController.RollbackTransaction();
-                            throw new Exception(o.FullName + ":" + "\n" + e.Message);
+                            throw new Exception(o.FullName + ":" + "\n" + e.Message, e);
                         }
                         Console.WriteLine(o.FullName + ":" + "\n" + errors);
                     }
@@ -126,7 +126,7 @@ namespace ConsoleApp
                     }
                     catch (Exception e)
                     {
-                        throw new Exception(o.FullName + ":" + "\n" + e.Message);
+                        throw new Exception(o.FullName + ":" + "\n" + e.Message, e);
                     }
                     Console.WriteLine(o.FullName + ":" + "\n" + errors);
                 }
@@ -138,7 +138,7 @@ namespace ConsoleApp
 
         static Polygon ReadPolygonFromGeojsonFile(FileInfo file)
         {
-            var polygon = (Polygon)ReadGeometryFromFile<MultiPolygon>(file.FullName)[0];
+            var polygon = (Polygon)ReadGeometryFromFile<MultiPolygon>(file.FullName).Geometries[0];
             polygon.SRID = 0;
             return polygon;
         }

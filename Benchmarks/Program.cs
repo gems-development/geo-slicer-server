@@ -17,9 +17,11 @@ namespace Benchmarks
                 .AddLogger(ConsoleLogger.Default)
                 .AddColumnProvider(DefaultColumnProviders.Instance)
                 .AddColumn(StatisticColumn.Max);
-            BenchmarkRunner.Run<GeometryUnifierBench>(config);
-            BenchmarkRunner.Run<GeometryInnerClickBench>(config);
-            BenchmarkRunner.Run<GeometryOuterClickBench>(config);
+            //BenchmarkRunner.Run<GeometryUnifierBench>(config);
+            //BenchmarkRunner.Run<GeometryInnerClickBench>(config);
+            //BenchmarkRunner.Run<GeometryOuterClickBench>(config);
+            BenchmarkRunner.Run<SearchGeometryIntersectsScreenBench>(config);
+            //BenchmarkRunner.Run<GetGeometryIntersectionScreenBench>(config);
         }
     }
 }

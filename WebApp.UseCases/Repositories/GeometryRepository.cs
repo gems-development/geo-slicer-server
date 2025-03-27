@@ -15,13 +15,30 @@ public class GeometryRepository : IGeometryRepository<Geometry>
         _geometryDbContext = geometryDbContext;
     }
     
-    public async Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByLinearRing(LinearRing ring, CancellationToken cancellationToken)
+    public async Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByPolygonLinq(Polygon polygon, CancellationToken cancellationToken)
     {
         var res = await _geometryDbContext.GeometryOriginals
-            .Where(g => g.Data.Intersects(ring))
-            .Select(g => g.Data.Intersection(ring))
+            .Where(g => g.Data.Intersects(polygon))
+            .Select(g => g.Data.Intersection(polygon))
             .Select(g => new AreaIntersectionDto<Geometry>("NAME", g))
             .ToArrayAsync(cancellationToken: cancellationToken);
         return res;
+    }
+
+    public Task<Geometry> GetSimplifiedGeometryByPolygon(Polygon polygon, double tolerance)
+    {
+        return _geometryDbContext.Database.SqlQueryRaw<Geometry>(
+            @"
+                SELECT 
+                    ST_INTERSECTION(
+                        ST_SimplifyPreserveTopology(
+                            ST_Collect(
+                                (SELECT f.""Data"" FROM ""GeometryOriginals"" AS f WHERE ST_Intersects(f.""Data"", {0}))
+                            ), 
+                            {1}
+                        ), 
+                        {0}
+                    ) AS ""Value""
+                ", polygon, tolerance).FirstOrDefaultAsync()!;
     }
 }
