@@ -2,10 +2,11 @@ using MediatR;
 using NetTopologySuite.Geometries;
 using WebApp.UseCases.Requests;
 using WebApp.UseCases.Services.Interfaces;
+using WebApp.Utils.Dto.Responses;
 
 namespace WebApp.UseCases.Handlers;
 
-public class GetByAreaQueryHandler : IRequestHandler<GetByAreaQuery, Geometry>
+public class GetByAreaQueryHandler : IRequestHandler<GetByAreaQuery, IEnumerable<AreaIntersectionDto<Geometry>>>
 {
     private readonly IAreaService<Geometry> _service;
 
@@ -14,7 +15,7 @@ public class GetByAreaQueryHandler : IRequestHandler<GetByAreaQuery, Geometry>
         _service = service;
     }
 
-    public Task<Geometry> Handle(GetByAreaQuery request, CancellationToken cancellationToken)
+    public Task<IEnumerable<AreaIntersectionDto<Geometry>>> Handle(GetByAreaQuery request, CancellationToken cancellationToken)
     {
         return _service.GetGeometryByRectangle(request.PointLeftBottom, request.PointRightTop, cancellationToken);
     }

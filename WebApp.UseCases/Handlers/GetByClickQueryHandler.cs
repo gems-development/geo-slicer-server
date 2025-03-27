@@ -1,10 +1,11 @@
 using MediatR;
 using WebApp.UseCases.Requests;
 using WebApp.UseCases.Services.Interfaces;
+using WebApp.Utils.Dto.Responses;
 
 namespace WebApp.UseCases.Handlers;
 
-public class GetByClickQueryHandler : IRequestHandler<GetByClickQuery, IEnumerable<string>>
+public class GetByClickQueryHandler : IRequestHandler<GetByClickQuery, IEnumerable<ClickInfoDto<string>>>
 {
     private readonly IClickService<string> _service;
 
@@ -13,7 +14,7 @@ public class GetByClickQueryHandler : IRequestHandler<GetByClickQuery, IEnumerab
         _service = service;
     }
 
-    public Task<IEnumerable<string>> Handle(GetByClickQuery request, CancellationToken cancellationToken)
+    public Task<IEnumerable<ClickInfoDto<string>>> Handle(GetByClickQuery request, CancellationToken cancellationToken)
     {
         return _service.GetInfoByClick(request.Point, cancellationToken);
     }

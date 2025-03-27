@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using NetTopologySuite.Geometries;
 
-namespace WebApp.Utils.Dto;
+namespace WebApp.Utils.Dto.Requests;
 
 public class PointDto
 {

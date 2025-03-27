@@ -1,8 +1,5 @@
 using DataAccess.Interfaces;
 using DataAccess.PostgreSql;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 using WebApp.UseCases.Handlers;
 using WebApp.UseCases.Repositories;
@@ -10,7 +7,7 @@ using WebApp.UseCases.Repositories.Interfaces;
 using WebApp.UseCases.Services;
 using WebApp.UseCases.Services.Interfaces;
 
-namespace WebApp.Utils;
+namespace WebApp.Server;
 
 public static class DependencyContainerFiller
 {
