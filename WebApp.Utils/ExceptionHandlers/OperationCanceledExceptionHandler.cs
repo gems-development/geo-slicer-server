@@ -26,7 +26,7 @@ public class OperationCanceledExceptionHandler : IExceptionHandler
         
         var problemDetails = new ProblemDetails
         {
-            Status = StatusCodes.Status200OK,
+            Status = StatusCodes.Status499ClientClosedRequest,
             Detail = $"Operation was canceled: {exception.Message}"
         };
 
