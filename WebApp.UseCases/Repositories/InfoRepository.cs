@@ -19,7 +19,7 @@ public class InfoRepository : IInfoRepository<string>
     {
         var res = await _geometryDbContext.GeometryFragments
             .Where(g => g.Fragment.Intersects(point))
-            .Select(g => new ClickInfoDto<string>("LayerName", g.GeometryOriginalId.ToString()))
+            .Select(g => new ClickInfoDto<string>("water", "BAIKAL", g.GeometryOriginalId.ToString()))
             .ToArrayAsync(cancellationToken: cancellationToken);
         return res;
     }

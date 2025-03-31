@@ -20,7 +20,7 @@ public class GeometryRepository : IGeometryRepository<Geometry>
         var res = await _geometryDbContext.GeometryOriginals
             .Where(g => g.Data.Intersects(polygon))
             .Select(g => g.Data.Intersection(polygon))
-            .Select(g => new AreaIntersectionDto<Geometry>("NAME", g))
+            .Select(g => new AreaIntersectionDto<Geometry>("water", "BAIKAL", g))
             .ToArrayAsync(cancellationToken: cancellationToken);
         return res;
     }
