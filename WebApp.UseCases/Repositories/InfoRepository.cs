@@ -2,6 +2,7 @@ using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using WebApp.UseCases.Repositories.Interfaces;
+using WebApp.Utils.Dto.Responses;
 
 namespace WebApp.UseCases.Repositories;
 
@@ -14,12 +15,12 @@ public class InfoRepository : IInfoRepository<string>
         _geometryDbContext = geometryDbContext;
     }
 
-    public async Task<IEnumerable<string>> GetInfoByClick(Point point)
+    public async Task<IEnumerable<ClickInfoDto<string>>> GetInfoByClick(Point point, CancellationToken cancellationToken)
     {
         var res = await _geometryDbContext.GeometryFragments
             .Where(g => g.Fragment.Intersects(point))
-            .Select(g => g.GeometryOriginalId)
-            .ToHashSetAsync();
-        return res.Select(g => g.ToString()).AsEnumerable();
+            .Select(g => new ClickInfoDto<string>("water", "BAIKAL", g.GeometryOriginalId.ToString()))
+            .ToArrayAsync(cancellationToken: cancellationToken);
+        return res;
     }
 }

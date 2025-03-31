@@ -1,33 +1,30 @@
-using DataAccess.Interfaces;
+using System.ComponentModel.DataAnnotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using NetTopologySuite.Geometries;
 using WebApp.UseCases.Requests;
-using WebApp.Utils;
+using WebApp.Utils.Dto.Requests;
 
 namespace WebApp.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("geometry")]
 public class MapController : ControllerBase
 {
-    private readonly Mediator _mediator;
-    public MapController(Mediator mediator)
+    private readonly IMediator _mediator;
+    public MapController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [HttpGet("Click")]
-    // [Route($"{{coordinate:{nameof(Point)}}}")]
-    public async Task<IActionResult> GetByClick([FromBody] PointDecor coordinate, CancellationToken token)
+    [HttpPost("byClick")]
+    public async Task<IActionResult> GetByClick([FromBody] PointDto coordinate, CancellationToken token)
     {
-        return Ok(await _mediator.Send(new GetByClickQuery(coordinate), token));
+        return Ok(await _mediator.Send(new GetByClickQuery(coordinate.CreatePoint()), token));
     }
     
-    [HttpGet("Area")]
-    // [Route($"{{coordinateLeftBottom:{nameof(Point)}, coordinateRightTop:{nameof(Point)}}}")]
-    public async Task<IActionResult> GetByArea([FromBody](PointDecor coordinateLeftBottom, PointDecor coordinateRightTop) coordinates, CancellationToken token)
+    [HttpPost("byRectangle")]
+    public async Task<IActionResult> GetByArea([FromBody][Length(2, 2)] PointDto[] coordinates, CancellationToken token)
     {
-        return Ok(await _mediator.Send(new GetByAreaQuery(coordinates.coordinateLeftBottom, coordinates.coordinateRightTop), token));
+        return Ok(await _mediator.Send(new GetByAreaQuery(coordinates[0].CreatePoint(), coordinates[1].CreatePoint()), token));
     }
 }

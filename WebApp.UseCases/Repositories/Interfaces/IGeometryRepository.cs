@@ -1,9 +1,9 @@
 using NetTopologySuite.Geometries;
+using WebApp.Utils.Dto.Responses;
 
 namespace WebApp.UseCases.Repositories.Interfaces;
 
 public interface IGeometryRepository<TGeometry> where TGeometry : Geometry
 {
-    Task<TGeometry> GetGeometryByPolygonLinq(Polygon ring);
-    Task<TGeometry> GetSimplifiedGeometryByPolygon(Polygon polygon, double tolerance);
+    Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByPolygonLinq(Polygon polygon, CancellationToken cancellationToken);
 }

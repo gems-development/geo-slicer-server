@@ -1,36 +1,46 @@
-
-using System.Reflection;
-using DataAccess.Interfaces;
-using DataAccess.PostgreSql;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using NetTopologySuite.IO.Converters;
+using WebApp.Server;
+using WebApp.Utils;
+using WebApp.Utils.ExceptionHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
-var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-//make controllers scoped
-//add repos in DC
-//add services in DC
-//move DC filling to different class
-builder.Services.AddControllers();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+builder.Services.AddExceptionHandler<OperationCanceledExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new GeoJsonConverterFactory());
+        options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
     options.AddPolicy(
-        "default", 
+        "default",
         policyBuilder => policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
     ));
-builder.Services.AddTransient<GeometryDbContext>(_ => new PostgreApplicationContext(connectionString!));
+
+DependencyContainerFiller.Fill(ref builder, configuration);
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-// app.UseHttpsRedirection();
 
 app.UseCors("default");
 
