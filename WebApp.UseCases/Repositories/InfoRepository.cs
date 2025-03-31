@@ -1,8 +1,8 @@
 using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using WebApp.Dto.Responses;
 using WebApp.UseCases.Repositories.Interfaces;
-using WebApp.Utils.Dto.Responses;
 
 namespace WebApp.UseCases.Repositories;
 

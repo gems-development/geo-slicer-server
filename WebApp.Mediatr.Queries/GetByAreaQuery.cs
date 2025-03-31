@@ -1,7 +1,7 @@
 using MediatR;
 using NetTopologySuite.Geometries;
-using WebApp.Utils.Dto.Responses;
+using WebApp.Dto.Responses;
 
-namespace WebApp.UseCases.Requests;
+namespace WebApp.Mediatr.Queries;
 
 public record GetByAreaQuery(Point PointLeftBottom, Point PointRightTop) : IRequest<IEnumerable<AreaIntersectionDto<Geometry>>>;

@@ -1,9 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NetTopologySuite.IO.Converters;
+using WebApp.ExceptionHandlers;
 using WebApp.Server;
-using WebApp.Utils;
-using WebApp.Utils.ExceptionHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();

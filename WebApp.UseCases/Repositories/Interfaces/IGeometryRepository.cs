@@ -1,5 +1,5 @@
 using NetTopologySuite.Geometries;
-using WebApp.Utils.Dto.Responses;
+using WebApp.Dto.Responses;
 
 namespace WebApp.UseCases.Repositories.Interfaces;
 

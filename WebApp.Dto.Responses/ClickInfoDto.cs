@@ -1,4 +1,4 @@
-namespace WebApp.Utils.Dto.Responses;
+namespace WebApp.Dto.Responses;
 
 public class ClickInfoDto<TInfo>
 {

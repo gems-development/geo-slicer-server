@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace WebApp.Utils.ExceptionHandlers;
+namespace WebApp.ExceptionHandlers;
 
 public class OperationCanceledExceptionHandler : IExceptionHandler
 {

@@ -1,11 +1,11 @@
 using DataAccess.Interfaces;
 using DataAccess.PostgreSql;
 using NetTopologySuite.Geometries;
-using WebApp.UseCases.Handlers;
+using WebApp.Mediatr.Handlers;
+using WebApp.UseCases;
 using WebApp.UseCases.Repositories;
 using WebApp.UseCases.Repositories.Interfaces;
-using WebApp.UseCases.Services;
-using WebApp.UseCases.Services.Interfaces;
+using WebApp.UseCases.Interfaces;
 
 namespace WebApp.Server;
 
@@ -18,7 +18,7 @@ public static class DependencyContainerFiller
         builder.Services.AddSingleton<GeometryDbContext>(_ => new PostgreApplicationContext(connectionString!));
         builder.Services.AddSingleton<IInfoRepository<string>, InfoRepository>();
         builder.Services.AddSingleton<IGeometryRepository<Geometry>, GeometryRepository>();
-        builder.Services.AddScoped<IClickService<string>, ClickService<string>>();
-        builder.Services.AddScoped<IAreaService<Geometry>, AreaService<Geometry>>();
+        builder.Services.AddScoped<IClickUseCase<string>, ClickUseCase<string>>();
+        builder.Services.AddScoped<IAreaUseCase<Geometry>, AreaUseCase<Geometry>>();
     }
 }

@@ -30,8 +30,11 @@
     <ItemGroup>
       <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
+      <ProjectReference Include="..\WebApp.Dto.Requests\WebApp.Dto.Requests.csproj" />
+      <ProjectReference Include="..\WebApp.ExceptionHandlers\WebApp.ExceptionHandlers.csproj" />
+      <ProjectReference Include="..\WebApp.Mediatr.Handlers\WebApp.Mediatr.Handlers.csproj" />
+      <ProjectReference Include="..\WebApp.Mediatr.Queries\WebApp.Mediatr.Queries.csproj" />
       <ProjectReference Include="..\WebApp.UseCases\WebApp.UseCases.csproj" />
-      <ProjectReference Include="..\WebApp.Utils\WebApp.Utils.csproj" />
     </ItemGroup>
 
 </Project>

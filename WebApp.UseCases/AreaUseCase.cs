@@ -1,15 +1,15 @@
 using NetTopologySuite.Geometries;
+using WebApp.Dto.Responses;
 using WebApp.UseCases.Repositories.Interfaces;
-using WebApp.UseCases.Services.Interfaces;
-using WebApp.Utils.Dto.Responses;
+using WebApp.UseCases.Interfaces;
 
-namespace WebApp.UseCases.Services;
+namespace WebApp.UseCases;
 
-public class AreaService<TGeometry> : IAreaService<TGeometry> where TGeometry : Geometry
+public class AreaUseCase<TGeometry> : IAreaUseCase<TGeometry> where TGeometry : Geometry
 {
     private readonly IGeometryRepository<TGeometry> _geometryRepository;
 
-    public AreaService(IGeometryRepository<TGeometry> geometryRepository)
+    public AreaUseCase(IGeometryRepository<TGeometry> geometryRepository)
     {
         _geometryRepository = geometryRepository;
     }
