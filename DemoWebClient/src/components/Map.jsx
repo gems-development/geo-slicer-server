@@ -73,7 +73,7 @@ export default function MyMap() {
         let y = e.lngLat.lat;
 
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://localhost:5049/geometry/info/byClick", false);
+        xhr.open("POST", "http://localhost:5049/geometry/byClick", false);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         xhr.send(JSON.stringify({ "x": x, "y": y }));
         alert(xhr.response.replace("},{", "},\n{"));
