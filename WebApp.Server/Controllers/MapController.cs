@@ -19,12 +19,12 @@ public class MapController : ControllerBase
     [HttpPost("byClick")]
     public async Task<IActionResult> GetByClick([FromBody] PointDto coordinate, CancellationToken token)
     {
-        return Ok(await _mediator.Send(new GetByClickQuery(coordinate.CreatePoint()), token));
+        return Ok(await _mediator.Send(new GetByClickQuery(coordinate), token));
     }
     
     [HttpPost("byRectangle")]
     public async Task<IActionResult> GetByArea([FromBody][Length(2, 2)] PointDto[] coordinates, CancellationToken token)
     {
-        return Ok(await _mediator.Send(new GetByAreaQuery(coordinates[0].CreatePoint(), coordinates[1].CreatePoint()), token));
+        return Ok(await _mediator.Send(new GetByAreaQuery(coordinates[0], coordinates[1]), token));
     }
 }

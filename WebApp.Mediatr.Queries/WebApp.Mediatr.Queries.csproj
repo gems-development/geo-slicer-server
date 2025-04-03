@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\WebApp.Dto.Requests\WebApp.Dto.Requests.csproj" />
       <ProjectReference Include="..\WebApp.Dto.Responses\WebApp.Dto.Responses.csproj" />
     </ItemGroup>
 

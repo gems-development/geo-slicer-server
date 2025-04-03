@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\WebApp.Dto.Requests\WebApp.Dto.Requests.csproj" />
       <ProjectReference Include="..\WebApp.Mediatr.Queries\WebApp.Mediatr.Queries.csproj" />
       <ProjectReference Include="..\WebApp.UseCases.Interfaces\WebApp.UseCases.Interfaces.csproj" />
     </ItemGroup>
