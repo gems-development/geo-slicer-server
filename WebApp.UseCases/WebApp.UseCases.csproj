@@ -17,6 +17,7 @@
     <ItemGroup>
       <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
       <ProjectReference Include="..\WebApp.Dto.Responses\WebApp.Dto.Responses.csproj" />
+      <ProjectReference Include="..\WebApp.Services.Interfaces\WebApp.Services.Interfaces.csproj" />
       <ProjectReference Include="..\WebApp.UseCases.Interfaces\WebApp.UseCases.Interfaces.csproj" />
     </ItemGroup>
 

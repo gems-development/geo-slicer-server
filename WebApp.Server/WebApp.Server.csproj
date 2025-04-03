@@ -34,6 +34,7 @@
       <ProjectReference Include="..\WebApp.ExceptionHandlers\WebApp.ExceptionHandlers.csproj" />
       <ProjectReference Include="..\WebApp.Mediatr.Handlers\WebApp.Mediatr.Handlers.csproj" />
       <ProjectReference Include="..\WebApp.Mediatr.Queries\WebApp.Mediatr.Queries.csproj" />
+      <ProjectReference Include="..\WebApp.Services\WebApp.Services.csproj" />
       <ProjectReference Include="..\WebApp.UseCases\WebApp.UseCases.csproj" />
     </ItemGroup>
 
