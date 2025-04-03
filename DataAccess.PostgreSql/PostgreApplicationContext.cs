@@ -8,6 +8,7 @@ namespace DataAccess.PostgreSql
     {
         public override DbSet<GeometryOriginal> GeometryOriginals { get; set; }
         public override DbSet<GeometryFragment> GeometryFragments { get; set; }
+        public override DbSet<Layer> Layers { get; set; }
         private readonly string _connectionString;
 
         public PostgreApplicationContext(string connectionString)
@@ -28,6 +29,10 @@ namespace DataAccess.PostgreSql
             
             modelBuilder.Entity<GeometryFragment>()
                 .HasIndex(g => g.Fragment).HasMethod("GIST");
+            
+            modelBuilder.Entity<Layer>()
+                .HasIndex(l => l.Alias)
+                .IsUnique();
         }
     }
 }

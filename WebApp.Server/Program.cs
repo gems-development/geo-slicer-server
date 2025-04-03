@@ -1,8 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NetTopologySuite.IO.Converters;
+using WebApp.ExceptionHandlers;
 using WebApp.Server;
-using WebApp.Utils.ExceptionHandlers;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

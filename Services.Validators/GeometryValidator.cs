@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using NetTopologySuite.Geometries;
 using Services.ValidateErrors;
 using Services.Validators.Interfaces;
 

@@ -22,14 +22,16 @@ namespace DataAccess.Repositories.ConsoleApp
         {
             _dbContext = dbContext;
         }
-        
+        //todo добавлена заглушка, так как инструмент не учитывает слой и свойства сохраняемой геометрии
         public int Save(GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>> objectToSave)
         {
             try
             {
                 GeometryOriginal geometryOriginal = new GeometryOriginal
                 {
-                    Data = objectToSave.Data
+                    Data = objectToSave.Data,
+                    LayerId = 0,
+                    Properties = ""
                 };
                 _dbContext.GeometryOriginals.Add(geometryOriginal);
 

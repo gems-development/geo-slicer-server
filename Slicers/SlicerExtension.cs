@@ -2,7 +2,6 @@ using DomainModels;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 using Slicers.Interfaces;
-using GeoSlicer.DivideAndRuleSlicers.OppositesSlicer;
 
 namespace Slicers
 {

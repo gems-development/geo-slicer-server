@@ -1,6 +1,3 @@
-using System;
-using DataAccess.Interfaces;
-using DataAccess.PostgreSql;
 using DataAccess.Repositories.ConsoleApp.Interfaces;
 using DomainModels;
 using Microsoft.Extensions.DependencyInjection;

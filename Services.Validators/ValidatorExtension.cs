@@ -1,4 +1,3 @@
-using GeoSlicer.Utils.Intersectors.CoordinateComparators;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 using Services.Validators.Interfaces;

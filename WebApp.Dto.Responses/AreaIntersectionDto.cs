@@ -1,6 +1,6 @@
 using NetTopologySuite.Geometries;
 
-namespace WebApp.Utils.Dto.Responses;
+namespace WebApp.Dto.Responses;
 
 public class AreaIntersectionDto<TGeometry> where TGeometry : Geometry
 {

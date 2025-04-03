@@ -1,15 +1,15 @@
 using NetTopologySuite.Geometries;
+using WebApp.Dto.Responses;
 using WebApp.UseCases.Repositories.Interfaces;
-using WebApp.UseCases.Services.Interfaces;
-using WebApp.Utils.Dto.Responses;
+using WebApp.UseCases.Interfaces;
 
-namespace WebApp.UseCases.Services;
+namespace WebApp.UseCases;
 
-public class ClickService<TInfo> : IClickService<TInfo>
+public class ClickUseCase<TInfo> : IClickUseCase<TInfo>
 {
     private readonly IInfoRepository<TInfo> _repository;
 
-    public ClickService(IInfoRepository<TInfo> repository)
+    public ClickUseCase(IInfoRepository<TInfo> repository)
     {
         _repository = repository;
     }

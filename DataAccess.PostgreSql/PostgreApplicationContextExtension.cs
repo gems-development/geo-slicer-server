@@ -1,6 +1,5 @@
 using DataAccess.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using NetTopologySuite.Geometries;
 
 namespace DataAccess.PostgreSql
 {

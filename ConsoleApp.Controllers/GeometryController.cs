@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using ConsoleApp.Controllers.Helpers;
 using ConsoleApp.Services;
 using DataAccess.Repositories.ConsoleApp.Interfaces;
 using DomainModels;

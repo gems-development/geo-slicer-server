@@ -1,5 +1,4 @@
-﻿using System;
-using GeoSlicer.DivideAndRuleSlicers.OppositesSlicer;
+﻿using GeoSlicer.DivideAndRuleSlicers.OppositesSlicer;
 using GeoSlicer.Utils;
 using GeoSlicer.Utils.Intersectors;
 using GeoSlicer.Utils.Intersectors.CoordinateComparators;

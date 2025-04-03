@@ -1,9 +1,10 @@
 using NetTopologySuite.Geometries;
-using WebApp.Utils.Dto.Responses;
+using WebApp.Dto.Responses;
+using Point = NetTopologySuite.Geometries.Point;
 
-namespace WebApp.UseCases.Services.Interfaces;
+namespace WebApp.UseCases.Interfaces;
 
-public interface IAreaService<TGeometry> where TGeometry : Geometry
+public interface IAreaUseCase<TGeometry> where TGeometry : Geometry
 {
     Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByRectangle(Point pointLeftBottom, Point pointRightTop, CancellationToken cancellationToken);
 }

@@ -2,8 +2,6 @@ using BenchmarkDotNet.Attributes;
 using DataAccess.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
-using WebApp.UseCases.Repositories;
-using WebApp.UseCases.Repositories.Interfaces;
 
 namespace Benchmarks.Benchmarks;
 
