@@ -33,7 +33,7 @@ export default function MyMap() {
         }
         renderScreenRequest.current = new XMLHttpRequest();
         let xhr = renderScreenRequest.current;
-        xhr.open("POST", "http://localhost:5148/geometry/byRectangle", true);
+        xhr.open("POST", "http://localhost:5049/geometry/byRectangle", true);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         xhr.send(JSON.stringify([{ "x": west, "y": south }, { "x": east, "y": north }]));
         xhr.onload = function () {
@@ -55,10 +55,10 @@ export default function MyMap() {
         }
 
         for (const layer of layers) {
-            if (styles[layer.Alias] === undefined) {
-                layer.Alias = "other";
+            if (styles[layer.layerAlias] === undefined) {
+                layer.layerAlias = "other";
             }
-            res[layer.Alias].push({ "type": "Feature", "geometry": layer.Result });
+            res[layer.layerAlias].push({ "type": "Feature", "geometry": layer.Result });
         }
 
         for (const style in styles) {
@@ -73,7 +73,7 @@ export default function MyMap() {
         let y = e.lngLat.lat;
 
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://localhost:5148/geometry/info/byClick", false);
+        xhr.open("POST", "http://localhost:5049/geometry/info/byClick", false);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         xhr.send(JSON.stringify({ "x": x, "y": y }));
         alert(xhr.response.replace("},{", "},\n{"));
