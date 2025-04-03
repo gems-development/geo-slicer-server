@@ -15,7 +15,7 @@ let styles = {
         'fill-color': '#00F',
         'fill-opacity': 0.8
     },
-    "other": {
+    "DefaultLayer": {
         'fill-color': '#000',
         'fill-opacity': 0.5
     }

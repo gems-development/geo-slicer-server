@@ -16,8 +16,8 @@ export default function MyMap() {
     const mapContainer = useRef(null);
     const map = useRef(null);
     const renderScreenRequest = useRef(null);
-    const lng = 0;
-    const lat = 0;
+    const lng = 107.716;
+    const lat = 53.681;
     const zoom = 5;
 
     function renderScreen() {
@@ -56,14 +56,16 @@ export default function MyMap() {
 
         for (const layer of layers) {
             if (styles[layer.layerAlias] === undefined) {
-                layer.layerAlias = "other";
+                layer.layerAlias = "DefaultLayer";
             }
-            res[layer.layerAlias].push({ "type": "Feature", "geometry": layer.Result });
+            res[layer.layerAlias].push({ "type": "Feature", "geometry": layer.result });
         }
 
         for (const style in styles) {
             res[style] = { "type": "FeatureCollection", "features": res[style] }
         }
+
+        console.log(res);
 
         return res;
     }

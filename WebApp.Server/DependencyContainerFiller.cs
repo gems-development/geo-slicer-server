@@ -15,10 +15,10 @@ public static class DependencyContainerFiller
     {
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(GetByAreaQueryHandler)));
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        builder.Services.AddSingleton<GeometryDbContext>(_ => new PostgreApplicationContext(connectionString!));
-        builder.Services.AddSingleton<IGeometryInfoService<string>, GeometryInfoService>();
-        builder.Services.AddSingleton<IGeometryByScreenService<Geometry>, GeometryByScreenService>();
-        builder.Services.AddSingleton<IRectangleToPolygonService, RectangleToPolygonService>();
+        builder.Services.AddScoped<GeometryDbContext>(_ => new PostgreApplicationContext(connectionString!));
+        builder.Services.AddScoped<IGeometryInfoService<string>, GeometryInfoService>();
+        builder.Services.AddScoped<IGeometryByScreenService<Geometry>, GeometryByScreenService>();
+        builder.Services.AddScoped<IRectangleToPolygonService, RectangleToPolygonService>();
         builder.Services.AddScoped<IClickUseCase<string>, ClickUseCase<string>>();
         builder.Services.AddScoped<IAreaUseCase<Geometry>, AreaUseCase<Geometry>>();
     }
