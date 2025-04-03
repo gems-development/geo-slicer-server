@@ -2,15 +2,15 @@ using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using WebApp.Dto.Responses;
-using WebApp.UseCases.Repositories.Interfaces;
+using WebApp.Services.Interfaces;
 
-namespace WebApp.UseCases.Repositories;
+namespace WebApp.Services;
 
-public class InfoRepository : IInfoRepository<string>
+public class GeometryInfoService : IGeometryInfoService<string>
 {
     private GeometryDbContext _geometryDbContext;
 
-    public InfoRepository(GeometryDbContext geometryDbContext)
+    public GeometryInfoService(GeometryDbContext geometryDbContext)
     {
         _geometryDbContext = geometryDbContext;
     }
@@ -19,7 +19,7 @@ public class InfoRepository : IInfoRepository<string>
     {
         var res = await _geometryDbContext.GeometryFragments
             .Where(g => g.Fragment.Intersects(point))
-            .Select(g => new ClickInfoDto<string>("water", "BAIKAL", g.GeometryOriginalId.ToString()))
+            .Select(g => new ClickInfoDto<string>(g.GeometryOriginal.Layer.Alias, g.GeometryOriginal.Properties, g.GeometryOriginalId.ToString()))
             .ToArrayAsync(cancellationToken: cancellationToken);
         return res;
     }

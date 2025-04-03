@@ -2,30 +2,31 @@ using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using WebApp.Dto.Responses;
-using WebApp.UseCases.Repositories.Interfaces;
+using WebApp.Services.Interfaces;
 
-namespace WebApp.UseCases.Repositories;
+namespace WebApp.Services;
 
-public class GeometryRepository : IGeometryRepository<Geometry>
+public class GeometryByScreenService : IGeometryByScreenService<Geometry>
 {
     private GeometryDbContext _geometryDbContext;
 
-    public GeometryRepository(GeometryDbContext geometryDbContext)
+    public GeometryByScreenService(GeometryDbContext geometryDbContext)
     {
         _geometryDbContext = geometryDbContext;
     }
     
-    public async Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByPolygonLinq(Polygon polygon, CancellationToken cancellationToken)
+    public async Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByScreen(Polygon screen, CancellationToken cancellationToken)
     {
         var res = await _geometryDbContext.GeometryOriginals
-            .Where(g => g.Data.Intersects(polygon))
-            .Select(g => g.Data.Intersection(polygon))
-            .Select(g => new AreaIntersectionDto<Geometry>("water", "BAIKAL", g))
+            .Where(g => g.Data.Intersects(screen))
+            .Select(g => 
+                new AreaIntersectionDto<Geometry>(
+                    g.Layer.Alias, g.Properties, g.Data.Intersection(screen)))
             .ToArrayAsync(cancellationToken: cancellationToken);
         return res;
     }
 
-    public Task<Geometry> GetSimplifiedGeometryByPolygon(Polygon polygon, double tolerance)
+    private Task<Geometry> GetSimplifiedGeometryByPolygon(Polygon polygon, double tolerance)
     {
         return _geometryDbContext.Database.SqlQueryRaw<Geometry>(
             @"

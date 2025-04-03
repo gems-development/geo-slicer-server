@@ -1,21 +1,21 @@
 using NetTopologySuite.Geometries;
 using WebApp.Dto.Responses;
-using WebApp.UseCases.Repositories.Interfaces;
+using WebApp.Services.Interfaces;
 using WebApp.UseCases.Interfaces;
 
 namespace WebApp.UseCases;
 
 public class ClickUseCase<TInfo> : IClickUseCase<TInfo>
 {
-    private readonly IInfoRepository<TInfo> _repository;
+    private readonly IGeometryInfoService<TInfo> _service;
 
-    public ClickUseCase(IInfoRepository<TInfo> repository)
+    public ClickUseCase(IGeometryInfoService<TInfo> service)
     {
-        _repository = repository;
+        _service = service;
     }
 
     public Task<IEnumerable<ClickInfoDto<TInfo>>> GetInfoByClick(Point point, CancellationToken cancellationToken)
     {
-        return _repository.GetInfoByClick(point, cancellationToken);
+        return _service.GetInfoByClick(point, cancellationToken);
     }
 }

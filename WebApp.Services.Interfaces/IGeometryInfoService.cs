@@ -1,9 +1,9 @@
 using NetTopologySuite.Geometries;
 using WebApp.Dto.Responses;
 
-namespace WebApp.UseCases.Repositories.Interfaces;
+namespace WebApp.Services.Interfaces;
 
-public interface IInfoRepository<TInfo>
+public interface IGeometryInfoService<TInfo>
 {
     Task<IEnumerable<ClickInfoDto<TInfo>>> GetInfoByClick(Point point, CancellationToken cancellationToken);
 }

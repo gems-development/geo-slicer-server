@@ -17,6 +17,6 @@ public class GetByAreaQueryHandler : IRequestHandler<GetByAreaQuery, IEnumerable
 
     public Task<IEnumerable<AreaIntersectionDto<Geometry>>> Handle(GetByAreaQuery request, CancellationToken cancellationToken)
     {
-        return _useCase.GetGeometryByRectangle(request.PointLeftBottom, request.PointRightTop, cancellationToken);
+        return _useCase.GetGeometryByScreen(request.PointLeftBottom, request.PointRightTop, cancellationToken);
     }
 }
