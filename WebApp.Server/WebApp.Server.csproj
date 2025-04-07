@@ -29,16 +29,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\UseCases.Interfaces\UseCases.Interfaces.csproj" />
+      <ProjectReference Include="..\UseCases\UseCases.csproj" />
       <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
       <ProjectReference Include="..\WebApp.Dto.Requests\WebApp.Dto.Requests.csproj" />
-      <ProjectReference Include="..\WebApp.ExceptionHandlers\WebApp.ExceptionHandlers.csproj" />
-      <ProjectReference Include="..\WebApp.Mediatr.Handlers\WebApp.Mediatr.Handlers.csproj" />
-      <ProjectReference Include="..\WebApp.Mediatr.Queries\WebApp.Mediatr.Queries.csproj" />
-      <ProjectReference Include="..\WebApp.Services.Interfaces\WebApp.Services.Interfaces.csproj" />
-      <ProjectReference Include="..\WebApp.Services\WebApp.Services.csproj" />
-      <ProjectReference Include="..\WebApp.UseCases.Interfaces\WebApp.UseCases.Interfaces.csproj" />
-      <ProjectReference Include="..\WebApp.UseCases\WebApp.UseCases.csproj" />
+      <ProjectReference Include="..\Mediatr.Handlers\Mediatr.Handlers.csproj" />
+      <ProjectReference Include="..\Mediatr.Queries\Mediatr.Queries.csproj" />
+      <ProjectReference Include="..\Services.GeometryProviders.Interfaces\Services.GeometryProviders.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.GeometryProviders\Services.GeometryProviders.csproj" />
     </ItemGroup>
 
     <ItemGroup>

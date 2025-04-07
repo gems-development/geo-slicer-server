@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\UseCases.Interfaces\UseCases.Interfaces.csproj" />
+      <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp.Interfaces\DataAccess.Repositories.ConsoleApp.Interfaces.csproj" />
+      <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
+      <ProjectReference Include="..\Services.GeometryCreators.Interfaces\Services.GeometryCreators.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.GeometryCreators\Services.GeometryCreators.csproj" />
+      <ProjectReference Include="..\Services.GeometryFixers.Interfaces\Services.GeometryFixers.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.GeometryProviders.Interfaces\Services.GeometryProviders.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.GeometryValidateErrors\Services.GeometryValidateErrors.csproj" />
+      <ProjectReference Include="..\Services.GeometryValidators.Interfaces\Services.GeometryValidators.Interfaces.csproj" />
+      <ProjectReference Include="..\Utils\Utils.csproj" />
+      <ProjectReference Include="..\WebApp.Dto.Responses\WebApp.Dto.Responses.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
+      <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+    </ItemGroup>
+
+</Project>

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Dto.Requests;
-using WebApp.Mediatr.Queries;
+using Mediatr.Queries;
 
 namespace WebApp.Server.Controllers;
 

@@ -2,8 +2,8 @@
 using System.CommandLine;
 using System.IO;
 using System.Threading.Tasks;
-using ConsoleApp.Controllers;
-using ConsoleApp.Services;
+using UseCases;
+using UseCases.Interfaces;
 using DataAccess.PostgreSql;
 using DataAccess.Repositories.ConsoleApp;
 using DomainModels;
@@ -11,11 +11,11 @@ using GeoSlicer.Config;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
-using Services.Creators;
-using Services.Fixers;
-using Services.ValidateErrors;
-using Services.Validators;
-using Slicers;
+using Services.GeometryCreators;
+using Services.GeometryFixers;
+using Services.GeometryValidators;
+using Services.GeometrySlicers;
+using Services.GeometryValidateErrors;
 
 
 namespace ConsoleApp
@@ -68,13 +68,13 @@ namespace ConsoleApp
                     serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon, points);
                     serviceCollection.AddGeometryFixer();
                     serviceCollection.AddGeometryValidator();
-                    serviceCollection.AddSlicers();
+                    serviceCollection.AddGeometrySlicers();
                     serviceCollection.AddGeometryWithFragmentsCreator();
-                    serviceCollection.AddCorrectionService();
-                    serviceCollection.AddGeometryController();
+                    serviceCollection.AddGeometryCorrector();
+                    serviceCollection.AddGeometrySaver();
                     using var serviceProvider = serviceCollection.BuildServiceProvider();
                     var geometryController = serviceProvider
-                        .GetService<GeometryController<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
+                        .GetService<IGeometrySaver<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
                     if (geometryController == null)
                     {
                         throw new NullReferenceException("Geometry controller is null");
@@ -107,10 +107,10 @@ namespace ConsoleApp
                 serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon);
                 serviceCollection.AddGeometryFixer();
                 serviceCollection.AddGeometryValidator();
-                serviceCollection.AddCorrectionService();
+                serviceCollection.AddGeometryCorrector();
                 using var serviceProvider = serviceCollection.BuildServiceProvider();
                 var correctionService = serviceProvider
-                    .GetService<CorrectionService<Polygon>>();
+                    .GetService<IGeometryCorrector<Polygon>>();
                 if (correctionService == null)
                 {
                     throw new NullReferenceException("Correction service is null");
