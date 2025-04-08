@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
-      <ProjectReference Include="..\WebApp.UseCases\WebApp.UseCases.csproj" />
     </ItemGroup>
 
 </Project>

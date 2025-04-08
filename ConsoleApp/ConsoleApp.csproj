@@ -9,15 +9,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ConsoleApp.Controllers\ConsoleApp.Controllers.csproj" />
-      <ProjectReference Include="..\ConsoleApp.Services\ConsoleApp.Services.csproj" />
+      <ProjectReference Include="..\UseCases.Interfaces\UseCases.Interfaces.csproj" />
+      <ProjectReference Include="..\UseCases\UseCases.csproj" />
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
       <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp\DataAccess.Repositories.ConsoleApp.csproj" />
       <ProjectReference Include="..\Entities\Entities.csproj" />
       <ProjectReference Include="..\GeoSlicer.Config\GeoSlicer.Config.csproj" />
-      <ProjectReference Include="..\Services.Fixers\Services.Fixers.csproj" />
-      <ProjectReference Include="..\Services.Validators\Services.Validators.csproj" />
-      <ProjectReference Include="..\Slicers\Slicers.csproj" />
+      <ProjectReference Include="..\Services.GeometryFixers\Services.GeometryFixers.csproj" />
+      <ProjectReference Include="..\Services.GeometryValidateErrors\Services.GeometryValidateErrors.csproj" />
+      <ProjectReference Include="..\Services.GeometryValidators\Services.GeometryValidators.csproj" />
+      <ProjectReference Include="..\Services.GeometrySlicers\Services.GeometrySlicers.csproj" />
     </ItemGroup>
 
     <ItemGroup>
