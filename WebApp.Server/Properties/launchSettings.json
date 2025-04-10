@@ -4,6 +4,15 @@
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5049",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings:DefaultConnection": "Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin"
+      }
+    },
+    "http_swagger": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5049",
