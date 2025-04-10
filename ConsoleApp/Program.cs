@@ -4,7 +4,6 @@ using UseCases.Interfaces;
 using DataAccess.PostgreSql;
 using DataAccess.Repositories.ConsoleApp;
 using DomainModels;
-using GeoSlicer.Config;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
@@ -62,10 +61,9 @@ class Program
                 IServiceCollection serviceCollection = new ServiceCollection();
                 serviceCollection.AddGeometryDbContext(connectionString);
                 serviceCollection.AddSaveRepository();
-                serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon, points);
+                serviceCollection.AddGeometrySlicers(EpsilonCoordinateComparator, Epsilon, points);
                 serviceCollection.AddGeometryFixer(EpsilonCoordinateComparator);
                 serviceCollection.AddGeometryValidator(EpsilonCoordinateComparator);
-                serviceCollection.AddGeometrySlicers();
                 serviceCollection.AddGeometryWithFragmentsCreator();
                 serviceCollection.AddGeometryCorrector();
                 serviceCollection.AddGeometrySaver();
@@ -101,7 +99,6 @@ class Program
         validate.SetHandler(files =>
         {
             IServiceCollection serviceCollection = new ServiceCollection();
-            serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon);
             serviceCollection.AddGeometryFixer(EpsilonCoordinateComparator);
             serviceCollection.AddGeometryValidator(EpsilonCoordinateComparator);
             serviceCollection.AddGeometryCorrector();

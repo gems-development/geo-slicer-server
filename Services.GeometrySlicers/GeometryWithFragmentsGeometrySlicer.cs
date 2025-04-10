@@ -9,13 +9,14 @@ namespace Services.GeometrySlicers;
 
 public class GeometryWithFragmentsGeometrySlicer : IGeometrySlicer<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>
 {
-    private IGeometrySlicer<Polygon, Polygon> _geometrySlicer;
+    private readonly IGeometrySlicer<Polygon, Polygon> _geometrySlicer;
         
-    private double _epsilon = 1E-14;
+    private readonly double _epsilon;
 
-    public GeometryWithFragmentsGeometrySlicer(IGeometrySlicer<Polygon, Polygon> geometrySlicer)
+    public GeometryWithFragmentsGeometrySlicer(IGeometrySlicer<Polygon, Polygon> geometrySlicer, double epsilon)
     {
         _geometrySlicer = geometrySlicer;
+        _epsilon = epsilon;
     }
 
     [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]

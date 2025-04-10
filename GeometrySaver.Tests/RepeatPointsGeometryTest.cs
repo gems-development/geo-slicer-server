@@ -2,13 +2,13 @@ using UseCases;
 using UseCases.Interfaces;
 using DataAccess.Repositories.ConsoleApp.Interfaces;
 using DomainModels;
-using GeoSlicer.Config;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Services.GeometryCreators.Interfaces;
 using Services.GeometryFixers;
+using Services.GeometrySlicers;
 using Services.GeometryValidators;
 using Xunit.Abstractions;
 
@@ -41,7 +41,7 @@ public class RepeatPointsGeometryTest
             .Returns<GeometryWithFragments<Polygon, Polygon>>(input => input.Data);
         
         IServiceCollection serviceCollection = new ServiceCollection();
-        serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon);
+        serviceCollection.AddGeometrySlicers(EpsilonCoordinateComparator, Epsilon);
         serviceCollection.AddGeometryFixer(EpsilonCoordinateComparator);
         serviceCollection.AddGeometryValidator(EpsilonCoordinateComparator);
         serviceCollection.AddGeometryCorrector();

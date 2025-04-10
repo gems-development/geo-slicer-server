@@ -14,7 +14,6 @@
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
       <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp\DataAccess.Repositories.ConsoleApp.csproj" />
       <ProjectReference Include="..\Entities\Entities.csproj" />
-      <ProjectReference Include="..\GeoSlicer.Config\GeoSlicer.Config.csproj" />
       <ProjectReference Include="..\Services.GeometryFixers\Services.GeometryFixers.csproj" />
       <ProjectReference Include="..\Services.GeometryValidateErrors\Services.GeometryValidateErrors.csproj" />
       <ProjectReference Include="..\Services.GeometryValidators\Services.GeometryValidators.csproj" />

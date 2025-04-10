@@ -9,7 +9,7 @@ public static class GeometryFixerExtension
     public static void AddGeometryFixer(
         this IServiceCollection serviceCollection, double epsilon)
     {
-        serviceCollection.AddTransient<IGeometryFixerFactory<Polygon>>(provider => new GeometryFixerFactory(epsilon));
+        serviceCollection.AddTransient<IGeometryFixerFactory<Polygon>>(_ => new GeometryFixerFactory(epsilon));
         serviceCollection.AddTransient<IGeometryFixer<Polygon>, GeometryFixer<Polygon>>();
     }
 }
