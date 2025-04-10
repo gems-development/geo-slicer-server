@@ -2,14 +2,13 @@ using UseCases.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 
-namespace UseCases
+namespace UseCases;
+
+public static class GeometryCorrectorExtension
 {
-    public static class GeometryCorrectorExtension
+    public static void AddGeometryCorrector(
+        this IServiceCollection serviceCollection)
     {
-        public static void AddGeometryCorrector(
-            this IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddTransient<IGeometryCorrector<Polygon>, GeometryCorrector<Polygon>>();
-        }
+        serviceCollection.AddTransient<IGeometryCorrector<Polygon>, GeometryCorrector<Polygon>>();
     }
 }

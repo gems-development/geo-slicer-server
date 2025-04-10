@@ -1,28 +1,27 @@
-using System;
+using NetTopologySuite.Geometries;
 using Services.GeometryFixers.Interfaces;
 using Services.GeometryValidateErrors;
 
-namespace Services.GeometryFixers
+namespace Services.GeometryFixers;
+
+public class GeometryFixer<TGeometry> : IGeometryFixer<TGeometry> where TGeometry : Geometry
 {
-    public class GeometryFixer<TGeometry> : IGeometryFixer<TGeometry>
+    private IGeometryFixerFactory<TGeometry> _geometryFixerFactory;
+
+    public GeometryFixer(IGeometryFixerFactory<TGeometry> geometryFixerFactory)
     {
-        private IGeometryFixerFactory<TGeometry> _geometryFixerFactory;
+        _geometryFixerFactory = geometryFixerFactory;
+    }
 
-        public GeometryFixer(IGeometryFixerFactory<TGeometry> geometryFixerFactory)
+    protected override TGeometry Fix(TGeometry geometry, GeometryValidateError[] geometryValidateErrors)
+    {
+        foreach (var error in geometryValidateErrors)
         {
-            _geometryFixerFactory = geometryFixerFactory;
+            var fixer = _geometryFixerFactory.GetFixer(error);
+            if (fixer == null)
+                throw new ApplicationException($"There is no fixer for the error {error}");
+            geometry = fixer.Fix(geometry);
         }
-
-        protected override TGeometry Fix(TGeometry geometry, GeometryValidateError[] geometryValidateErrors)
-        {
-            foreach (var error in geometryValidateErrors)
-            {
-                var fixer = _geometryFixerFactory.GetFixer(error);
-                if (fixer == null)
-                    throw new ApplicationException($"There is no fixer for the error {error}");
-                geometry = fixer.Fix(geometry);
-            }
-            return geometry;
-        }
+        return geometry;
     }
 }

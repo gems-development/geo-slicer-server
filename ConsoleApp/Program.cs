@@ -1,7 +1,4 @@
-﻿using System;
-using System.CommandLine;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.CommandLine;
 using UseCases;
 using UseCases.Interfaces;
 using DataAccess.PostgreSql;
@@ -18,136 +15,135 @@ using Services.GeometrySlicers;
 using Services.GeometryValidateErrors;
 
 
-namespace ConsoleApp
+namespace ConsoleApp;
+
+class Program
 {
-    class Program
+    private const double EpsilonCoordinateComparator = 1e-7;
+    private const double Epsilon = 1e-14;
+    static async Task<int> Main(string[] args)
     {
-        private const double EpsilonCoordinateComparator = 1e-7;
-        private const double Epsilon = 1e-14;
-        static async Task<int> Main(string[] args)
+        //Console usage example:
+        //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -maxp 1500
+        //geosaver validate -fs a.txt b.txt
+        var rootCommand = new RootCommand("rootCommand")
         {
-            //Console usage example:
-            //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -maxp 1500
-            //geosaver validate -fs a.txt b.txt
-            var rootCommand = new RootCommand("rootCommand")
-            {
-                Name = "geosaver"
-            };
-            var stringOption = new Option<string>(
-                aliases: new[] { "-cs", "--connectionString" },
-                description: "Option to set connectionString.")
-            {
-                IsRequired = true,
-                Arity = ArgumentArity.ExactlyOne
-            };
-            var filesInfo = new Option<FileInfo[]>(
-                aliases: new[] { "-fs", "--files" },
-                description: "Input file names")
-            {
-                IsRequired = true,
-                Arity = ArgumentArity.OneOrMore,
-                AllowMultipleArgumentsPerToken = true
-            };
-            var numberOfPointsOption = new Option<int>(
-                aliases: new[] { "-maxp", "--maxNumberOfPointsInFragment" },
-                description: "Option to set maximum number of points in fragment after slicing.")
-            {
-                IsRequired = true,
-                Arity = ArgumentArity.ExactlyOne
-            };
-            var save = new Command("save",
-                "Save geometries from {--files} in database using {--connectionString} to connect.");
-            save.AddOption(stringOption);
-            save.AddOption(filesInfo);
-            save.AddOption(numberOfPointsOption);
-            save.SetHandler((connectionString, files, points) =>
-                {
-                    IServiceCollection serviceCollection = new ServiceCollection();
-                    serviceCollection.AddGeometryDbContext(connectionString);
-                    serviceCollection.AddSaveRepository();
-                    serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon, points);
-                    serviceCollection.AddGeometryFixer();
-                    serviceCollection.AddGeometryValidator();
-                    serviceCollection.AddGeometrySlicers();
-                    serviceCollection.AddGeometryWithFragmentsCreator();
-                    serviceCollection.AddGeometryCorrector();
-                    serviceCollection.AddGeometrySaver();
-                    using var serviceProvider = serviceCollection.BuildServiceProvider();
-                    var geometryController = serviceProvider
-                        .GetService<IGeometrySaver<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
-                    if (geometryController == null)
-                    {
-                        throw new NullReferenceException("Geometry controller is null");
-                    }
-                    geometryController.StartTransaction();
-                    foreach (var o in files)
-                    {
-                        string errors;
-                        try
-                        {
-                            var polygon = ReadPolygonFromGeojsonFile(o);
-                            geometryController.SaveGeometry(polygon, out errors);
-                        }
-                        catch (Exception e)
-                        {
-                            geometryController.RollbackTransaction();
-                            throw new Exception(o.FullName + ":" + "\n" + e.Message, e);
-                        }
-                        Console.WriteLine(o.FullName + ":" + "\n" + errors);
-                    }
-                    geometryController.CommitTransaction();
-                },
-                stringOption, filesInfo, numberOfPointsOption);
-            var validate = new Command("validate",
-                "Validate geometries from {--files}.");
-            validate.AddOption(filesInfo);
-            validate.SetHandler(files =>
+            Name = "geosaver"
+        };
+        var stringOption = new Option<string>(
+            aliases: new[] { "-cs", "--connectionString" },
+            description: "Option to set connectionString.")
+        {
+            IsRequired = true,
+            Arity = ArgumentArity.ExactlyOne
+        };
+        var filesInfo = new Option<FileInfo[]>(
+            aliases: new[] { "-fs", "--files" },
+            description: "Input file names")
+        {
+            IsRequired = true,
+            Arity = ArgumentArity.OneOrMore,
+            AllowMultipleArgumentsPerToken = true
+        };
+        var numberOfPointsOption = new Option<int>(
+            aliases: new[] { "-maxp", "--maxNumberOfPointsInFragment" },
+            description: "Option to set maximum number of points in fragment after slicing.")
+        {
+            IsRequired = true,
+            Arity = ArgumentArity.ExactlyOne
+        };
+        var save = new Command("save",
+            "Save geometries from {--files} in database using {--connectionString} to connect.");
+        save.AddOption(stringOption);
+        save.AddOption(filesInfo);
+        save.AddOption(numberOfPointsOption);
+        save.SetHandler((connectionString, files, points) =>
             {
                 IServiceCollection serviceCollection = new ServiceCollection();
-                serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon);
-                serviceCollection.AddGeometryFixer();
-                serviceCollection.AddGeometryValidator();
+                serviceCollection.AddGeometryDbContext(connectionString);
+                serviceCollection.AddSaveRepository();
+                serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon, points);
+                serviceCollection.AddGeometryFixer(EpsilonCoordinateComparator);
+                serviceCollection.AddGeometryValidator(EpsilonCoordinateComparator);
+                serviceCollection.AddGeometrySlicers();
+                serviceCollection.AddGeometryWithFragmentsCreator();
                 serviceCollection.AddGeometryCorrector();
+                serviceCollection.AddGeometrySaver();
                 using var serviceProvider = serviceCollection.BuildServiceProvider();
-                var correctionService = serviceProvider
-                    .GetService<IGeometryCorrector<Polygon>>();
-                if (correctionService == null)
+                var geometryController = serviceProvider
+                    .GetService<IGeometrySaver<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
+                if (geometryController == null)
                 {
-                    throw new NullReferenceException("Correction service is null");
+                    throw new NullReferenceException("Geometry controller is null");
                 }
+                geometryController.StartTransaction();
                 foreach (var o in files)
                 {
-                    string errors = "";
-                    GeometryValidateError[]? geometryValidateErrors = null;
+                    string errors;
                     try
                     {
                         var polygon = ReadPolygonFromGeojsonFile(o);
-                        correctionService.ValidateGeometry(ref geometryValidateErrors, polygon, ref errors);
+                        geometryController.SaveGeometry(polygon, out errors);
                     }
                     catch (Exception e)
                     {
+                        geometryController.RollbackTransaction();
                         throw new Exception(o.FullName + ":" + "\n" + e.Message, e);
                     }
                     Console.WriteLine(o.FullName + ":" + "\n" + errors);
                 }
-            }, filesInfo);
-            rootCommand.Add(save);
-            rootCommand.Add(validate);
-            return await rootCommand.InvokeAsync(args);
-        }
-
-        static Polygon ReadPolygonFromGeojsonFile(FileInfo file)
+                geometryController.CommitTransaction();
+            },
+            stringOption, filesInfo, numberOfPointsOption);
+        var validate = new Command("validate",
+            "Validate geometries from {--files}.");
+        validate.AddOption(filesInfo);
+        validate.SetHandler(files =>
         {
-            var polygon = (Polygon)ReadGeometryFromFile<MultiPolygon>(file.FullName).Geometries[0];
-            polygon.SRID = 0;
-            return polygon;
-        }
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon);
+            serviceCollection.AddGeometryFixer(EpsilonCoordinateComparator);
+            serviceCollection.AddGeometryValidator(EpsilonCoordinateComparator);
+            serviceCollection.AddGeometryCorrector();
+            using var serviceProvider = serviceCollection.BuildServiceProvider();
+            var correctionService = serviceProvider
+                .GetService<IGeometryCorrector<Polygon>>();
+            if (correctionService == null)
+            {
+                throw new NullReferenceException("Correction service is null");
+            }
+            foreach (var o in files)
+            {
+                string errors = "";
+                GeometryValidateError[]? geometryValidateErrors = null;
+                try
+                {
+                    var polygon = ReadPolygonFromGeojsonFile(o);
+                    correctionService.ValidateGeometry(ref geometryValidateErrors, polygon, ref errors);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(o.FullName + ":" + "\n" + e.Message, e);
+                }
+                Console.WriteLine(o.FullName + ":" + "\n" + errors);
+            }
+        }, filesInfo);
+        rootCommand.Add(save);
+        rootCommand.Add(validate);
+        return await rootCommand.InvokeAsync(args);
+    }
 
-        private static T ReadGeometryFromFile<T>(string path) where T : class
-        {
-            string geoJson = File.ReadAllText(path);
-            var geometry = new GeoJsonReader().Read<T>(geoJson);
-            return geometry;
-        }
+    static Polygon ReadPolygonFromGeojsonFile(FileInfo file)
+    {
+        var polygon = (Polygon)ReadGeometryFromFile<MultiPolygon>(file.FullName).Geometries[0];
+        polygon.SRID = 0;
+        return polygon;
+    }
+
+    private static T ReadGeometryFromFile<T>(string path) where T : class
+    {
+        string geoJson = File.ReadAllText(path);
+        var geometry = new GeoJsonReader().Read<T>(geoJson);
+        return geometry;
     }
 }

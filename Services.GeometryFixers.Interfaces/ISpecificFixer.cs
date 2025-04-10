@@ -1,7 +1,8 @@
-namespace Services.GeometryFixers.Interfaces
+using NetTopologySuite.Geometries;
+
+namespace Services.GeometryFixers.Interfaces;
+
+public interface ISpecificFixer<TGeometry> where TGeometry : Geometry
 {
-    public interface ISpecificFixer<TGeometry>
-    {
-        public TGeometry Fix(TGeometry geometry);
-    }
+    public TGeometry Fix(TGeometry geometry);
 }

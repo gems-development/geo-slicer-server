@@ -42,8 +42,8 @@ public class RepeatPointsGeometryTest
         
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection.AddAlgorithms(EpsilonCoordinateComparator, Epsilon);
-        serviceCollection.AddGeometryFixer();
-        serviceCollection.AddGeometryValidator();
+        serviceCollection.AddGeometryFixer(EpsilonCoordinateComparator);
+        serviceCollection.AddGeometryValidator(EpsilonCoordinateComparator);
         serviceCollection.AddGeometryCorrector();
         using var serviceProvider = serviceCollection.BuildServiceProvider();
         var correctionService = serviceProvider.GetService<IGeometryCorrector<Polygon>>();
