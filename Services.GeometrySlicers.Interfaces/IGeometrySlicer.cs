@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using NetTopologySuite.Geometries;
 
-namespace Services.GeometrySlicers.Interfaces
+namespace Services.GeometrySlicers.Interfaces;
+
+public interface IGeometrySlicer<TGeometry, TSlicedType> where TGeometry : Geometry
 {
-    public interface IGeometrySlicer<TGeometry, TSlicedType>
-    {
-        IEnumerable<TSlicedType> Slice(TGeometry polygon);
-    }
+    IEnumerable<TSlicedType> Slice(TGeometry polygon);
 }

@@ -1,22 +1,20 @@
-using System.Collections.Generic;
+using GeoSlicer.DivideAndRuleSlicers.OppositesSlicer;
 using NetTopologySuite.Geometries;
 using Services.GeometrySlicers.Interfaces;
-using GeoSlicer.DivideAndRuleSlicers.OppositesSlicer;
 
-namespace Services.GeometrySlicers
+namespace Services.GeometrySlicers;
+
+public class OppositesGeometrySlicerAdapter : IGeometrySlicer<Polygon, Polygon>
 {
-    public class OppositesGeometrySlicerAdapter : IGeometrySlicer<Polygon, Polygon>
-    {
-        private Slicer _slicer;
+    private Slicer _slicer;
 
-        public OppositesGeometrySlicerAdapter(Slicer slicer)
-        {
-            _slicer = slicer;
-        }
+    public OppositesGeometrySlicerAdapter(IOppositeSlicerFactory slicerFactory)
+    {
+        _slicer = slicerFactory.GetSlicer();
+    }
         
-        public IEnumerable<Polygon> Slice(Polygon polygon)
-        {
-            return _slicer.Slice(polygon);
-        }
+    public IEnumerable<Polygon> Slice(Polygon polygon)
+    {
+        return _slicer.Slice(polygon);
     }
 }

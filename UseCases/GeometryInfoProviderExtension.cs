@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using NetTopologySuite.Geometries;
 using UseCases.Interfaces;
 
 namespace UseCases;

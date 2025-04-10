@@ -25,12 +25,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Services.GeometrySlicers\Services.GeometrySlicers.csproj" />
       <ProjectReference Include="..\UseCases.Interfaces\UseCases.Interfaces.csproj" />
       <ProjectReference Include="..\UseCases\UseCases.csproj" />
       <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
       <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp.Interfaces\DataAccess.Repositories.ConsoleApp.Interfaces.csproj" />
-      <ProjectReference Include="..\GeoSlicer.Config\GeoSlicer.Config.csproj" />
       <ProjectReference Include="..\Services.GeometryCreators.Interfaces\Services.GeometryCreators.Interfaces.csproj" />
       <ProjectReference Include="..\Services.GeometryFixers\Services.GeometryFixers.csproj" />
       <ProjectReference Include="..\Services.GeometryValidators\Services.GeometryValidators.csproj" />

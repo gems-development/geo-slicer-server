@@ -3,16 +3,15 @@ using DomainModels;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 
-namespace UseCases
+namespace UseCases;
+
+public static class GeometrySaverExtension
 {
-    public static class GeometrySaverExtension
+    public static void AddGeometrySaver(
+        this IServiceCollection serviceCollection)
     {
-        public static void AddGeometrySaver(
-            this IServiceCollection serviceCollection)
-        {
-            serviceCollection
-                .AddTransient<IGeometrySaver<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>,
-                    GeometrySaver<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
-        }
+        serviceCollection
+            .AddTransient<IGeometrySaver<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>,
+                GeometrySaver<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
     }
 }

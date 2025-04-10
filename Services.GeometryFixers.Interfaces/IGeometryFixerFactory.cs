@@ -1,10 +1,10 @@
+using NetTopologySuite.Geometries;
 using Services.GeometryValidateErrors;
 
-namespace Services.GeometryFixers.Interfaces
+namespace Services.GeometryFixers.Interfaces;
+
+public interface IGeometryFixerFactory<TGeometry> where TGeometry : Geometry
 {
-    public interface IGeometryFixerFactory<TGeometry>
-    {
-        //Возвращает null в случае если на эту ошибку нет fixer
-        public ISpecificFixer<TGeometry>? GetFixer(GeometryValidateError geometryValidateError);
-    }
+    //Возвращает null в случае если на эту ошибку нет fixer
+    public ISpecificFixer<TGeometry>? GetFixer(GeometryValidateError geometryValidateError);
 }

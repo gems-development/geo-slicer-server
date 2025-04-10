@@ -1,9 +1,9 @@
-﻿using Services.GeometryValidateErrors;
+﻿using NetTopologySuite.Geometries;
+using Services.GeometryValidateErrors;
 
-namespace Services.GeometryValidators.Interfaces
+namespace Services.GeometryValidators.Interfaces;
+
+public interface IGeometryValidator<TGeometry> where TGeometry : Geometry
 {
-    public interface IGeometryValidator<TGeometry>
-    {
-        public GeometryValidateError[] ValidateGeometry(TGeometry geometry);
-    }
+    public GeometryValidateError[] ValidateGeometry(TGeometry geometry);
 }
