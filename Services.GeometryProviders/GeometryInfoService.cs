@@ -6,7 +6,7 @@ using Services.GeometryProviders.Interfaces;
 
 namespace Services.GeometryProviders;
 
-public class GeometryInfoService : IGeometryInfoService<string>
+public class GeometryInfoService : IGeometryInfoService<int>
 {
     private GeometryDbContext _geometryDbContext;
 
@@ -15,11 +15,11 @@ public class GeometryInfoService : IGeometryInfoService<string>
         _geometryDbContext = geometryDbContext;
     }
 
-    public async Task<IEnumerable<ClickInfoDto<string>>> GetInfoByClick(Point point, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ClickInfoDto<int>>> GetInfoByClick(Point point, CancellationToken cancellationToken)
     {
         var res = await _geometryDbContext.GeometryFragments
             .Where(g => g.Fragment.Intersects(point))
-            .Select(g => new ClickInfoDto<string>(g.GeometryOriginal.Layer.Alias, g.GeometryOriginal.Properties, g.GeometryOriginalId.ToString()))
+            .Select(g => new ClickInfoDto<int>(g.GeometryOriginal.Layer.Alias, g.GeometryOriginal.Properties, g.GeometryOriginalId))
             .ToArrayAsync(cancellationToken: cancellationToken);
         return res;
     }

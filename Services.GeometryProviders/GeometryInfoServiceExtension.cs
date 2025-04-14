@@ -7,6 +7,6 @@ public static class GeometryInfoServiceExtension
 {
     public static void AddGeometryInfoService(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IGeometryInfoService<string>, GeometryInfoService>();
+        serviceCollection.AddScoped<IGeometryInfoService<int>, GeometryInfoService>();
     }
 }

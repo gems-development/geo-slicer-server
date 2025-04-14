@@ -4,4 +4,4 @@ using WebApp.Dto.Responses;
 
 namespace Mediatr.Queries;
 
-public record GetByClickQuery(PointDto Point) : IRequest<IEnumerable<ClickInfoDto<string>>>;
+public record GetByClickQuery(PointDto Point) : IRequest<IEnumerable<ClickInfoDto<int>>>;
