@@ -18,7 +18,7 @@ export default function MyMap() {
     const renderScreenRequest = useRef(null);
     const lng = 107.716;
     const lat = 53.681;
-    const zoom = 5;
+    const zoom = 15;
 
     function renderScreen() {
         let bounds = map.current.getBounds();
@@ -65,8 +65,6 @@ export default function MyMap() {
             res[style] = { "type": "FeatureCollection", "features": res[style] }
         }
 
-        console.log(res);
-
         return res;
     }
 
@@ -111,6 +109,7 @@ export default function MyMap() {
 
 
         map.current.on('moveend', () => { renderScreen(); });
+        //map.current.on('move', () => { renderScreen(); });
         map.current.on('click', (e) => { showInfo(e); })
 
         renderScreen();
