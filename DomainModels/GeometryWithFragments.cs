@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using NetTopologySuite.Geometries;
 
-namespace DomainModels
+namespace DomainModels;
+
+public class GeometryWithFragments<TGeometry, TSliceType> where TGeometry : Geometry
 {
-    public class GeometryWithFragments<TGeometry, TSliceType>
-    {
-        public TGeometry Data { get; private set; }
-        public IEnumerable<TSliceType> GeometryFragments { get; private set; }
+    public TGeometry Data { get; private set; }
+    public IEnumerable<TSliceType> GeometryFragments { get; private set; }
         
-        public GeometryWithFragments(TGeometry data, IEnumerable<TSliceType> geometryFragments)
-        {
-            Data = data;
-            GeometryFragments = geometryFragments;
-        }
+    public GeometryWithFragments(TGeometry data, IEnumerable<TSliceType> geometryFragments)
+    {
+        Data = data;
+        GeometryFragments = geometryFragments;
     }
 }

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
+      <ProjectReference Include="..\Services.GeometryCreators.Interfaces\Services.GeometryCreators.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.GeometrySlicers.Interfaces\Services.GeometrySlicers.Interfaces.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
+    </ItemGroup>
+
+</Project>

@@ -1,15 +1,13 @@
 using DataAccess.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using NetTopologySuite.Geometries;
 
-namespace DataAccess.PostgreSql
+namespace DataAccess.PostgreSql;
+
+public static class PostgreApplicationContextExtension
 {
-    public static class PostgreApplicationContextExtension
+    public static void AddGeometryDbContext(
+        this IServiceCollection serviceCollection, string connectionString)
     {
-        public static void AddGeometryDbContext(
-            this IServiceCollection serviceCollection, string connectionString)
-        {
-            serviceCollection.AddTransient<GeometryDbContext>(provider => new PostgreApplicationContext(connectionString));
-        }
+        serviceCollection.AddTransient<GeometryDbContext>(_ => new PostgreApplicationContext(connectionString));
     }
 }
