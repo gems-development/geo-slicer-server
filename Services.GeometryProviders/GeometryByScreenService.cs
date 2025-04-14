@@ -20,7 +20,7 @@ public class GeometryByScreenService : IGeometryByScreenService<Geometry>
         var res = await _geometryDbContext.GeometryOriginals
             .Where(g => g.Data.Intersects(screen))
             .Select(g => 
-                new AreaIntersectionDto<Geometry>(
+                new AreaIntersectionDto<Geometry>(g.Id,
                     g.Layer.Alias, g.Properties, g.Data.Intersection(screen)))
             .ToArrayAsync(cancellationToken: cancellationToken);
         return res;
