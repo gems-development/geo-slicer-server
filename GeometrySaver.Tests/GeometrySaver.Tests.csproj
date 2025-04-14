@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+        <PackageReference Include="Moq" Version="4.20.72" />
+        <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+        <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
+        <PackageReference Include="xunit" Version="2.5.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Services.GeometrySlicers\Services.GeometrySlicers.csproj" />
+      <ProjectReference Include="..\UseCases.Interfaces\UseCases.Interfaces.csproj" />
+      <ProjectReference Include="..\UseCases\UseCases.csproj" />
+      <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
+      <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
+      <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp.Interfaces\DataAccess.Repositories.ConsoleApp.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.GeometryCreators.Interfaces\Services.GeometryCreators.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.GeometryFixers\Services.GeometryFixers.csproj" />
+      <ProjectReference Include="..\Services.GeometryValidators\Services.GeometryValidators.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="TestFiles\*.geojson">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>

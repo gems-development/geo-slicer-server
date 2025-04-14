@@ -1,10 +1,9 @@
-﻿namespace DataAccess.Repositories.ConsoleApp.Interfaces
+﻿namespace DataAccess.Repositories.ConsoleApp.Interfaces;
+
+public interface IRepository<TInput, TOutput>
 {
-    public interface IRepository<TInput, TOutput>
-    {
-        TOutput Save(TInput objectToSave);
-        void StartTransaction();
-        void CommitTransaction();
-        void RollbackTransaction();
-    }
+    TOutput Save(TInput objectToSave);
+    void StartTransaction();
+    void CommitTransaction();
+    void RollbackTransaction();
 }

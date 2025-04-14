@@ -1,16 +1,15 @@
-namespace DomainModels
+namespace DomainModels;
+
+public class FragmentWithNonRenderingBorder<TFragmentType, TNonRenderingBorderType>
 {
-    public class FragmentWithNonRenderingBorder<TFragmentType, TNonRenderingBorderType>
+    public TFragmentType Fragment { get;  set; } = default!;
+    public TNonRenderingBorderType NonRenderingBorder { get;  set; } = default!;
+
+    public FragmentWithNonRenderingBorder() {}
+
+    public FragmentWithNonRenderingBorder(TFragmentType fragment, TNonRenderingBorderType nonRenderingBorder)
     {
-        public TFragmentType Fragment { get;  set; }
-        public TNonRenderingBorderType NonRenderingBorder { get;  set; }
-
-        public FragmentWithNonRenderingBorder() {}
-
-        public FragmentWithNonRenderingBorder(TFragmentType fragment, TNonRenderingBorderType nonRenderingBorder)
-        {
-            Fragment = fragment;
-            NonRenderingBorder = nonRenderingBorder;
-        }
+        Fragment = fragment;
+        NonRenderingBorder = nonRenderingBorder;
     }
 }
