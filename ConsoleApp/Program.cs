@@ -18,8 +18,8 @@ namespace ConsoleApp;
 
 class Program
 {
-    private const double EpsilonCoordinateComparator = 1e-7;
-    private const double Epsilon = 1e-14;
+    private const double EpsilonCoordinateComparator = 1e-9;
+    private const double Epsilon = 1e-15;
     static async Task<int> Main(string[] args)
     {
         //Console usage example:

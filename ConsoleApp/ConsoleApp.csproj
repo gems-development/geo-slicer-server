@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Services.GeometryCreators\Services.GeometryCreators.csproj" />
       <ProjectReference Include="..\UseCases.Interfaces\UseCases.Interfaces.csproj" />
       <ProjectReference Include="..\UseCases\UseCases.csproj" />
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />

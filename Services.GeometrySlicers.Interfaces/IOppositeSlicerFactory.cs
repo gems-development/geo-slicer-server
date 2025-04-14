@@ -1,4 +1,4 @@
-using GeoSlicer.DivideAndRuleSlicers.OppositesSlicer;
+using GeoSlicer.DivideAndRuleSlicers;
 
 namespace Services.GeometrySlicers.Interfaces;
 

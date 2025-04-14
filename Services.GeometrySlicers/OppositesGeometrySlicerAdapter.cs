@@ -1,4 +1,4 @@
-using GeoSlicer.DivideAndRuleSlicers.OppositesSlicer;
+using GeoSlicer.DivideAndRuleSlicers;
 using NetTopologySuite.Geometries;
 using Services.GeometrySlicers.Interfaces;
 
@@ -15,6 +15,6 @@ public class OppositesGeometrySlicerAdapter : IGeometrySlicer<Polygon, Polygon>
         
     public IEnumerable<Polygon> Slice(Polygon polygon)
     {
-        return _slicer.Slice(polygon);
+        return _slicer.Slice(polygon, out ICollection<int> skipped);
     }
 }

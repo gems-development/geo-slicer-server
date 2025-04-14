@@ -1,8 +1,9 @@
-using GeoSlicer.DivideAndRuleSlicers.OppositesSlicer;
+using GeoSlicer.DivideAndRuleSlicers;
+using GeoSlicer.DivideAndRuleSlicers.OppositesIndexesGivers;
 using GeoSlicer.Utils;
 using GeoSlicer.Utils.Intersectors;
 using GeoSlicer.Utils.Intersectors.CoordinateComparators;
-using GeoSlicer.Utils.PolygonClippingAlghorithm;
+using GeoSlicer.Utils.PolygonClippingAlgorithm;
 using Services.GeometrySlicers.Interfaces;
 
 namespace Services.GeometrySlicers;
@@ -21,11 +22,23 @@ public class OppositeGeometrySlicerFactory : IOppositeSlicerFactory
 
     public Slicer GetSlicer()
     {
-        var coordinateComparator = new EpsilonCoordinateComparator(_comparatorEpsilon);
-        LineService lineService = new LineService(_epsilon, coordinateComparator);
-        WeilerAthertonAlghorithm weilerAthertonAlghorithm = new WeilerAthertonAlghorithm(
-            new LinesIntersector(coordinateComparator, lineService, _epsilon), lineService,
-            coordinateComparator, new ContainsChecker(lineService, _epsilon), _epsilon);
-        return new Slicer(lineService, _maximumNumberOfPoints, weilerAthertonAlghorithm);
+        WeilerAthertonAlgorithm weilerAtherton = new WeilerAthertonAlgorithm(
+            new LinesIntersector(
+                new EpsilonCoordinateComparator(1E-9),
+                new LineService(1E-10, new EpsilonCoordinateComparator(1E-10)), 1E-15),
+            new LineService(1E-15, new EpsilonCoordinateComparator(1E-8)),
+            new EpsilonCoordinateComparator(1E-8),
+            new ContainsChecker(new LineService(1E-15, new EpsilonCoordinateComparator(1E-8)), 1E-15));
+        Slicer slicer = new Slicer(_maximumNumberOfPoints,
+            weilerAtherton, new ConvexityIndexesGiver(new LineService(1E-5, new EpsilonCoordinateComparator(1E-8))));
+        return slicer;
+        
+        
+        // var coordinateComparator = new EpsilonCoordinateComparator(_comparatorEpsilon);
+        // LineService lineService = new LineService(_epsilon, coordinateComparator);
+        // WeilerAthertonAlgorithm weilerAthertonAlgorithm = new WeilerAthertonAlgorithm(
+        //     new LinesIntersector(coordinateComparator, lineService, _epsilon), lineService,
+        //     coordinateComparator, new ContainsChecker(lineService, _epsilon));
+        // return new Slicer(_maximumNumberOfPoints, weilerAthertonAlgorithm, new ConvexityIndexesGiver(lineService));
     }
 }
