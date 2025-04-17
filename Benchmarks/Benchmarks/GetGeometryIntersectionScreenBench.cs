@@ -31,13 +31,13 @@ public class GetGeometryIntersectionScreenBench
         new Coordinate(95.816, 45.205)
     }));
     
-    Polygon VeryBigScreenIntersectsLeftBaikals = new GeometryFactory().CreatePolygon(new[]
+    private static readonly Polygon VeryBigScreenIntersectsLeftBaikals = new GeometryFactory().CreatePolygon(new[]
     {
-        new Coordinate(new Coordinate(44.785, 100.223).X, new Coordinate(44.785, 100.223).Y),       
-        new Coordinate(new Coordinate(62.987, 116.723).X, new Coordinate(44.785, 100.223).Y),      
-        new Coordinate(new Coordinate(62.987, 116.723).X, new Coordinate(62.987, 116.723).Y),     
-        new Coordinate(new Coordinate(44.785, 100.223).X, new Coordinate(62.987, 116.723).Y),     
-        new Coordinate(new Coordinate(44.785, 100.223).X, new Coordinate(44.785, 100.223).Y)       
+        new Coordinate(99.4985, 46.0831),
+        new Coordinate(new Coordinate(115.178, 61.333).X, new Coordinate(99.4985, 46.0831).Y),
+        new Coordinate(115.178, 61.333),
+        new Coordinate(new Coordinate(99.4985, 46.0831).X, new Coordinate(115.178, 61.333).Y), 
+        new Coordinate(99.4985, 46.0831) 
     });
 
     private static readonly PostgreApplicationContext PgContext =
@@ -72,8 +72,53 @@ public class GetGeometryIntersectionScreenBench
            WHERE ""Id"" = ANY(SELECT * from get_geometry_ids_intersects_display_bb_borders({0}))
            ";
 
+    private string _geometryOriginalCollectionDisplayIntersection = @"
+            SELECT ""Data"" FROM get_geometry_original_collection_display_intersection({0})
+            ";
+
+    private string _geometryOriginalCollectionDisplayIntersectionSql = @"
+    WITH 	
+	    originals_in_display AS MATERIALIZED (SELECT * FROM ""GeometryOriginals"" AS f WHERE f.""Data"" @ {0}),
+	    fragments_in_display_ids AS MATERIALIZED  (
+		    SELECT DISTINCT f.""GeometryOriginalId"" AS id
+            FROM ""GeometryFragments"" AS f 
+            WHERE f.""Fragment"" @ {0} AND NOT (f.""GeometryOriginalId"" = ANY(SELECT ""Id"" FROM originals_in_display))),
+        fragments_intersects_display_ids AS NOT MATERIALIZED (
+		    SELECT DISTINCT f.""GeometryOriginalId"" AS id
+		        FROM ""GeometryFragments"" AS f 
+		        WHERE 
+		    	    (f.""Fragment"" && {0} AND NOT f.""Fragment"" @ {0})
+		    	    AND NOT (f.""GeometryOriginalId"" = ANY(SELECT id FROM fragments_in_display_ids))
+		    	    AND ST_INTERSECTS(f.""Fragment"", {0}))			    	
+    SELECT ""Data"" FROM originals_in_display
+    UNION ALL
+    SELECT ST_Intersection(f.""Data"", {0}) AS ""Data""
+	    FROM ""GeometryOriginals"" AS f
+	    WHERE f.""Id"" = ANY(SELECT id FROM fragments_in_display_ids)
+    UNION ALL
+    SELECT ST_Intersection(f.""Data"", {0}) AS ""Data""
+	    FROM ""GeometryOriginals"" AS f
+	    WHERE f.""Id"" = ANY(SELECT id FROM fragments_intersects_display_ids)
+    ";
+    
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsWithBbFunctionOnSmallScreen()
+    public void GeometryOriginalCollectionDisplayIntersectionSqlSmallScreen()
+    {
+        var res = PgContext.Database
+            .SqlQueryRaw<Geometry>(_geometryOriginalCollectionDisplayIntersectionSql, ScreenSmall)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public void GeometryOriginalCollectionDisplayIntersectionSmallScreen()
+    {
+        var res = PgContext.Database
+            .SqlQueryRaw<Geometry>(_geometryOriginalCollectionDisplayIntersection, ScreenSmall)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public void EnumerateBbSqlSmallScreen()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_enumerateBbSql, ScreenSmall)
@@ -81,7 +126,7 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsOnSmallScreen()
+    public void EnumerateSqlSmallScreen()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_enumerateSql, ScreenSmall)
@@ -89,7 +134,7 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsWithWhereExistsOnSmallScreen()
+    public void WhereExistsSqlSmallScreen()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_whereExistsSql, ScreenSmall)
@@ -98,7 +143,7 @@ public class GetGeometryIntersectionScreenBench
     
     
     [Benchmark]
-    public void GetGeometryByPolygonLinqOnSmallScreen()
+    public void LinqOnSmallScreen()
     {
         var res = PgContext.GeometryOriginals
             .Where(g => g.Data.Intersects(ScreenSmall)).Select(g => g.Data.Intersection(ScreenSmall))
@@ -106,7 +151,23 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsWithBbFunctionOnBigScreen()
+    public void GeometryOriginalCollectionDisplayIntersectionSqlScreenBig()
+    {
+        var res = PgContext.Database
+            .SqlQueryRaw<Geometry>(_geometryOriginalCollectionDisplayIntersectionSql, ScreenBig)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public void GeometryOriginalCollectionDisplayIntersectionScreenBig()
+    {
+        var res = PgContext.Database
+            .SqlQueryRaw<Geometry>(_geometryOriginalCollectionDisplayIntersection, ScreenBig)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public void EnumerateBbSqlScreenBig()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_enumerateBbSql, ScreenBig)
@@ -114,7 +175,7 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsOnBigScreen()
+    public void EnumerateSqlScreenBig()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_enumerateSql, ScreenBig)
@@ -122,15 +183,16 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsWithWhereExistsOnBigScreen()
+    public void WhereExistsSqlScreenBig()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_whereExistsSql, ScreenBig)
             .ToArray();
     }
     
+    
     [Benchmark]
-    public void GetGeometryByPolygonLinqOnBigScreen()
+    public void LinqOnScreenBig()
     {
         var res = PgContext.GeometryOriginals
             .Where(g => g.Data.Intersects(ScreenBig)).Select(g => g.Data.Intersection(ScreenBig))
@@ -138,7 +200,23 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsWithBbFunctionOnFullScreen()
+    public void GeometryOriginalCollectionDisplayIntersectionSqlScreenFull()
+    {
+        var res = PgContext.Database
+            .SqlQueryRaw<Geometry>(_geometryOriginalCollectionDisplayIntersectionSql, ScreenFull)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public void GeometryOriginalCollectionDisplayIntersectionScreenFull()
+    {
+        var res = PgContext.Database
+            .SqlQueryRaw<Geometry>(_geometryOriginalCollectionDisplayIntersection, ScreenFull)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public void EnumerateBbSqlScreenFull()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_enumerateBbSql, ScreenFull)
@@ -146,7 +224,7 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsOnFullScreen()
+    public void EnumerateSqlScreenFull()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_enumerateSql, ScreenFull)
@@ -154,15 +232,16 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsWithWhereExistsOnFullScreen()
+    public void WhereExistsSqlScreenFull()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_whereExistsSql, ScreenFull)
             .ToArray();
     }
     
+    
     [Benchmark]
-    public void GetGeometryByPolygonLinqOnFullScreen()
+    public void LinqOnScreenFull()
     {
         var res = PgContext.GeometryOriginals
             .Where(g => g.Data.Intersects(ScreenFull)).Select(g => g.Data.Intersection(ScreenFull))
@@ -170,7 +249,23 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsWithBbFunctionOnVeryBigScreen()
+    public void GeometryOriginalCollectionDisplayIntersectionSqlVeryBigScreen()
+    {
+        var res = PgContext.Database
+            .SqlQueryRaw<Geometry>(_geometryOriginalCollectionDisplayIntersectionSql, VeryBigScreen)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public void GeometryOriginalCollectionDisplayIntersectionVeryBigScreen()
+    {
+        var res = PgContext.Database
+            .SqlQueryRaw<Geometry>(_geometryOriginalCollectionDisplayIntersection, VeryBigScreen)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public void EnumerateBbSqlVeryBigScreen()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_enumerateBbSql, VeryBigScreen)
@@ -178,7 +273,7 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsOnVeryBigScreen()
+    public void EnumerateSqlVeryBigScreen()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_enumerateSql, VeryBigScreen)
@@ -186,23 +281,39 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsWithWhereExistsOnVeryBigScreen()
+    public void WhereExistsSqlVeryBigScreen()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_whereExistsSql, VeryBigScreen)
             .ToArray();
     }
     
+    
     [Benchmark]
-    public void GetGeometryByPolygonLinqOnVeryBigScreen()
+    public void LinqOnVeryBigScreen()
     {
         var res = PgContext.GeometryOriginals
             .Where(g => g.Data.Intersects(VeryBigScreen)).Select(g => g.Data.Intersection(VeryBigScreen))
             .ToArray();
     }
-    
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsWithBbFunctionOnVeryBigScreenIntersectsLeftBaikals()
+    public void GeometryOriginalCollectionDisplayIntersectionSqlVeryBigScreenIntersectsLeftBaikals()
+    {
+        var res = PgContext.Database
+            .SqlQueryRaw<Geometry>(_geometryOriginalCollectionDisplayIntersectionSql, VeryBigScreenIntersectsLeftBaikals)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public void GeometryOriginalCollectionDisplayIntersectionVeryBigScreenIntersectsLeftBaikals()
+    {
+        var res = PgContext.Database
+            .SqlQueryRaw<Geometry>(_geometryOriginalCollectionDisplayIntersection, VeryBigScreenIntersectsLeftBaikals)
+            .ToArray();
+    }
+
+    [Benchmark]
+    public void EnumerateBbSqlVeryBigScreenIntersectsLeftBaikals()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_enumerateBbSql, VeryBigScreenIntersectsLeftBaikals)
@@ -210,7 +321,7 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsOnVeryBigScreenIntersectsLeftBaikals()
+    public void EnumerateSqlVeryBigScreenIntersectsLeftBaikals()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_enumerateSql, VeryBigScreenIntersectsLeftBaikals)
@@ -218,15 +329,16 @@ public class GetGeometryIntersectionScreenBench
     }
     
     [Benchmark]
-    public void GetGeometryByPolygonEnumerateFragmentsWithWhereExistsOnVeryBigScreenIntersectsLeftBaikals()
+    public void WhereExistsSqlVeryBigScreenIntersectsLeftBaikals()
     {
         var res = PgContext.Database
             .SqlQueryRaw<Geometry>(_whereExistsSql, VeryBigScreenIntersectsLeftBaikals)
             .ToArray();
     }
     
+    
     [Benchmark]
-    public void GetGeometryByPolygonLinqOnVeryBigScreenIntersectsLeftBaikals()
+    public void LinqOnVeryBigScreenIntersectsLeftBaikals()
     {
         var res = PgContext.GeometryOriginals
             .Where(g => g.Data.Intersects(VeryBigScreenIntersectsLeftBaikals)).Select(g => g.Data.Intersection(VeryBigScreenIntersectsLeftBaikals))

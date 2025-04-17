@@ -21,6 +21,7 @@ public static class Program
         //BenchmarkRunner.Run<GeometryInnerClickBench>(config);
         //BenchmarkRunner.Run<GeometryOuterClickBench>(config);
         //BenchmarkRunner.Run<SearchGeometryIntersectsScreenBench>(config);
-        BenchmarkRunner.Run<GetGeometryIntersectionScreenBench>(config);
+            //BenchmarkRunner.Run<GetGeometryIntersectionScreenBench>(config);
+            BenchmarkRunner.Run<GetGeometryIntersectionNewBench>(config);
     }
 }
