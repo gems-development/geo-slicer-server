@@ -21,4 +21,12 @@ let styles = {
     }
 }
 
-export default styles
+let specialStyles = {
+    "highlighted": {
+        'fill-color': '#2FF',
+        'fill-opacity': 0.4,
+        "fill-outline-color": "#F00"
+    }
+}
+
+export { styles, specialStyles }

@@ -2,7 +2,7 @@ import { Map } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './Map.css';
 import React, { useRef, useEffect } from 'react';
-import styles from '../layersStyles';
+import { styles, specialStyles } from '../layersStyles';
 
 
 
@@ -12,12 +12,13 @@ export default function MyMap() {
 
 
     const geojson = useRef(null);
+    const selectedIds = useRef(null);
 
     const mapContainer = useRef(null);
     const map = useRef(null);
     const renderScreenRequest = useRef(null);
-    const lng = 107.716;
-    const lat = 53.681;
+    const lng = 0;
+    const lat = 0;
     const zoom = 15;
 
     function renderScreen() {
@@ -39,26 +40,30 @@ export default function MyMap() {
         xhr.onload = function () {
             console.log(xhr.response);
             let response = JSON.parse(xhr.response);
+
+            geojson.current = response;
+
             let objectsByStyles = getObjectsBySlyles(response);
 
             for (const name in styles) {
                 map.current.getSource(name).setData(objectsByStyles[name]);
             }
+            highlight(selectedIds.current);
         };
 
     }
 
-    function getObjectsBySlyles(layers) {
+    function getObjectsBySlyles(geoms) {
         let res = {};
         for (const style in styles) {
             res[style] = [];
         }
 
-        for (const layer of layers) {
-            if (styles[layer.layerAlias] === undefined) {
-                layer.layerAlias = "DefaultLayer";
+        for (const geom of geoms) {
+            if (styles[geom.layerAlias] === undefined) {
+                geom.layerAlias = "DefaultLayer";
             }
-            res[layer.layerAlias].push({ "type": "Feature", "geometry": layer.result });
+            res[geom.layerAlias].push({ "type": "Feature", "geometry": geom.result });
         }
 
         for (const style in styles) {
@@ -68,15 +73,34 @@ export default function MyMap() {
         return res;
     }
 
+    function highlight(ids) {
+        let highlighted = [];
+
+        for(const geom of geojson.current){
+            if(ids.includes(geom.id)) {
+                highlighted.push({ "type": "Feature", "geometry": geom.result })
+            }
+        }
+
+        map.current.getSource("highlighted").setData({ "type": "FeatureCollection", "features": highlighted });
+    }
+
     function showInfo(e) {
         let x = e.lngLat.lng;
         let y = e.lngLat.lat;
 
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://localhost:5049/geometry/byClick", false);
+        xhr.open("POST", "http://localhost:5049/geometry/byClick", true);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         xhr.send(JSON.stringify({ "x": x, "y": y }));
-        alert(xhr.response.replace("},{", "},\n{"));
+        xhr.onload = function () {
+            alert(xhr.response.replace("},{", "},\n{"));
+
+            let response = JSON.parse(xhr.response);
+
+            selectedIds.current = response.map(layer => layer.id);
+            highlight(selectedIds.current);
+        }
     }
 
     useEffect(() => {
@@ -85,7 +109,8 @@ export default function MyMap() {
         geojson.current = {
             "type": "Point",
             "coordinates": [0, 0]
-        }
+        };
+        selectedIds.current = [];
 
         map.current = new Map({
             container: mapContainer.current,
@@ -106,6 +131,20 @@ export default function MyMap() {
                 'paint': styles[layer]
             });
         }
+        
+        for (const layer in specialStyles) {
+            map.current.addSource(layer, {
+                type: 'geojson',
+                data: geojson.current
+            });
+            map.current.addLayer({
+                'id': layer,
+                'type': 'fill',
+                'source': layer,
+                'layout': {},
+                'paint': specialStyles[layer]
+            });
+        }
 
 
         map.current.on('moveend', () => { renderScreen(); });
@@ -114,7 +153,7 @@ export default function MyMap() {
 
         renderScreen();
 
-    }, [geojson]);
+    }, [geojson, selectedIds]);
 
 
 
