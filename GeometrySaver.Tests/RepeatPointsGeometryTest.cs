@@ -37,8 +37,8 @@ public class RepeatPointsGeometryTest
             .Returns<Polygon>(input => new GeometryWithFragments<Polygon, Polygon>(input, Array. Empty<Polygon>())); 
         
         var mockRepository = new Mock<IRepository<GeometryWithFragments<Polygon, Polygon>, Polygon>>();
-        mockRepository.Setup(a => a.Save(It.IsAny<GeometryWithFragments<Polygon, Polygon>>(), ""))
-            .Returns<GeometryWithFragments<Polygon, Polygon>>(input => input.Data);
+        mockRepository.Setup(a => a.Save(It.IsAny<GeometryWithFragments<Polygon, Polygon>>(), It.IsAny<string>()))
+            .Returns((GeometryWithFragments<Polygon, Polygon> input, string _) => input.Data);
         
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection.AddGeometrySlicers(EpsilonCoordinateComparator, Epsilon);
