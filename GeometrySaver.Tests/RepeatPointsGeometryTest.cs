@@ -37,7 +37,7 @@ public class RepeatPointsGeometryTest
             .Returns<Polygon>(input => new GeometryWithFragments<Polygon, Polygon>(input, Array. Empty<Polygon>())); 
         
         var mockRepository = new Mock<IRepository<GeometryWithFragments<Polygon, Polygon>, Polygon>>();
-        mockRepository.Setup(a => a.Save(It.IsAny<GeometryWithFragments<Polygon, Polygon>>()))
+        mockRepository.Setup(a => a.Save(It.IsAny<GeometryWithFragments<Polygon, Polygon>>(), ""))
             .Returns<GeometryWithFragments<Polygon, Polygon>>(input => input.Data);
         
         IServiceCollection serviceCollection = new ServiceCollection();
@@ -56,7 +56,7 @@ public class RepeatPointsGeometryTest
         //Arrange
         var geometryController = GetGeometrySaver();
         //Act
-        var resultPolygon = geometryController.SaveGeometry(_testRepeatPointsPolygon, out string message);
+        var resultPolygon = geometryController.SaveGeometry(_testRepeatPointsPolygon, "", out string message);
         //Assert
         Assert.Equal(_testOriginalPolygon, resultPolygon);
         Assert.Equal("Validate errors: GeometryHasRepeatingPoints", message);
@@ -69,7 +69,7 @@ public class RepeatPointsGeometryTest
         var geometryController = GetGeometrySaver();
         string message = string.Empty;
         //Act + assert
-        Exception exception = Assert.Throws<Exception>(() => geometryController.SaveGeometry(_testHoleNotInPolygon, out message));
+        Exception exception = Assert.Throws<Exception>(() => geometryController.SaveGeometry(_testHoleNotInPolygon, "", out message));
         Assert.Equal("Validate errors: HoleOutsideShell\nThere is no fixer for the error HoleOutsideShell", exception.Message);
         Assert.Equal("Validate errors: HoleOutsideShell", message);
     }

@@ -20,7 +20,7 @@ public class SaveRepository : IRepository<GeometryWithFragments<Polygon, Fragmen
         _dbContext = dbContext;
     }
     //todo добавлена заглушка, так как инструмент не учитывает слой и свойства сохраняемой геометрии
-    public int Save(GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>> objectToSave)
+    public int Save(GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>> objectToSave, string layerAlias)
     {
         try
         {

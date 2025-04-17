@@ -23,7 +23,7 @@ class Program
     static async Task<int> Main(string[] args)
     {
         //Console usage example:
-        //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -maxp 1500
+        //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -mp 1500
         //geosaver validate -fs a.txt b.txt
         var rootCommand = new RootCommand("rootCommand")
         {
@@ -45,8 +45,15 @@ class Program
             AllowMultipleArgumentsPerToken = true
         };
         var numberOfPointsOption = new Option<int>(
-            aliases: new[] { "-maxp", "--maxNumberOfPointsInFragment" },
+            aliases: new[] { "-mp", "--maxNumberOfPointsInFragment" },
             description: "Option to set maximum number of points in fragment after slicing.")
+        {
+            IsRequired = true,
+            Arity = ArgumentArity.ExactlyOne
+        };
+        var layerAliasOption = new Option<string>(
+            aliases: new[] { "-la", "--layerAlias" },
+            description: "Option to set layer alias for geometry.")
         {
             IsRequired = true,
             Arity = ArgumentArity.ExactlyOne
@@ -56,7 +63,7 @@ class Program
         save.AddOption(stringOption);
         save.AddOption(filesInfo);
         save.AddOption(numberOfPointsOption);
-        save.SetHandler((connectionString, files, points) =>
+        save.SetHandler((connectionString, files, points, layerAlias) =>
             {
                 IServiceCollection serviceCollection = new ServiceCollection();
                 serviceCollection.AddGeometryDbContext(connectionString);
@@ -81,7 +88,7 @@ class Program
                     try
                     {
                         var polygon = ReadPolygonFromGeojsonFile(o);
-                        geometryController.SaveGeometry(polygon, out errors);
+                        geometryController.SaveGeometry(polygon, layerAlias, out errors);
                     }
                     catch (Exception e)
                     {
@@ -92,7 +99,7 @@ class Program
                 }
                 geometryController.CommitTransaction();
             },
-            stringOption, filesInfo, numberOfPointsOption);
+            stringOption, filesInfo, numberOfPointsOption, layerAliasOption);
         var validate = new Command("validate",
             "Validate geometries from {--files}.");
         validate.AddOption(filesInfo);

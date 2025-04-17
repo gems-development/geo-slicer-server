@@ -13,6 +13,7 @@ public class OppositeGeometrySlicerFactory : IOppositeSlicerFactory
     private readonly double _comparatorEpsilon;
     private readonly double _epsilon;
     private readonly int _maximumNumberOfPoints;
+
     public OppositeGeometrySlicerFactory(double comparatorEpsilon, double epsilon, int maximumNumberOfPoints = -1)
     {
         _comparatorEpsilon = comparatorEpsilon;
@@ -32,13 +33,5 @@ public class OppositeGeometrySlicerFactory : IOppositeSlicerFactory
         Slicer slicer = new Slicer(_maximumNumberOfPoints,
             weilerAtherton, new ConvexityIndexesGiver(new LineService(1E-5, new EpsilonCoordinateComparator(1E-8))));
         return slicer;
-        
-        
-        // var coordinateComparator = new EpsilonCoordinateComparator(_comparatorEpsilon);
-        // LineService lineService = new LineService(_epsilon, coordinateComparator);
-        // WeilerAthertonAlgorithm weilerAthertonAlgorithm = new WeilerAthertonAlgorithm(
-        //     new LinesIntersector(coordinateComparator, lineService, _epsilon), lineService,
-        //     coordinateComparator, new ContainsChecker(lineService, _epsilon));
-        // return new Slicer(_maximumNumberOfPoints, weilerAthertonAlgorithm, new ConvexityIndexesGiver(lineService));
     }
 }
