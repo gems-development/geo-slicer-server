@@ -23,7 +23,7 @@ class Program
     static async Task<int> Main(string[] args)
     {
         //Console usage example:
-        //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -mp 1500
+        //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -mp 1500 -la water --srid 4326
         //geosaver validate -fs a.txt b.txt
         var rootCommand = new RootCommand("rootCommand")
         {
@@ -58,12 +58,19 @@ class Program
             IsRequired = true,
             Arity = ArgumentArity.ExactlyOne
         };
+        var sridOption = new Option<int>(
+            aliases: new[] { "-s", "--srid" },
+            description: "Option to set srid for geometry.")
+        {
+            IsRequired = true,
+            Arity = ArgumentArity.ExactlyOne
+        };
         var save = new Command("save",
             "Save geometries from {--files} in database using {--connectionString} to connect.");
         save.AddOption(stringOption);
         save.AddOption(filesInfo);
         save.AddOption(numberOfPointsOption);
-        save.SetHandler((connectionString, files, points, layerAlias) =>
+        save.SetHandler((connectionString, files, points, layerAlias, srid) =>
             {
                 IServiceCollection serviceCollection = new ServiceCollection();
                 serviceCollection.AddGeometryDbContext(connectionString);
@@ -88,7 +95,7 @@ class Program
                     try
                     {
                         var polygon = ReadPolygonFromGeojsonFile(o);
-                        geometryController.SaveGeometry(polygon, layerAlias, out errors);
+                        geometryController.SaveGeometry(polygon, layerAlias, srid, out errors);
                     }
                     catch (Exception e)
                     {
@@ -99,7 +106,7 @@ class Program
                 }
                 geometryController.CommitTransaction();
             },
-            stringOption, filesInfo, numberOfPointsOption, layerAliasOption);
+            stringOption, filesInfo, numberOfPointsOption, layerAliasOption, sridOption);
         var validate = new Command("validate",
             "Validate geometries from {--files}.");
         validate.AddOption(filesInfo);

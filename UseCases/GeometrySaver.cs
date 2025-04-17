@@ -23,7 +23,7 @@ public class GeometrySaver<TGeometryIn, TSliceType, TKey> : IGeometrySaver<TGeom
         GeometryCorrector = geometryCorrector;
     }
         
-    public TKey SaveGeometry(TGeometryIn geometry, string layerAlias, out string validateResult)
+    public TKey SaveGeometry(TGeometryIn geometry, string layerAlias, int srid, out string validateResult)
     {
         validateResult = "";
         try
@@ -36,7 +36,7 @@ public class GeometrySaver<TGeometryIn, TSliceType, TKey> : IGeometrySaver<TGeom
             GeometryWithFragments<TGeometryIn, TSliceType> geometryOut =
                 GeometryWithFragmentsCreator.ToGeometryWithFragments(geometry);
 
-            return Repository.Save(geometryOut, layerAlias);
+            return Repository.Save(geometryOut, layerAlias, srid);
         }
         catch (Exception e)
         { 

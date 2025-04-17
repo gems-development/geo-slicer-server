@@ -37,8 +37,8 @@ public class RepeatPointsGeometryTest
             .Returns<Polygon>(input => new GeometryWithFragments<Polygon, Polygon>(input, Array. Empty<Polygon>())); 
         
         var mockRepository = new Mock<IRepository<GeometryWithFragments<Polygon, Polygon>, Polygon>>();
-        mockRepository.Setup(a => a.Save(It.IsAny<GeometryWithFragments<Polygon, Polygon>>(), It.IsAny<string>()))
-            .Returns((GeometryWithFragments<Polygon, Polygon> input, string _) => input.Data);
+        mockRepository.Setup(a => a.Save(It.IsAny<GeometryWithFragments<Polygon, Polygon>>(), It.IsAny<string>(), It.IsAny<int>()))
+            .Returns((GeometryWithFragments<Polygon, Polygon> input, string _, int _) => input.Data);
         
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection.AddGeometrySlicers(EpsilonCoordinateComparator, Epsilon);
@@ -56,7 +56,7 @@ public class RepeatPointsGeometryTest
         //Arrange
         var geometryController = GetGeometrySaver();
         //Act
-        var resultPolygon = geometryController.SaveGeometry(_testRepeatPointsPolygon, "", out string message);
+        var resultPolygon = geometryController.SaveGeometry(_testRepeatPointsPolygon, "", 4326, out string message);
         //Assert
         Assert.Equal(_testOriginalPolygon, resultPolygon);
         Assert.Equal("Validate errors: GeometryHasRepeatingPoints", message);
@@ -69,7 +69,7 @@ public class RepeatPointsGeometryTest
         var geometryController = GetGeometrySaver();
         string message = string.Empty;
         //Act + assert
-        Exception exception = Assert.Throws<Exception>(() => geometryController.SaveGeometry(_testHoleNotInPolygon, "", out message));
+        Exception exception = Assert.Throws<Exception>(() => geometryController.SaveGeometry(_testHoleNotInPolygon, "", 4326, out message));
         Assert.Equal("Validate errors: HoleOutsideShell\nThere is no fixer for the error HoleOutsideShell", exception.Message);
         Assert.Equal("Validate errors: HoleOutsideShell", message);
     }
