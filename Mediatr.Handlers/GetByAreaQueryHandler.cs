@@ -8,9 +8,9 @@ namespace Mediatr.Handlers;
 
 public class GetByAreaQueryHandler : IRequestHandler<GetByAreaQuery, IEnumerable<AreaIntersectionDto<Geometry>>>
 {
-    private readonly IGeometriesProvider<Geometry> _useCase;
+    private readonly IGeometriesProvider _useCase;
 
-    public GetByAreaQueryHandler(IGeometriesProvider<Geometry> useCase)
+    public GetByAreaQueryHandler(IGeometriesProvider useCase)
     {
         _useCase = useCase;
     }

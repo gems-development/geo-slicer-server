@@ -3,7 +3,8 @@ using WebApp.Dto.Responses;
 
 namespace Services.GeometryProviders.Interfaces;
 
-public interface IGeometryByScreenService<TGeometry> where TGeometry : Geometry
+public interface IGeometryByScreenService
 {
-    Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByScreen(Polygon screen, CancellationToken cancellationToken);
+    Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByScreen(
+        Polygon screen, double tolerance, CancellationToken cancellationToken);
 }

@@ -8,6 +8,6 @@ public static class GeometryByScreenServiceExtension
 {
     public static void AddGeometryByScreenService(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IGeometryByScreenService<Geometry>, GeometryByScreenService>();
+        serviceCollection.AddScoped<IGeometryByScreenService, GeometryByScreenService>();
     }
 }

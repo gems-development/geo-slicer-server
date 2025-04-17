@@ -4,7 +4,8 @@ using Point = NetTopologySuite.Geometries.Point;
 
 namespace UseCases.Interfaces;
 
-public interface IGeometriesProvider<TGeometry> where TGeometry : Geometry
+public interface IGeometriesProvider
 {
-    Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByScreen(Point pointLeftBottom, Point pointRightTop, CancellationToken cancellationToken);
+    Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByScreen(
+        Point pointLeftBottom, Point pointRightTop, CancellationToken cancellationToken);
 }

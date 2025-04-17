@@ -7,6 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Services.ScaleCalculator.Interfaces\Services.ScaleCalculator.Interfaces.csproj" />
+      <ProjectReference Include="..\Services.ScaleCalculator\Services.ScaleCalculator.csproj" />
       <ProjectReference Include="..\UseCases.Interfaces\UseCases.Interfaces.csproj" />
       <ProjectReference Include="..\DataAccess.Repositories.ConsoleApp.Interfaces\DataAccess.Repositories.ConsoleApp.Interfaces.csproj" />
       <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
