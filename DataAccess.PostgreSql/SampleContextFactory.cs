@@ -7,13 +7,13 @@ public class SampleContextFactory : IDesignTimeDbContextFactory<PostgreApplicati
 {
     public PostgreApplicationContext CreateDbContext(string[] args)
     {
-        // получаем конфигурацию из файла appsettings.json
+        // получаем конфигурацию из файла launchSettings.json проекта WebApp.Server
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.SetBasePath(Directory.GetCurrentDirectory());
-        builder.AddJsonFile("appsettings.json");
+        builder.AddJsonFile("launchSettings.json");
         IConfigurationRoot config = builder.Build();
  
-        // получаем строку подключения из файла appsettings.json
+        // получаем строку подключения из файла launchSettings.json проекта WebApp.Server
         string connectionString = config.GetConnectionString("DefaultConnection")!;
         return new PostgreApplicationContext(connectionString);
     }

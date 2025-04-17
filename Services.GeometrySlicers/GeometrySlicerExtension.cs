@@ -8,11 +8,11 @@ namespace Services.GeometrySlicers;
 public static class GeometrySlicerExtension
 {
     public static void AddGeometrySlicers(
-        this IServiceCollection serviceCollection, double comparatorEpsilon, double epsilon,
+        this IServiceCollection serviceCollection, double epsilon,
         int maximumNumberOfPoints = -1)
     {
         serviceCollection.AddTransient<IOppositeSlicerFactory>(_ =>
-            new OppositeGeometrySlicerFactory(comparatorEpsilon, epsilon, maximumNumberOfPoints));
+            new OppositeGeometrySlicerFactory(maximumNumberOfPoints));
 
         serviceCollection.AddTransient<IGeometrySlicer<Polygon, Polygon>, OppositesGeometrySlicerAdapter>();
 

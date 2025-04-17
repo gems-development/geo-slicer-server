@@ -15,7 +15,7 @@ public class GeometriesProvider<TGeometry> : IGeometriesProvider<TGeometry> wher
         _geometryByScreenService = geometryByScreenService;
     }
 
-    public Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByScreen(Point pointLeftBottom, Point pointRightTop, CancellationToken cancellationToken)
+    public Task<IEnumerable<AreaIntersectionDto<TGeometry>>> GetGeometryByScreen(Point pointLeftBottom, Point pointRightTop, CancellationToken cancellationToken)
     {
         Polygon polygon = PolygonUtils.FromRectangle(pointLeftBottom, pointRightTop);
         

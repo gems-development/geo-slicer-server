@@ -5,16 +5,16 @@ using WebApp.Dto.Responses;
 
 namespace UseCases;
 
-public class GeometryInfoProvider<TInfo> : IGeometryInfoProvider<TInfo>
+public class GeometryInfoProvider<TId> : IGeometryInfoProvider<TId>
 {
-    private readonly IGeometryInfoService<TInfo> _service;
+    private readonly IGeometryInfoService<TId> _service;
 
-    public GeometryInfoProvider(IGeometryInfoService<TInfo> service)
+    public GeometryInfoProvider(IGeometryInfoService<TId> service)
     {
         _service = service;
     }
 
-    public Task<IEnumerable<ClickInfoDto<TInfo>>> GetInfoByClick(Point point, CancellationToken cancellationToken)
+    public Task<IEnumerable<ClickInfoDto<TId>>> GetInfoByClick(Point point, CancellationToken cancellationToken)
     {
         return _service.GetInfoByClick(point, cancellationToken);
     }

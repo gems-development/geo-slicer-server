@@ -41,7 +41,7 @@ public class RepeatPointsGeometryTest
             .Returns((GeometryWithFragments<Polygon, Polygon> input, string _, int _) => input.Data);
         
         IServiceCollection serviceCollection = new ServiceCollection();
-        serviceCollection.AddGeometrySlicers(EpsilonCoordinateComparator, Epsilon);
+        serviceCollection.AddGeometrySlicers(Epsilon);
         serviceCollection.AddGeometryFixer(EpsilonCoordinateComparator);
         serviceCollection.AddGeometryValidator(EpsilonCoordinateComparator);
         serviceCollection.AddGeometryCorrector();

@@ -6,5 +6,5 @@ namespace UseCases.Interfaces;
 
 public interface IGeometriesProvider<TGeometry> where TGeometry : Geometry
 {
-    Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByScreen(Point pointLeftBottom, Point pointRightTop, CancellationToken cancellationToken);
+    Task<IEnumerable<AreaIntersectionDto<TGeometry>>> GetGeometryByScreen(Point pointLeftBottom, Point pointRightTop, CancellationToken cancellationToken);
 }

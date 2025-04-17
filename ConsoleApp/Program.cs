@@ -75,7 +75,7 @@ class Program
                 IServiceCollection serviceCollection = new ServiceCollection();
                 serviceCollection.AddGeometryDbContext(connectionString);
                 serviceCollection.AddSaveRepository();
-                serviceCollection.AddGeometrySlicers(EpsilonCoordinateComparator, Epsilon, points);
+                serviceCollection.AddGeometrySlicers(Epsilon, points);
                 serviceCollection.AddGeometryFixer(EpsilonCoordinateComparator);
                 serviceCollection.AddGeometryValidator(EpsilonCoordinateComparator);
                 serviceCollection.AddGeometryWithFragmentsCreator();
