@@ -5,5 +5,5 @@ namespace Services.GeometryProviders.Interfaces;
 
 public interface IGeometryByScreenService<TGeometry> where TGeometry : Geometry
 {
-    Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByScreen(Polygon screen, CancellationToken cancellationToken);
+    Task<IEnumerable<AreaIntersectionDto<TGeometry>>> GetGeometryByScreen(Polygon screen, CancellationToken cancellationToken);
 }
