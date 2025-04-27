@@ -10,14 +10,11 @@ namespace Services.GeometrySlicers;
 
 public class OppositeGeometrySlicerFactory : IOppositeSlicerFactory
 {
-    private readonly double _comparatorEpsilon;
-    private readonly double _epsilon;
+    
     private readonly int _maximumNumberOfPoints;
 
-    public OppositeGeometrySlicerFactory(double comparatorEpsilon, double epsilon, int maximumNumberOfPoints = -1)
+    public OppositeGeometrySlicerFactory(int maximumNumberOfPoints = -1)
     {
-        _comparatorEpsilon = comparatorEpsilon;
-        _epsilon = epsilon;
         _maximumNumberOfPoints = maximumNumberOfPoints;
     }
 

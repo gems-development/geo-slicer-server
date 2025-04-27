@@ -6,18 +6,18 @@ namespace Services.GeometryFixers;
 
 public class GeometryFixer<TGeometry> : IGeometryFixer<TGeometry> where TGeometry : Geometry
 {
-    private IGeometryFixerFactory<TGeometry> _geometryFixerFactory;
+    private ISpecificFixerFactory<TGeometry> _specificFixerFactory;
 
-    public GeometryFixer(IGeometryFixerFactory<TGeometry> geometryFixerFactory)
+    public GeometryFixer(ISpecificFixerFactory<TGeometry> specificFixerFactory)
     {
-        _geometryFixerFactory = geometryFixerFactory;
+        _specificFixerFactory = specificFixerFactory;
     }
 
-    protected override TGeometry Fix(TGeometry geometry, GeometryValidateError[] geometryValidateErrors)
+    protected override TGeometry Fix(TGeometry geometry, GeometryValidateErrorType[] geometryValidateErrors)
     {
         foreach (var error in geometryValidateErrors)
         {
-            var fixer = _geometryFixerFactory.GetFixer(error);
+            var fixer = _specificFixerFactory.GetFixer(error);
             if (fixer == null)
                 throw new ApplicationException($"There is no fixer for the error {error}");
             geometry = fixer.Fix(geometry);

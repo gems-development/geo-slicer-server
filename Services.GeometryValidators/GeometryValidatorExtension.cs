@@ -9,10 +9,10 @@ public static class GeometryValidatorExtension
     public static void AddGeometryValidator(
         this IServiceCollection serviceCollection, double epsilon)
     {
-        serviceCollection.AddTransient<ISpecificValidator<Polygon>, NetTopologySuiteValidatorAdapter<Polygon>>();
+        serviceCollection.AddTransient<ISpecificValidator<Geometry>, NtsSpecificValidatorAdapter>();
             
-        serviceCollection.AddTransient<ISpecificValidator<Polygon>>(_ => new RepeatingPointsGeometryValidator(epsilon));
+        serviceCollection.AddTransient<ISpecificValidator<Geometry>>(_ => new RepeatingPointsSpecificValidator(epsilon));
             
-        serviceCollection.AddTransient<IGeometryValidator<Polygon>, GeometryValidator<Polygon>>();
+        serviceCollection.AddTransient<IGeometryValidator<Geometry>, GeometryValidator<Geometry>>();
     }
 }

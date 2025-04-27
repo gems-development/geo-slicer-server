@@ -11,7 +11,7 @@ public static class GeometrySaverExtension
         this IServiceCollection serviceCollection)
     {
         serviceCollection
-            .AddTransient<IGeometrySaver<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>,
-                GeometrySaver<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
+            .AddTransient<IGeometrySaver<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>, int>,
+                GeometrySaver<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>, int>>();
     }
 }

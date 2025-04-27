@@ -15,18 +15,19 @@ public class GeometryValidator<TGeometry> : IGeometryValidator<TGeometry> where 
 
     public GeometryValidateError[] ValidateGeometry(TGeometry geometry)
     {
-        HashSet<GeometryValidateError> validateErrors = new HashSet<GeometryValidateError>(_validators.Length);
+        var validateErrors = new HashSet<GeometryValidateError>(_validators.Length);
         for (int i = 0; i < _validators.Length; i++)
         {
             var answer = _validators[i].ValidateGeometry(geometry);
-            if (answer != GeometryValidateError.GeometryValid)
+            if (answer.Type != GeometryValidateErrorType.GeometryValid)
             {
                 validateErrors.Add(answer);
             }
         }
         if (!validateErrors.Any())
         {
-            validateErrors.Add(GeometryValidateError.GeometryValid);
+            validateErrors.Add(
+                new GeometryValidateError(GeometryValidateErrorType.GeometryValid, "no errors were found"));
         }
         return validateErrors.ToArray();
     }
