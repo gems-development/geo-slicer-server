@@ -1,33 +1,28 @@
 using GeoSlicer.Utils.Intersectors.CoordinateComparators;
 using NetTopologySuite.Geometries;
 using GeoSlicer.Utils.Validators;
-using Services.GeometryFixers.Interfaces;
 
 namespace Services.GeometryFixers;
 
-public class RepeatingPointsFixer : ISpecificFixer<Polygon>
+//Исправляет подряд идущие повторяющиеся точки только в частях geometry, которые являются linearRing и lineString
+public class RepeatingPointsFixer : SpecificTemplateFixer
 {
     private readonly RepeatingPointsValidator _repeatingPointsValidator;
-    private readonly Func<Coordinate[], LinearRing> _creator = array => new LinearRing(array);
+    private readonly Func<Coordinate[], LinearRing> _linearRingCreator = array => new LinearRing(array);
+    private readonly Func<Coordinate[], LineString> _lineStringCreator = array => new LineString(array);
 
     public RepeatingPointsFixer(double epsilon)
     {
         _repeatingPointsValidator = new RepeatingPointsValidator(new EpsilonCoordinateComparator(epsilon));
     }
-        
-    public Polygon Fix(Polygon geometry)
+    
+    protected override LinearRing FixLinearRing(LinearRing linearRing)
     {
-        LinearRing shell = geometry.Shell;
-        LinearRing[] holes = geometry.Holes;
+        return _repeatingPointsValidator.Fix(linearRing, _linearRingCreator);
+    }
 
-        LinearRing newShell = _repeatingPointsValidator.Fix<LinearRing>(shell, _creator);
-        LinearRing[] newHoles = new LinearRing[holes.Length];
-        for (int i = 0; i < holes.Length; i++)
-        {
-            LinearRing hole = _repeatingPointsValidator.Fix<LinearRing>(holes[i], _creator);
-            newHoles[i] = hole;
-        }
-
-        return new Polygon(newShell, newHoles);
+    protected override LineString FixLineString(LineString lineString)
+    {
+        return _repeatingPointsValidator.Fix(lineString, _lineStringCreator);
     }
 }

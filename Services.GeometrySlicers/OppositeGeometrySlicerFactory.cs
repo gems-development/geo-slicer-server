@@ -10,6 +10,7 @@ namespace Services.GeometrySlicers;
 
 public class OppositeGeometrySlicerFactory : IOppositeSlicerFactory
 {
+    
     private readonly int _maximumNumberOfPoints;
     public OppositeGeometrySlicerFactory(int maximumNumberOfPoints = -1)
     {

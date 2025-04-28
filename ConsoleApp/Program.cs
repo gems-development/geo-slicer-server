@@ -4,14 +4,12 @@ using UseCases.Interfaces;
 using DataAccess.PostgreSql;
 using DataAccess.Repositories.ConsoleApp;
 using DomainModels;
+using GeometrySlicerTypes;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
-using Services.GeometryCreators;
-using Services.GeometryFixers;
-using Services.GeometryValidators;
-using Services.GeometrySlicers;
 using Services.GeometryValidateErrors;
+using Utils;
 
 
 namespace ConsoleApp;
@@ -20,6 +18,7 @@ class Program
 {
     private const double EpsilonCoordinateComparator = 1e-9;
     private const double Epsilon = 1e-15;
+    
     static async Task<int> Main(string[] args)
     {
         //Console usage example:
@@ -70,41 +69,43 @@ class Program
         save.AddOption(stringOption);
         save.AddOption(filesInfo);
         save.AddOption(numberOfPointsOption);
+        save.AddOption(layerAliasOption);
+        save.AddOption(sridOption);
         save.SetHandler((connectionString, files, points, layerAlias, srid) =>
             {
+                Console.WriteLine(points);
+                Console.WriteLine(layerAlias);
                 IServiceCollection serviceCollection = new ServiceCollection();
-                serviceCollection.AddGeometryDbContext(connectionString);
-                serviceCollection.AddSaveRepository();
-                serviceCollection.AddGeometrySlicers(Epsilon, points);
-                serviceCollection.AddGeometryFixer(EpsilonCoordinateComparator);
-                serviceCollection.AddGeometryValidator(EpsilonCoordinateComparator);
-                serviceCollection.AddGeometryWithFragmentsCreator();
-                serviceCollection.AddGeometryCorrector();
-                serviceCollection.AddGeometrySaver();
-                using var serviceProvider = serviceCollection.BuildServiceProvider();
-                var geometryController = serviceProvider
-                    .GetService<IGeometrySaver<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>, int>>();
-                if (geometryController == null)
+                using var geometrySaverProvider =
+                    serviceCollection.BuildGeometrySaverServiceProvider(connectionString, points,
+                        EpsilonCoordinateComparator, Epsilon, GeometrySlicerType.OppositeSlicer);
+                var geometrySaver = geometrySaverProvider
+                    .GetService<
+                        IGeometrySaver<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>, int>>();
+                if (geometrySaver == null)
                 {
                     throw new NullReferenceException("Geometry controller is null");
                 }
-                geometryController.StartTransaction();
+                geometrySaver.StartTransaction();
                 foreach (var o in files)
                 {
-                    string errors;
+                    string errors = "";
                     try
                     {
-                        var polygon = ReadPolygonFromGeojsonFile(o);
-                        geometryController.SaveGeometry(polygon, layerAlias, srid, out errors);
+                        var featureCollection = new GeometryReader().ReadGeometriesFromFile(o.FullName);
+                        foreach (var feature in featureCollection)
+                        {
+                            geometrySaver.SaveGeometry(feature.Geometry, layerAlias, feature.Attributes.ToString() ?? "", out errors);
+                        }
                     }
                     catch (Exception e)
                     {
-                        geometryController.RollbackTransaction();
+                        geometrySaver.RollbackTransaction();
                         throw new Exception(o.FullName + ":" + "\n" + e.Message, e);
                     }
                     Console.WriteLine(o.FullName + ":" + "\n" + errors);
                 }
-                geometryController.CommitTransaction();
+                geometrySaver.CommitTransaction();
             },
             stringOption, filesInfo, numberOfPointsOption, layerAliasOption, sridOption);
         var validate = new Command("validate",
@@ -113,12 +114,8 @@ class Program
         validate.SetHandler(files =>
         {
             IServiceCollection serviceCollection = new ServiceCollection();
-            serviceCollection.AddGeometryFixer(EpsilonCoordinateComparator);
-            serviceCollection.AddGeometryValidator(EpsilonCoordinateComparator);
-            serviceCollection.AddGeometryCorrector();
-            using var serviceProvider = serviceCollection.BuildServiceProvider();
-            var correctionService = serviceProvider
-                .GetService<IGeometryCorrector<Polygon>>();
+            using var geometryCorrectorProvider = serviceCollection.BuildGeometryCorrectorProvider(EpsilonCoordinateComparator);
+            var correctionService = geometryCorrectorProvider.GetService<IGeometryCorrector<Polygon>>();
             if (correctionService == null)
             {
                 throw new NullReferenceException("Correction service is null");
@@ -126,7 +123,7 @@ class Program
             foreach (var o in files)
             {
                 string errors = "";
-                GeometryValidateError[]? geometryValidateErrors = null;
+                GeometryValidateErrorType[]? geometryValidateErrors = null;
                 try
                 {
                     var polygon = ReadPolygonFromGeojsonFile(o);

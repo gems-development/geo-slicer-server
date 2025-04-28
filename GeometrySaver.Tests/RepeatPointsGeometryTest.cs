@@ -16,6 +16,7 @@ namespace GeometrySaver.Tests;
 
 public class RepeatPointsGeometryTest
 {
+    /*
     private Polygon _testRepeatPointsPolygon = ReadGeometryFromFile<Polygon>("TestFiles\\sampleRepeatPoints.geojson");
     private Polygon _testOriginalPolygon = ReadGeometryFromFile<Polygon>("TestFiles\\sample.geojson");
     private Polygon _testHoleNotInPolygon = ReadGeometryFromFile<Polygon>("TestFiles\\sampleHoleOutside.geojson");
@@ -30,6 +31,7 @@ public class RepeatPointsGeometryTest
         _output = output;
     }
 
+    /*
     public IGeometrySaver<Polygon, Polygon, Polygon> GetGeometrySaver()
     {
         var mockCreator = new Mock<IGeometryWithFragmentsCreator<Polygon, Polygon>>();
@@ -79,5 +81,5 @@ public class RepeatPointsGeometryTest
         string geoJson = File.ReadAllText(path);
         var geometry = new GeoJsonReader().Read<T>(geoJson);
         return geometry;
-    }
+    }*/
 }

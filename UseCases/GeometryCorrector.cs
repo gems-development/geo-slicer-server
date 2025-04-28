@@ -19,15 +19,16 @@ public class GeometryCorrector<TGeometryIn> : IGeometryCorrector<TGeometryIn> wh
         GeometryFixer = geometryFixer;
     }
     public bool ValidateGeometry(
-        ref GeometryValidateError[]? geometryValidateErrors, TGeometryIn geometry, ref string result)
+        ref GeometryValidateErrorType[]? geometryValidateErrorsTypes, TGeometryIn geometry, ref string result)
     {
-        geometryValidateErrors = GeometryValidator.ValidateGeometry(geometry);
-        result = result + "Validate errors: " + string.Join("\n", geometryValidateErrors);
+        var geometryValidateErrors = GeometryValidator.ValidateGeometry(geometry);
+        geometryValidateErrorsTypes = geometryValidateErrors.Select(l => l.Type).ToArray();
+        result = result + "Validate errors: " + string.Join("\n", geometryValidateErrors.Select(l => l.Type + ": " + l.Message));
         return true;
     }
 
     public TGeometryIn FixGeometry(
-        bool validatedGeometry, TGeometryIn geometry, GeometryValidateError[]? geometryValidateErrors)
+        bool validatedGeometry, TGeometryIn geometry, GeometryValidateErrorType[]? geometryValidateErrors)
     {
         if (!validatedGeometry)
             throw new ApplicationException("geometry was not validated, but a fix parameter was sent");
