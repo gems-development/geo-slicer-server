@@ -38,42 +38,25 @@ public class GeometryWithFragmentsCreator : IGeometryWithFragmentsCreator<Geomet
     private GeometryWithFragments<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>>
         HandleGeometryCollection(GeometryCollection geometryCollection)
     {
-        var res =
-            geometryCollection.Geometries.Select(ToGeometryWithFragments).ToArray();
-        var newGeometryCollection = new GeometryCollection(
-            res.Select(g => g.Data).ToArray());
-        SetSrid(geometryCollection, newGeometryCollection);
-        var fragments = res
+        var fragments = geometryCollection.Geometries
+                .Select(ToGeometryWithFragments)
                 .Select(g => g.GeometryFragments)
                 .SelectMany(x => x)
                 .ToArray();
         return new GeometryWithFragments<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>>(
-            newGeometryCollection, fragments);
+            geometryCollection, fragments);
     }
     
     private GeometryWithFragments<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>>
         HandleMultiPolygon(MultiPolygon multiPolygon)
     {
-        var res =
-            multiPolygon.Geometries.Select(a => SlicePolygon((Polygon) a)).ToArray();
-        foreach (var fragment in res)
-        {
-            foreach (var fr in fragment.GeometryFragments)
-            {
-                //Console.WriteLine(fr.Fragment.SRID);
-            }
-        }
-        var newMultiPolygon = new MultiPolygon(
-            res.Select(g => g.Data).ToArray());
-        SetSrid(multiPolygon, newMultiPolygon);
-        var fragments = res
+        var fragments = multiPolygon.Geometries
+            .Select(a => HandlePolygon((Polygon) a))
             .Select(g => g.GeometryFragments)
             .SelectMany(x => x)
-            .Select(g => 
-                new FragmentWithNonRenderingBorder<Geometry, Geometry>(g.Fragment, g.NonRenderingBorder))
             .ToArray();
         return new GeometryWithFragments<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>>(
-            newMultiPolygon, fragments);
+            multiPolygon, fragments);
     }
     
     private GeometryWithFragments<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>>
@@ -84,39 +67,21 @@ public class GeometryWithFragmentsCreator : IGeometryWithFragmentsCreator<Geomet
             [new FragmentWithNonRenderingBorder<Geometry, Geometry>(geometry, emptyGeometry)]);
     }
 
-    private GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>> SlicePolygon(Polygon polygon)
-    {
-        var slicedPolygon = _polygonSlicer.Slice(polygon).ToArray();
-        foreach (var fragment in slicedPolygon)
-        {
-            //Console.WriteLine(fragment.Fragment.SRID);
-            SetSrid(polygon, fragment.Fragment);
-            SetSrid(polygon, fragment.NonRenderingBorder);
-        }
-        
-        foreach (var fragment in slicedPolygon)
-        {
-            Console.WriteLine(fragment.Fragment.SRID);
-            Console.WriteLine(fragment.NonRenderingBorder.SRID);
-        }
-
-        return new GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>(
-            polygon,
-            slicedPolygon);
-    }
-
     private GeometryWithFragments<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>> HandlePolygon(Polygon polygon)
     {
-        var slicedPolygon = SlicePolygon(polygon);
+        var slicedPolygon = _polygonSlicer
+            .Slice(polygon)
+            .Select(a => { 
+                SetSrid(polygon, a.Fragment); 
+                SetSrid(polygon, a.NonRenderingBorder); 
+                return a; 
+            })
+            .Select(a =>
+                new FragmentWithNonRenderingBorder<Geometry, Geometry>(a.Fragment, a.NonRenderingBorder))
+            .ToArray();
+
         return new GeometryWithFragments<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>>(
-            slicedPolygon.Data,
-            slicedPolygon.GeometryFragments
-                .Select(g =>
-                    new FragmentWithNonRenderingBorder<Geometry, Geometry>(
-                        g.Fragment,
-                        g.NonRenderingBorder
-                    ))
-                .ToArray()
-        );
+            polygon,
+            slicedPolygon);
     }
 }
