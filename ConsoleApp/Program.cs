@@ -1,8 +1,5 @@
 ﻿using System.CommandLine;
-using UseCases;
 using UseCases.Interfaces;
-using DataAccess.PostgreSql;
-using DataAccess.Repositories.ConsoleApp;
 using DomainModels;
 using GeometrySlicerTypes;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,14 +26,14 @@ class Program
             Name = "geosaver"
         };
         var stringOption = new Option<string>(
-            aliases: new[] { "-cs", "--connectionString" },
+            aliases: ["-cs", "--connectionString"],
             description: "Option to set connectionString.")
         {
             IsRequired = true,
             Arity = ArgumentArity.ExactlyOne
         };
         var filesInfo = new Option<FileInfo[]>(
-            aliases: new[] { "-fs", "--files" },
+            aliases: ["-fs", "--files"],
             description: "Input file names")
         {
             IsRequired = true,
@@ -44,21 +41,21 @@ class Program
             AllowMultipleArgumentsPerToken = true
         };
         var numberOfPointsOption = new Option<int>(
-            aliases: new[] { "-mp", "--maxNumberOfPointsInFragment" },
+            aliases: ["-mp", "--maxNumberOfPointsInFragment"],
             description: "Option to set maximum number of points in fragment after slicing.")
         {
             IsRequired = true,
             Arity = ArgumentArity.ExactlyOne
         };
         var layerAliasOption = new Option<string>(
-            aliases: new[] { "-la", "--layerAlias" },
+            aliases: ["-la", "--layerAlias"],
             description: "Option to set layer alias for geometry.")
         {
             IsRequired = true,
             Arity = ArgumentArity.ExactlyOne
         };
         var sridOption = new Option<int>(
-            aliases: new[] { "-s", "--srid" },
+            aliases: ["-s", "--srid"],
             description: "Option to set srid for geometry.")
         {
             IsRequired = true,

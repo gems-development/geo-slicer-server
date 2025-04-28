@@ -23,7 +23,7 @@ public class GeometryCorrector<TGeometryIn> : IGeometryCorrector<TGeometryIn> wh
     {
         var geometryValidateErrors = GeometryValidator.ValidateGeometry(geometry);
         geometryValidateErrorsTypes = geometryValidateErrors.Select(l => l.Type).ToArray();
-        result = result + "Validate errors: " + string.Join("\n", geometryValidateErrors.Select(l => l.Type + ": " + l.Message));
+        result = result + "\nValidate errors: " + string.Join("\n", geometryValidateErrors.Select(l => l.Type + ": " + l.Message));
         return true;
     }
 
