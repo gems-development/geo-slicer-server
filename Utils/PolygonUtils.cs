@@ -39,7 +39,7 @@ public static class PolygonUtils
         return linesSet;
     }
     
-    public static Polygon FromRectangle(Point pointLeftBottom, Point pointRightTop)
+    public static Polygon FromRectangle(Point pointLeftBottom, Point pointRightTop, int srid)
     {
         Coordinate coordinateLeftTop = new Coordinate(pointLeftBottom.X, pointRightTop.Y);
         Coordinate coordinateRightBottom = new Coordinate(pointRightTop.X, pointLeftBottom.Y);
@@ -51,6 +51,8 @@ public static class PolygonUtils
             coordinateRightBottom, 
             pointLeftBottom.Coordinate
         });
-        return new Polygon(ring);
+        var polygon = new Polygon(ring);
+        polygon.SRID = srid;
+        return polygon;
     }
 }

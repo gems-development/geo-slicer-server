@@ -1,6 +1,7 @@
 ﻿using NetTopologySuite.Geometries;
+using Services.ScaleCalculator.Interfaces;
 
-namespace Services.ScaleCalculator.Interfaces;
+namespace Services.ScaleCalculator;
 
 public class LinearToleranceCalculator : IToleranceCalculator
 {

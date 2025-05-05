@@ -1,4 +1,5 @@
 using NetTopologySuite.Geometries;
+using Services.ScaleCalculator;
 using Services.ScaleCalculator.Interfaces;
 using Xunit;
 
