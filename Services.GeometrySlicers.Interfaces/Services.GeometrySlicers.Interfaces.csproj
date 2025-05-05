@@ -12,4 +12,8 @@
       <PackageReference Include="NetTopologySuite" Version="2.5.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\GeometrySlicerTypes\GeometrySlicerTypes.csproj" />
+    </ItemGroup>
+
 </Project>

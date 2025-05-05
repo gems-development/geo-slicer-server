@@ -7,7 +7,7 @@ using NetTopologySuite.Geometries;
 
 namespace DataAccess.Repositories.ConsoleApp;
 
-public class SaveRepository : IRepository<GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>, int>
+public class SaveRepository : IRepository<GeometryWithFragments<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>>, int>
 {
     private readonly GeometryDbContext _dbContext;
 
@@ -19,19 +19,25 @@ public class SaveRepository : IRepository<GeometryWithFragments<Polygon, Fragmen
     {
         _dbContext = dbContext;
     }
-    //todo добавлена заглушка, так как инструмент не учитывает слой и свойства сохраняемой геометрии
-    public int Save(GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>> objectToSave)
+    public int Save(GeometryWithFragments<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>> objectToSave, string layerAlias, string properties)
     {
         try
         {
+            // Проверяем, существует ли Layer с данным Alias
+            var existingLayer =  _dbContext.Layers
+                .FirstOrDefault(l => l.Alias.Equals(layerAlias));
+
+            // Если Layer существует, используем его, иначе создаём новый
+            var layer = existingLayer ?? new Layer { Alias = layerAlias };
+            
             GeometryOriginal geometryOriginal = new GeometryOriginal
             {
                 Data = objectToSave.Data,
-                LayerId = 0,
-                Properties = ""
+                Layer = layer,
+                Properties = properties
             };
             _dbContext.GeometryOriginals.Add(geometryOriginal);
-
+            
             IEnumerable<GeometryFragment> fragments = objectToSave.GeometryFragments.Select(
                 fragmentWithNonRenderingBorder =>
                     new GeometryFragment

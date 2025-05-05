@@ -9,9 +9,8 @@ public static class SaveRepositoryExtension
 {
     public static void AddSaveRepository(this IServiceCollection serviceCollection)
     {
-        //serviceCollection.AddSingleton<GeometryDbContext>(provider => provider.GetRequiredService<GeometryDbContext>());
         serviceCollection.AddTransient<IRepository<
-                GeometryWithFragments<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>, int>,
+                GeometryWithFragments<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>>, int>,
             SaveRepository>();
     }
 }

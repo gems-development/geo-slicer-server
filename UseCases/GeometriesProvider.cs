@@ -18,7 +18,7 @@ public class GeometriesProvider : IGeometriesProvider
         _toleranceCalculator = toleranceCalculator;
     }
 
-    public Task<IEnumerable<AreaIntersectionDto<Geometry>>> GetGeometryByScreen(Point pointLeftBottom, Point pointRightTop, CancellationToken cancellationToken)
+    public Task<IEnumerable<AreaIntersectionDto<TGeometry>>> GetGeometryByScreen(Point pointLeftBottom, Point pointRightTop, CancellationToken cancellationToken)
     {
         Polygon polygon = PolygonUtils.FromRectangle(pointLeftBottom, pointRightTop);
         double tolerance = _toleranceCalculator.CalculateTolerance(pointLeftBottom, pointRightTop);

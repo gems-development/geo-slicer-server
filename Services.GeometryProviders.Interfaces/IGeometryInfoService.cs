@@ -3,7 +3,7 @@ using WebApp.Dto.Responses;
 
 namespace Services.GeometryProviders.Interfaces;
 
-public interface IGeometryInfoService<TInfo>
+public interface IGeometryInfoService<TId>
 {
-    Task<IEnumerable<ClickInfoDto<TInfo>>> GetInfoByClick(Point point, CancellationToken cancellationToken);
+    Task<IEnumerable<ClickInfoDto<TId>>> GetInfoByClick(Point point, CancellationToken cancellationToken);
 }

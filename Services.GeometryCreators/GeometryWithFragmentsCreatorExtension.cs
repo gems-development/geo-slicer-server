@@ -12,7 +12,7 @@ public static class GeometryWithFragmentsCreatorExtension
     {
         serviceCollection
             .AddTransient<
-                IGeometryWithFragmentsCreator<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>,
-                GeometryWithFragmentsCreator<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>>();
+                IGeometryWithFragmentsCreator<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>>,
+                GeometryWithFragmentsCreator>();
     }
 }

@@ -23,20 +23,25 @@ public class GeometrySaver<TGeometryIn, TSliceType, TKey> : IGeometrySaver<TGeom
         GeometryCorrector = geometryCorrector;
     }
         
-    public TKey SaveGeometry(TGeometryIn geometry, out string validateResult)
+    public TKey SaveGeometry(TGeometryIn geometry, string layerAlias, string properties, out string validateResult)
     {
         validateResult = "";
         try
         {
-            GeometryValidateError[]? geometryValidateErrors = null;
-                
-            bool validatedGeometry = ValidateGeometry(ref geometryValidateErrors, geometry, ref validateResult);
-            geometry = FixGeometry(validatedGeometry, geometry, geometryValidateErrors);
-
+            GeometryValidateErrorType[]? geometryValidateErrors;
+            do
+            {
+                geometryValidateErrors = null;
+                bool validatedGeometry = ValidateGeometry(ref geometryValidateErrors, geometry, ref validateResult);
+                geometry = FixGeometry(validatedGeometry, geometry, geometryValidateErrors);
+            } while (geometryValidateErrors!.Length != 0
+                     && !(geometryValidateErrors.Contains(GeometryValidateErrorType.GeometryValid)
+                         && geometryValidateErrors.Length == 1));
+            
             GeometryWithFragments<TGeometryIn, TSliceType> geometryOut =
                 GeometryWithFragmentsCreator.ToGeometryWithFragments(geometry);
-
-            return Repository.Save(geometryOut);
+            
+            return Repository.Save(geometryOut, layerAlias, properties);
         }
         catch (Exception e)
         { 
@@ -46,13 +51,13 @@ public class GeometrySaver<TGeometryIn, TSliceType, TKey> : IGeometrySaver<TGeom
     }
 
     private bool ValidateGeometry(
-        ref GeometryValidateError[]? geometryValidateErrors, TGeometryIn geometry, ref string result)
+        ref GeometryValidateErrorType[]? geometryValidateErrors, TGeometryIn geometry, ref string result)
     {
         return GeometryCorrector.ValidateGeometry(ref geometryValidateErrors, geometry, ref result);
     }
 
     private TGeometryIn FixGeometry(
-        bool validatedGeometry, TGeometryIn geometry, GeometryValidateError[]? geometryValidateErrors)
+        bool validatedGeometry, TGeometryIn geometry, GeometryValidateErrorType[]? geometryValidateErrors)
     {
         return GeometryCorrector.FixGeometry(validatedGeometry, geometry, geometryValidateErrors);
     }

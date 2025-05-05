@@ -9,6 +9,6 @@ public static class GeometryCorrectorExtension
     public static void AddGeometryCorrector(
         this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddTransient<IGeometryCorrector<Polygon>, GeometryCorrector<Polygon>>();
+        serviceCollection.AddTransient<IGeometryCorrector<Geometry>, GeometryCorrector<Geometry>>();
     }
 }
