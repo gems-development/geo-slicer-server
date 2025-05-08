@@ -31,13 +31,33 @@ public class InvalidGeometryCollectionTest
         var resultCollection = geometryController
             .SaveGeometry(_invalidGeometryCollection, "", "", out string message);
         //Assert
-        //Assert.True(_validGeometryCollection.Equals((GeometryCollection) resultCollection.Data));
-        var resCol = new GeoJsonWriter().Write((GeometryCollection) resultCollection.Data);
-        var inv = new GeoJsonWriter().Write(_validGeometryCollection);
-        //File.WriteAllText("TestFiles\\123.geojson", inv);
-        //File.WriteAllText("TestFiles\\456.geojson", resCol);
-        Assert.Equal(inv, resCol);
-        _output.WriteLine(message);
+        var resultGeojson = new GeoJsonWriter().Write((GeometryCollection) resultCollection.Data);
+        var validGeometryGeojson = new GeoJsonWriter().Write(_validGeometryCollection);
+        Assert.Equal(validGeometryGeojson, resultGeojson);
+        Assert.Equal(
+            "\nValidate errors: GeometryHasRepeatingPoints: Equals points at 8 and 9\n: (109.2226941, 56.63581), (109.2226941, 56.63581)\nValidate errors: GeometryValid: no errors were found", 
+            message);
+        //_output.WriteLine(message);
+    }
+    
+    [Fact]
+    public void TestNoInformationLost()
+    {
+        //Arrange
+        var geometryController = GeometrySaverBuilder.Build();
+        _invalidGeometryCollection.SRID = 0;
+        //Act
+        var resultCollection = geometryController
+            .SaveGeometry(_invalidGeometryCollection, "", "", out string message);
+        //Assert
+        Geometry result = resultCollection.Data;
+        foreach (var fragment in resultCollection.GeometryFragments)
+        {
+            result = result.Difference(fragment.Fragment);
+        }
+        var resultGeojson = new GeoJsonWriter().Write(result);
+        File.WriteAllText("TestFiles\\123.geojson", resultGeojson);
+        //_output.WriteLine(message);
     }
     
     private static T ReadGeometryFromFile<T>(string path) where T : class

@@ -3,24 +3,31 @@ using BenchmarkDotNet.Attributes;
 using DataAccess.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using Utils;
 
 namespace Benchmarks.Benchmarks;
 
 [MemoryDiagnoser(false)]
 public class GeometryInnerClickBench
 {
-    private static readonly LineString innerRing = new (new[]
-    {
-        new Coordinate(106.1756565, 51.9990953),
-        new Coordinate(106.1766145, 51.9990098),
-        new Coordinate(106.1764491, 51.9984510)
-    });
+    private readonly LineString innerRing;
     
     private static readonly Coordinate innerCoordinate = new Coordinate(106.1756565, 51.9990953);
     
     private static readonly PostgreApplicationContext PgContext =
         new("Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin");
-    
+
+    public GeometryInnerClickBench()
+    {
+        innerRing = new (new[]
+        {
+            new Coordinate(106.1756565, 51.9990953),
+            new Coordinate(106.1766145, 51.9990098),
+            new Coordinate(106.1764491, 51.9984510)
+        });
+        innerRing.SRID = GeometryServerSrid.Srid;
+    }
+
     [Benchmark]
     public void TestGeometryInnerClickWithFragments()
     {
@@ -28,7 +35,7 @@ public class GeometryInnerClickBench
         var y = innerCoordinate.Y.ToString(CultureInfo.InvariantCulture);
         var result = PgContext.Database
             .SqlQueryRaw<long>(
-                $"SELECT f.\"GeometryOriginalId\" AS \"Value\" FROM \"GeometryFragments\" AS f WHERE ST_Intersects(f.\"Fragment\", ST_GeomFromText('POINT({x} {y})'))").ToArray();
+                $"SELECT f.\"GeometryOriginalId\" AS \"Value\" FROM \"GeometryFragments\" AS f WHERE ST_Intersects(f.\"Fragment\", ST_GeomFromText('POINT({x} {y})', {GeometryServerSrid.Srid}))").ToArray();
     }
     
     [Benchmark]
@@ -38,7 +45,7 @@ public class GeometryInnerClickBench
         var y = innerCoordinate.Y.ToString(CultureInfo.InvariantCulture);
         var result = PgContext.Database
             .SqlQueryRaw<long>(
-                $"SELECT f.\"Id\" AS \"Value\" FROM \"GeometryOriginals\" AS f WHERE ST_Intersects(f.\"Data\", ST_GeomFromText('POINT({x} {y})'))").ToArray();
+                $"SELECT f.\"Id\" AS \"Value\" FROM \"GeometryOriginals\" AS f WHERE ST_Intersects(f.\"Data\", ST_GeomFromText('POINT({x} {y})', {GeometryServerSrid.Srid}))").ToArray();
     }
     
     [Benchmark]

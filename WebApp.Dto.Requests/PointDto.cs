@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using NetTopologySuite.Geometries;
+using Utils;
 
 namespace WebApp.Dto.Requests;
 
@@ -17,6 +18,8 @@ public class PointDto
 
     public Point CreatePoint()
     {
-        return new Point(X, Y);
+        var point = new Point(X, Y);
+        point.SRID = GeometryServerSrid.Srid;
+        return point;
     }
 }
