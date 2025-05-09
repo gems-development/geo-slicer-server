@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
+      <ProjectReference Include="..\Utils\Utils.csproj" />
       <ProjectReference Include="..\WebApp.Dto.Responses\WebApp.Dto.Responses.csproj" />
       <ProjectReference Include="..\Services.GeometryProviders.Interfaces\Services.GeometryProviders.Interfaces.csproj" />
     </ItemGroup>

@@ -22,6 +22,8 @@ namespace Benchmarks.Benchmarks;
 //прямоугольником). Это проблема может повлиять на производительность, так как на вход ST_Intersection может попасть фигура,
 //которая не пересекается с экраном(а смысл всех этих запросов не подавать на вход ST_Intersection фигуры, которые не пересекают экран).
 
+//так же в _bbSql не выполняется поиск по фрагментам если входной прямоугольник(экран) содержится в bbox фигуры, сразу вызывается ST_Intersection
+
 //Возможность для оптимизации - сохранять заранее в бд упрощенные фигуры с помощью ST_SimplifyPreserveTopology, а не упрощать на лету
 
 public class GetGeometryIntersectionNewBench
@@ -149,75 +151,84 @@ public class GetGeometryIntersectionNewBench
 				UNION ALL 
 			SELECT id FROM fragments_intersects_display_ids)
     ";*/
-
-    //todo поменять srid на GeometryServerSrid
     
     //sql запрос, который ищет фигуры, bb которых пересекает либо одну грань прямоугольника, либо две параллельных грани
     //прямоугольника. Фигуры, bb которых пересекает две непараллельных грани прямоугольника, проверяются по фрагментам
-    private string _bbSql = @"
-		WITH SRID AS (
-		    SELECT 4326 AS srid
-		),
-		input_rect AS (
-		    -- Входной прямоугольник с заданным SRID
-		    SELECT {0} AS geom
-		),
-		-- Извлекаем вершины прямоугольника
-		rect_points AS (
-		    SELECT (ST_DumpPoints(geom)).geom AS point
-		    FROM input_rect
-		),
-		-- Формируем грани прямоугольника (4 линии)
-		rect_edges AS (
-		    SELECT ST_SetSRID(ST_MakeLine(point, LEAD(point) OVER ()), (SELECT srid FROM SRID)) AS edge
-		    FROM rect_points
-		    WHERE point IS NOT NULL
-		    LIMIT 4
-		),
-		-- Нумеруем грани и определяем их тип (0 - горизонтальные, 1 - вертикальные)
-		edges AS (
-		    SELECT 
-		        edge,
-		        CASE 
-		            WHEN ST_Y(ST_StartPoint(edge)) = ST_Y(ST_EndPoint(edge)) THEN 0 -- горизонтальная
-		            ELSE 1 -- вертикальная
-		        END AS edge_type
-		    FROM rect_edges
-		),
-		-- Находим bounding box'ы фигур и их пересечения с гранями
-		bbox_intersections AS (
-		    SELECT 
-		        g.""Id"",
-		        g.""Data"",
-		        e.edge_type
-		    FROM (SELECT * FROM ""GeometryOriginals"" s WHERE (s.""Data"" && {0} AND NOT s.""Data"" @ {0})) g
-		    CROSS JOIN edges e
-		    WHERE g.""Data"" && e.edge
-		),
-		-- Подсчитываем количество пересечений и проверяем условия
-		valid_intersections AS (
-		    SELECT 
-		        ST_Intersection(ST_MakeValid(ST_Simplify(ANY_VALUE(""Data""), {1})), {0}) AS ""Data""
-		    FROM bbox_intersections
-		    GROUP BY ""Id""
-		    HAVING 
-		        -- Ровно одно пересечение
-		        COUNT(*) = 1
-		        OR 
-		        -- Два пересечения, но только параллельные грани (одинаковый edge_type)
-		        (COUNT(*) = 2 AND array_length(ARRAY_AGG(DISTINCT edge_type), 1) = 1)
-		        OR EXISTS (
-		            SELECT 1 FROM ""GeometryFragments"" AS f WHERE f.""Id"" = ""Id"" AND f.""Fragment"" && {0}
-		            GROUP BY f.""Id""
-		            HAVING BOOL_OR(f.""Fragment"" @ {0} OR ST_INTERSECTS(f.""Fragment"", {0}))
-		        )
-		    UNION ALL
-		        SELECT ST_MakeValid(ST_Simplify(""Data"", {1})) AS ""Data""
-		        FROM ""GeometryOriginals"" AS f WHERE f.""Data"" @ {0}
-		)
-		SELECT ""Data""
-		FROM valid_intersections
-";
+    private string _bbSql = 
+	     """
+	    	WITH SRID AS (
+	    	    SELECT 
+	    """ + GeometryServerSrid.Srid + """
+             AS srid
+                    ),
+                    input_rect AS (
+                        -- Входной прямоугольник с заданным SRID
+                        SELECT {0} AS geom
+                    ),
+                    -- Извлекаем вершины прямоугольника
+                    rect_points AS (
+                        SELECT (ST_DumpPoints(geom)).geom AS point
+                        FROM input_rect
+                    ),
+                    -- Формируем грани прямоугольника (4 линии)
+                    rect_edges AS (
+                        SELECT ST_SetSRID(ST_MakeLine(point, LEAD(point) OVER ()), (SELECT srid FROM SRID)) AS edge
+                        FROM rect_points
+                        WHERE point IS NOT NULL
+                        LIMIT 4
+                    ),
+                    -- Нумеруем грани и определяем их тип (0 - горизонтальные, 1 - вертикальные)
+                    edges AS (
+                        SELECT 
+                            edge,
+                            CASE 
+                                WHEN ST_Y(ST_StartPoint(edge)) = ST_Y(ST_EndPoint(edge)) THEN 0 -- горизонтальная
+                                ELSE 1 -- вертикальная
+                            END AS edge_type
+                        FROM rect_edges
+                    ),
+                    -- Находим bounding box'ы фигур и их пересечения с гранями
+                    bbox_intersections AS (
+                        SELECT 
+                            g."Data",
+                            g."Id",
+                            g."Properties",
+                            g."LayerId",
+                            e.edge_type
+                        FROM (SELECT * FROM "GeometryOriginals" s WHERE (s."Data" && {0} AND NOT s."Data" @ {0})) g
+                        CROSS JOIN edges e
+                        WHERE g."Data" && e.edge AND NOT e.edge @ g."Data"
+                    ),
+                    -- Подсчитываем количество пересечений и проверяем условия
+                    valid_intersections AS (
+                        SELECT 
+                            b."Id", ANY_VALUE("Alias") AS "LayerAlias", ANY_VALUE("Properties") AS "Properties", ST_Intersection(ST_MakeValid(ST_Simplify(ANY_VALUE("Data"), {1})), {0}) AS "Result"
+                        FROM bbox_intersections b INNER JOIN "Layers" ON "LayerId" = "Layers"."Id"
+                        GROUP BY b."Id"
+                        HAVING 
+                            -- Ровно одно пересечение
+                            COUNT(*) = 1
+                            OR 
+                            -- Два пересечения, но только параллельные грани (одинаковый edge_type)
+                            (COUNT(*) = 2 AND array_length(ARRAY_AGG(DISTINCT edge_type), 1) = 1)
+                            OR EXISTS (
+                                SELECT 1 FROM "GeometryFragments" AS f 
+                                WHERE f."GeometryOriginalId" = b."Id" AND f."Fragment" && {0}
+                                GROUP BY f."GeometryOriginalId"
+                                HAVING BOOL_OR(f."Fragment" @ {0} OR ST_INTERSECTS(f."Fragment", {0}))
+                            )
+                        UNION ALL
+                            SELECT b."Id", "Alias" AS "LayerAlias", "Properties", ST_MakeValid(ST_Simplify("Data", {1})) AS "Result"
+                            FROM "GeometryOriginals" b INNER JOIN "Layers" ON "LayerId" = "Layers"."Id"
+                            WHERE "Data" @ {0}
+                        UNION ALL  
+                            SELECT b."Id", "Alias" AS "LayerAlias", "Properties", ST_Intersection(ST_MakeValid(ST_Simplify("Data", {1})), {0}) AS "Result"
+                            FROM "GeometryOriginals" b INNER JOIN "Layers" ON "LayerId" = "Layers"."Id"
+                            WHERE {0} @ "Data"
+                    )
+                    SELECT "Result"
+                    FROM valid_intersections
+            """;
 
     private string _enumerateOriginalsSql = @"
 		SELECT ST_MakeValid(ST_Simplify(""Data"", {1})) AS ""Data""
@@ -419,7 +430,7 @@ public class GetGeometryIntersectionNewBench
     
     //поиск по оригиналам _enumerateOriginalsSql быстрее поисков по фрагментам
     
-    [Benchmark]
+    /*[Benchmark]
     public void EnumerateFragmentsSqlScreenIntersects145Baikals()
     {
 	    var points = GetBoundingBox(Screen145IntersectsBaikals);
@@ -451,5 +462,5 @@ public class GetGeometryIntersectionNewBench
 	    var res = PgContext.Database
 		    .SqlQueryRaw<Geometry>(_enumerateOriginalsSql, Screen145IntersectsBaikals, tolerance)
 		    .ToArray();
-    }
+    }*/
 }
