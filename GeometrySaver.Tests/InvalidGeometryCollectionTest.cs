@@ -40,26 +40,6 @@ public class InvalidGeometryCollectionTest
         //_output.WriteLine(message);
     }
     
-    [Fact]
-    public void TestNoInformationLost()
-    {
-        //Arrange
-        var geometryController = GeometrySaverBuilder.Build();
-        _invalidGeometryCollection.SRID = 0;
-        //Act
-        var resultCollection = geometryController
-            .SaveGeometry(_invalidGeometryCollection, "", "", out string message);
-        //Assert
-        Geometry result = resultCollection.Data;
-        foreach (var fragment in resultCollection.GeometryFragments)
-        {
-            result = result.Difference(fragment.Fragment);
-        }
-        var resultGeojson = new GeoJsonWriter().Write(result);
-        File.WriteAllText("TestFiles\\123.geojson", resultGeojson);
-        //_output.WriteLine(message);
-    }
-    
     private static T ReadGeometryFromFile<T>(string path) where T : class
     {
         string geoJson = File.ReadAllText(path);

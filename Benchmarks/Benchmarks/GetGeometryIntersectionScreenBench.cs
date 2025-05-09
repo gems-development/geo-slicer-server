@@ -5,6 +5,8 @@ using NetTopologySuite.Geometries;
 
 namespace Benchmarks.Benchmarks;
 
+//бенчмарк не актуален
+//todo добавить GeometryServerSrid
 public class GetGeometryIntersectionScreenBench
 {
    private static readonly Polygon ScreenSmall = new Polygon(new LinearRing(new Coordinate[]

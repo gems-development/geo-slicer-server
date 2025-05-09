@@ -6,6 +6,9 @@ using NetTopologySuite.Operation.Union;
 
 namespace Benchmarks.Benchmarks;
 
+//тест объединения кусков по экрану и поиска пересечения оригинальной фигуры и экрана
+//бенчмарк не актуален
+//todo переделать под GeometryServerSrid
 [MemoryDiagnoser(false)]
 public class GeometryUnifierBench
 {

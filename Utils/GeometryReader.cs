@@ -17,8 +17,8 @@ public class GeometryReader
         
         var jsonObject = JObject.Parse(geoJson);
         
-        string geoJsonType = jsonObject["type"].ToString();
-
+        string geoJsonType = jsonObject["type"]!.ToString();
+        
         return geoJsonType switch
         {
             "FeatureCollection" => geoJsonReader.Read<FeatureCollection>(geoJson),

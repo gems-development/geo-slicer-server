@@ -17,7 +17,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DataAccess.PostgreSql\DataAccess.PostgreSql.csproj" />
+      <ProjectReference Include="..\Services.ScaleCalculator\Services.ScaleCalculator.csproj" />
       <ProjectReference Include="..\Utils\Utils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="TestFiles\" />
     </ItemGroup>
 
 </Project>

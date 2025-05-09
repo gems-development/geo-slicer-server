@@ -8,6 +8,7 @@ public class OppositesGeometrySlicerAdapter : IGeometrySlicer<Polygon, Polygon>
 {
     private Slicer _slicer;
 
+
     public OppositesGeometrySlicerAdapter(IOppositeSlicerFactory slicerFactory)
     {
         _slicer = slicerFactory.GetSlicer();

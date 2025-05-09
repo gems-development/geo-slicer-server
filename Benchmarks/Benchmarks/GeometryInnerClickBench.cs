@@ -6,6 +6,11 @@ using NetTopologySuite.Geometries;
 using Utils;
 
 namespace Benchmarks.Benchmarks;
+//todo актуальный бенчмарк
+
+//бенчмарк должен проводится на бд, в которой сохранено 145 фигур из папки TestFiles
+
+//бенчмарк проводился на фигурах, фрагменты которых имеют не более 1000 точек
 
 [MemoryDiagnoser(false)]
 public class GeometryInnerClickBench

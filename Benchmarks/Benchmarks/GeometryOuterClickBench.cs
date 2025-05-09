@@ -3,8 +3,14 @@ using BenchmarkDotNet.Attributes;
 using DataAccess.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using Utils;
 
 namespace Benchmarks.Benchmarks;
+//todo актуальный бенчмарк
+
+//бенчмарк должен проводится на бд, в которой сохранено 145 фигур из папки TestFiles
+
+//бенчмарк проводился на фигурах, фрагменты которых имеют не более 1000 точек
 
 [MemoryDiagnoser(false)]
 public class GeometryOuterClickBench
@@ -21,7 +27,7 @@ public class GeometryOuterClickBench
         var y = outerCoordinate.Y.ToString(CultureInfo.InvariantCulture);
         var result = PgContext.Database
             .SqlQueryRaw<long>(
-                $"SELECT f.\"GeometryOriginalId\" AS \"Value\" FROM \"GeometryFragments\" AS f WHERE ST_Intersects(f.\"Fragment\", ST_GeomFromText('POINT({x} {y})'))")
+                $"SELECT f.\"GeometryOriginalId\" AS \"Value\" FROM \"GeometryFragments\" AS f WHERE ST_Intersects(f.\"Fragment\", ST_GeomFromText('POINT({x} {y})', {GeometryServerSrid.Srid}))")
             .ToArray();
     }
 
@@ -32,7 +38,7 @@ public class GeometryOuterClickBench
         var y = outerCoordinate.Y.ToString(CultureInfo.InvariantCulture);
         var result = PgContext.Database
             .SqlQueryRaw<long>(
-                $"SELECT f.\"Id\" AS \"Value\" FROM \"GeometryOriginals\" AS f WHERE ST_Intersects(f.\"Data\", ST_GeomFromText('POINT({x} {y})'))")
+                $"SELECT f.\"Id\" AS \"Value\" FROM \"GeometryOriginals\" AS f WHERE ST_Intersects(f.\"Data\", ST_GeomFromText('POINT({x} {y})', {GeometryServerSrid.Srid}))")
             .ToArray();
     }
 }

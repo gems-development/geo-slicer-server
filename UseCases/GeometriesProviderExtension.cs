@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using NetTopologySuite.Geometries;
 using Services.ScaleCalculator;
 using Services.ScaleCalculator.Interfaces;
 using UseCases.Interfaces;
