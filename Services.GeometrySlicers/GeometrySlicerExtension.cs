@@ -11,17 +11,21 @@ public static class GeometrySlicerExtension
     public static void AddGeometrySlicers(
         this IServiceCollection serviceCollection, double epsilon,
         GeometrySlicerType slicerType,
-        int maximumNumberOfPoints = -1)
+        int? maximumNumberOfPoints)
     {
         if (slicerType == GeometrySlicerType.OppositeSlicer)
         {
-            if (maximumNumberOfPoints <= 0)
+            if (maximumNumberOfPoints!.Value <= 0)
                 throw new ArgumentException("Maximum number of points must be greater than zero");
             serviceCollection
                 .AddTransient<IGeometrySlicer<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>>
                 (_ => new GeometryWithFragmentsGeometrySlicer(
-                    new OppositesGeometrySlicerAdapter(new OppositeGeometrySlicerFactory(maximumNumberOfPoints)),
+                    new OppositesGeometrySlicerAdapter(new OppositeGeometrySlicerFactory(maximumNumberOfPoints.Value)),
                     epsilon));
+        }
+        else if (slicerType == GeometrySlicerType.NonConvexSlicer)
+        {
+            throw new NotSupportedException("NonConvexSlicers are not supported");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.CommandLine;
 using ConsoleApp.CommandHandlers;
+using GeometrySlicerTypes;
 
 
 namespace ConsoleApp;
@@ -9,7 +10,8 @@ class Program
     static async Task<int> Main(string[] args)
     {
         //Console usage example:
-        //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -mp 1500 -la water --srid 4326
+        //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -mp 1500 -la water --srid 4326 --algorithm OppositeSlicer
+        //geosaver save -cs Host=localhost;Port=5432;Database=demo;Username=postgres;Password=admin -fs a.txt b.txt -la water --srid 4326 --algorithm NonConvexSlicer
         //geosaver validate -fs a.txt b.txt --srid 4326
         var rootCommand = new RootCommand("rootCommand")
         {
@@ -30,11 +32,11 @@ class Program
             Arity = ArgumentArity.OneOrMore,
             AllowMultipleArgumentsPerToken = true
         };
-        var numberOfPointsOption = new Option<int>(
+        var numberOfPointsOption = new Option<int?>(
             aliases: ["-mp", "--maxNumberOfPointsInFragment"],
             description: "Option to set maximum number of points in fragment after slicing.")
         {
-            IsRequired = true,
+            IsRequired = false,
             Arity = ArgumentArity.ExactlyOne
         };
         var layerAliasOption = new Option<string>(
@@ -51,18 +53,32 @@ class Program
             IsRequired = true,
             Arity = ArgumentArity.ExactlyOne
         };
+        var algorithmOption = new Option<GeometrySlicerType>(
+            aliases: ["-a", "--algorithm"],
+            description: "Option to select the algorithm to use.")
+        {
+            IsRequired = true,
+            Arity = ArgumentArity.ExactlyOne
+        };
         
         //save
         var save = new Command("save",
             "Save geometries from {--files} in database using {--connectionString} to connect.");
         save.AddOption(connectionStringOption);
         save.AddOption(filesInfo);
-        save.AddOption(numberOfPointsOption);
         save.AddOption(layerAliasOption);
         save.AddOption(sridOption);
-        save.SetHandler(
-            SaveCommandHandler.Handle,
-            connectionStringOption, filesInfo, numberOfPointsOption, layerAliasOption, sridOption);
+        save.AddOption(algorithmOption);
+        save.AddOption(numberOfPointsOption);
+        save.SetHandler((connectionString, files, layerAlias, srid, type, points) =>
+            {
+                if (type == GeometrySlicerType.OppositeSlicer && !points.HasValue)
+                {
+                    Console.WriteLine("Error: --maxNumberOfPointsInFragment is required for OppositeSlicer.");
+                }
+                else SaveCommandHandler.Handle(connectionString, files, layerAlias, srid, type, points);
+            },
+            connectionStringOption, filesInfo, layerAliasOption, sridOption, algorithmOption, numberOfPointsOption);
         
         //validate
         var validate = new Command("validate",

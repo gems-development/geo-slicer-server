@@ -16,7 +16,7 @@ internal static class GeometrySaverBuilder
     internal static ServiceProvider BuildGeometrySaverServiceProvider(
         this IServiceCollection geometrySaverServiceCollection,
         string connectionString,
-        int points,
+        int? points,
         double epsilonCoordinateComparator,
         double epsilon,
         GeometrySlicerType type)

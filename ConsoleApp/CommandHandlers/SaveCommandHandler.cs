@@ -12,12 +12,12 @@ namespace ConsoleApp.CommandHandlers;
 
 internal static class SaveCommandHandler
 {
-    internal static void Handle(string connectionString, IEnumerable<FileInfo> files, int points, string layerAlias, int srid)
+    internal static void Handle(string connectionString, IEnumerable<FileInfo> files, string layerAlias, int srid, GeometrySlicerType type, int? points)
     {
         IServiceCollection serviceCollection = new ServiceCollection();
         using var geometrySaverProvider =
             serviceCollection.BuildGeometrySaverServiceProvider(connectionString, points,
-                Epsilons.EpsilonCoordinateComparator, Epsilons.Epsilon, GeometrySlicerType.OppositeSlicer);
+                Epsilons.EpsilonCoordinateComparator, Epsilons.Epsilon, type);
         var geometrySaver = geometrySaverProvider
             .GetService<
                 IGeometrySaver<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>, int>>();

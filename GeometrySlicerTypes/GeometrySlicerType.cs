@@ -2,5 +2,6 @@
 
 public enum GeometrySlicerType
 {
-    OppositeSlicer
+    OppositeSlicer,
+    NonConvexSlicer
 }

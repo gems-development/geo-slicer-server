@@ -12,7 +12,7 @@ public class OppositeGeometrySlicerFactory : IOppositeSlicerFactory
 {
     
     private readonly int _maximumNumberOfPoints;
-    public OppositeGeometrySlicerFactory(int maximumNumberOfPoints = -1)
+    public OppositeGeometrySlicerFactory(int maximumNumberOfPoints)
     {
         _maximumNumberOfPoints = maximumNumberOfPoints;
     }
