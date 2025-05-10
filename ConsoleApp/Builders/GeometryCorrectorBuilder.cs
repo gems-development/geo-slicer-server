@@ -3,11 +3,11 @@ using Services.GeometryFixers;
 using Services.GeometryValidators;
 using UseCases;
 
-namespace ConsoleApp;
+namespace ConsoleApp.Builders;
 
-public static class GeometryCorrectorBuilder
+internal static class GeometryCorrectorBuilder
 {
-    public static  ServiceProvider BuildGeometryCorrectorProvider(
+    internal static  ServiceProvider BuildGeometryCorrectorProvider(
         this IServiceCollection geometryCorrectorServiceCollection,
         double epsilonCoordinateComparator)
     {
