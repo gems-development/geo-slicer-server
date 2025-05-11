@@ -4,33 +4,33 @@ namespace Utils;
 
 public static class PolygonUtils
 {
-    public static IEnumerable<LineString> GetAllLines(Polygon polygon)
+    public static IEnumerable<LineString> GetAllLines(Polygon polygon, int srid)
     {
-        foreach (LineString lineString in LineStringUtils.Split(polygon.Shell))
+        foreach (LineString lineString in LineStringUtils.Split(polygon.Shell, srid))
         {
             yield return lineString;
         }
 
         foreach (LinearRing hole in polygon.Holes)
         {
-            foreach (LineString lineString in LineStringUtils.Split(hole))
+            foreach (LineString lineString in LineStringUtils.Split(hole, srid))
             {
                 yield return lineString;
             }
         }
     }
     
-    public static ISet<LineString> GetAllLinesSet(Polygon polygon)
+    public static ISet<LineString> GetAllLinesSet(Polygon polygon, int srid)
     {
         ISet<LineString> linesSet = new HashSet<LineString>();
-        foreach (LineString lineString in LineStringUtils.Split(polygon.Shell))
+        foreach (LineString lineString in LineStringUtils.Split(polygon.Shell, srid))
         {
             linesSet.Add(lineString);
         }
 
         foreach (LinearRing hole in polygon.Holes)
         {
-            foreach (LineString lineString in LineStringUtils.Split(hole))
+            foreach (LineString lineString in LineStringUtils.Split(hole, srid))
             {
                 linesSet.Add(lineString);
             }
@@ -51,8 +51,9 @@ public static class PolygonUtils
             coordinateRightBottom, 
             pointLeftBottom.Coordinate
         });
-        var polygon = new Polygon(ring);
-        polygon.SRID = srid;
-        return polygon;
+        return new Polygon(ring)
+        {
+            SRID = srid
+        };
     }
 }

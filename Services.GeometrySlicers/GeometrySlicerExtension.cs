@@ -2,6 +2,7 @@ using DomainModels;
 using GeometrySlicerTypes;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
+using Services.GeometrySlicers.GeoSlicerDetails;
 using Services.GeometrySlicers.Interfaces;
 
 namespace Services.GeometrySlicers;
@@ -25,7 +26,11 @@ public static class GeometrySlicerExtension
         }
         else if (slicerType == GeometrySlicerType.NonConvexSlicer)
         {
-            throw new NotSupportedException("NonConvexSlicers are not supported");
+            serviceCollection
+                .AddTransient<IGeometrySlicer<Polygon, FragmentWithNonRenderingBorder<Polygon, MultiLineString>>>
+                (_ => new GeometryWithFragmentsGeometrySlicer(
+                    new NonConvexSlicerAdapter(new NonConvexSlicerFactory(), new BoundingHoleDeleterFactory()),
+                    epsilon));
         }
     }
 }

@@ -48,6 +48,7 @@ public class SaveRepository : IRepository<GeometryWithFragments<Geometry, Fragme
                     });
             _dbContext.GeometryFragments.AddRange(fragments);
             _dbContext.SaveChanges();
+            _dbContext.ChangeTracker.Clear();
             return geometryOriginal.Id;
         }
         catch (Exception ex)

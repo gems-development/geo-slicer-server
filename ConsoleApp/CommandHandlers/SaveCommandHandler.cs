@@ -17,7 +17,7 @@ internal static class SaveCommandHandler
         IServiceCollection serviceCollection = new ServiceCollection();
         using var geometrySaverProvider =
             serviceCollection.BuildGeometrySaverServiceProvider(connectionString, points,
-                Epsilons.EpsilonCoordinateComparator, Epsilons.Epsilon, type);
+                Epsilons.RepeatingPointsEpsilon, Epsilons.GeometryWithFragmentsSlicerEpsilon, type);
         var geometrySaver = geometrySaverProvider
             .GetService<
                 IGeometrySaver<Geometry, FragmentWithNonRenderingBorder<Geometry, Geometry>, int>>();

@@ -12,7 +12,7 @@ internal static class ValidateCommandHandler
     internal static void Handle(IEnumerable<FileInfo> files, int srid)
     {
         IServiceCollection serviceCollection = new ServiceCollection();
-        using var geometryCorrectorProvider = serviceCollection.BuildGeometryCorrectorProvider(Epsilons.EpsilonCoordinateComparator);
+        using var geometryCorrectorProvider = serviceCollection.BuildGeometryCorrectorProvider(Epsilons.RepeatingPointsEpsilon);
         var correctionService = geometryCorrectorProvider.GetService<IGeometryCorrector<Geometry>>();
         if (correctionService == null)
         {

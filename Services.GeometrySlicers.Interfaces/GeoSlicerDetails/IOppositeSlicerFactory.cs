@@ -1,6 +1,6 @@
 using GeoSlicer.DivideAndRuleSlicers;
 
-namespace Services.GeometrySlicers.Interfaces;
+namespace Services.GeometrySlicers.Interfaces.GeoSlicerDetails;
 
 public interface IOppositeSlicerFactory
 {

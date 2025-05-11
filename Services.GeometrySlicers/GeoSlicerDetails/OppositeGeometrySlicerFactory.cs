@@ -4,9 +4,9 @@ using GeoSlicer.Utils;
 using GeoSlicer.Utils.Intersectors;
 using GeoSlicer.Utils.Intersectors.CoordinateComparators;
 using GeoSlicer.Utils.PolygonClippingAlgorithm;
-using Services.GeometrySlicers.Interfaces;
+using Services.GeometrySlicers.Interfaces.GeoSlicerDetails;
 
-namespace Services.GeometrySlicers;
+namespace Services.GeometrySlicers.GeoSlicerDetails;
 
 public class OppositeGeometrySlicerFactory : IOppositeSlicerFactory
 {

@@ -1,6 +1,7 @@
 using GeoSlicer.DivideAndRuleSlicers;
 using NetTopologySuite.Geometries;
 using Services.GeometrySlicers.Interfaces;
+using Services.GeometrySlicers.Interfaces.GeoSlicerDetails;
 
 namespace Services.GeometrySlicers;
 

@@ -4,7 +4,6 @@ using GeometrySlicerTypes;
 
 
 namespace ConsoleApp;
-//todo утечка памяти при сохранении большого количества объектов
 class Program
 {
     static async Task<int> Main(string[] args)

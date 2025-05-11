@@ -4,11 +4,14 @@ namespace Utils;
 
 public static class LineStringUtils
 {
-    public static IEnumerable<LineString> Split(LineString sequence)
+    public static IEnumerable<LineString> Split(LineString sequence, int srid)
     {
         for (int i = 0; i < sequence.Count - 1; i++)
         {
-            yield return new LineString(new[] { sequence[i], sequence[i + 1] });
+            yield return new LineString(new[] { sequence[i], sequence[i + 1] })
+            {
+                SRID = srid
+            };
         }
     }
 }
