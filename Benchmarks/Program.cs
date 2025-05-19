@@ -18,10 +18,11 @@ public static class Program
             .AddColumnProvider(DefaultColumnProviders.Instance)
             .AddColumn(StatisticColumn.Max);
         //BenchmarkRunner.Run<GeometryUnifierBench>(config);
-        BenchmarkRunner.Run<GeometryInnerClickBench>(config);
+        //BenchmarkRunner.Run<GeometryInnerClickBench>(config);
         //BenchmarkRunner.Run<GeometryOuterClickBench>(config);
         //BenchmarkRunner.Run<SearchGeometryIntersectsScreenBench>(config);
             //BenchmarkRunner.Run<GetGeometryIntersectionScreenBench>(config);
-            //BenchmarkRunner.Run<GetGeometryIntersectionNewBench>(config);
+            BenchmarkRunner.Run<GetGeometryIntersectionDisplayWithoutLoading>(config);
+            //BenchmarkRunner.Run<GetGeometryIntersectionDisplay>(config);
     }
 }

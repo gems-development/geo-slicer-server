@@ -27,10 +27,4 @@
       <Compile Remove="Migrations\20250331061947_added_layer_entity_and_properties.cs" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="..\WebApp.Server\Properties\launchSettings.json">
-        <Link>launchSettings.json</Link>
-      </Content>
-    </ItemGroup>
-
 </Project>

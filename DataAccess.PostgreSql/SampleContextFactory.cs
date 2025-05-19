@@ -10,7 +10,7 @@ public class SampleContextFactory : IDesignTimeDbContextFactory<PostgreApplicati
         // получаем конфигурацию из файла launchSettings.json проекта WebApp.Server
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.SetBasePath(Directory.GetCurrentDirectory());
-        builder.AddJsonFile("launchSettings.json");
+        builder.AddJsonFile("Properties/launchSettings.json");
         IConfigurationRoot config = builder.Build();
  
         // получаем строку подключения из файла launchSettings.json проекта WebApp.Server
