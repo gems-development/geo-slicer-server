@@ -28,7 +28,7 @@ public class GeometryByScreenService : IGeometryByScreenService
         	CASE 
                WHEN "Data" @ (SELECT geom FROM rectangle)
                THEN ST_Simplify("Data", (SELECT value FROM epsilon))
-               ELSE ST_Intersection(ST_MakeValid(ST_Simplify("Data", (SELECT value FROM epsilon))), (SELECT geom FROM rectangle))
+               ELSE ST_ClipByBox2D((ST_Simplify("Data", (SELECT value FROM epsilon))), (SELECT geom FROM rectangle))
             END AS "Result"
         FROM "GeometryOriginals" AS b INNER JOIN "Layers" ON "LayerId" = "Layers"."Id"
         WHERE b."Data" && (SELECT geom FROM rectangle) AND 

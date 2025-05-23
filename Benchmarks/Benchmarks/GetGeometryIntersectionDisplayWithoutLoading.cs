@@ -110,8 +110,8 @@ public class GetGeometryIntersectionDisplayWithoutLoading
 	     	/*b."Id", "Alias" AS "LayerAlias", "Properties",*/ 
 	     	CASE 
 	            WHEN "Data" @ (SELECT geom FROM rectangle)
-	            THEN /*ST_Simplify("Data", (SELECT value FROM epsilon))*/ 1
-	            ELSE /*ST_Intersection(ST_MakeValid(ST_Simplify("Data", (SELECT value FROM epsilon))), (SELECT geom FROM rectangle))*/ 1
+	            THEN 1
+	            ELSE 1
 	         END AS "Result"
 	         
 	     FROM "GeometryOriginals" AS b INNER JOIN "Layers" ON "LayerId" = "Layers"."Id"
@@ -144,11 +144,11 @@ public class GetGeometryIntersectionDisplayWithoutLoading
     private string _enumerateOriginalsSql = @"
 		BEGIN;
 		SET LOCAL max_parallel_workers_per_gather = 0;
-		SELECT /*ST_Simplify(""Data"", {1}) AS ""Data""*/ 1
+		SELECT 1
 		FROM ""GeometryOriginals"" AS f
 		WHERE f.""Data"" @ {0}
 		UNION ALL 
-		SELECT /*ST_Intersection(ST_MakeValid(ST_Simplify(""Data"", {1})), {0}) AS ""Data""*/ 1
+		SELECT 1
 		FROM ""GeometryOriginals"" AS f
 		WHERE (f.""Data"" && {0}
 			AND NOT f.""Data"" @ {0}) AND ST_Intersects(f.""Data"", {0});

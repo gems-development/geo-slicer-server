@@ -17,14 +17,16 @@ namespace Benchmarks.Benchmarks;
 //Возможность для оптимизации - сохранять заранее в бд упрощенные фигуры с помощью ST_SimplifyPreserveTopology, а не упрощать на лету
 
 //Возможность для оптимизации - отфильтровывать оригинальные геометрии, bounding box которых пересекает ровно двумя своими
-//параллельными вертикальными (горизонтальными) гранями одно или два параллельных горизонтальных (вертикальных)
-//ребра входного прямоугольника-дисплея (а не проверять их по фрагментам как сейчас в _bbSql)
+//параллельными гранями одно ребро входного прямоугольника - дисплея
+//(вместо проверки их по фрагментам как сейчас в _bbSql)
 
 //Проблема: запрос, который работает только с оригинальными геометриями, может быть быстрее в некоторых тестах, так как
 //СУБД выполняет его в нескольких потоках (поэтому в запросах ниже max_parallel_workers_per_gather = 0)
 
 //Решение: сохранять заранее в бд упрощенные фигуры, либо переписать _bbSql таким образом, чтобы он выполнялся
 //в нескольких потоках
+
+//Проблема: сырые запросы выполняются сильно медленнее, чем при выполнении их в dbeaver 
 
 public class GetGeometryIntersectionDisplay
 {
@@ -125,7 +127,7 @@ public class GetGeometryIntersectionDisplay
 	     	CASE 
 	            WHEN "Data" @ (SELECT geom FROM rectangle)
 	            THEN ST_Simplify("Data", (SELECT value FROM epsilon))
-	            ELSE ST_Intersection(ST_MakeValid(ST_Simplify("Data", (SELECT value FROM epsilon))), (SELECT geom FROM rectangle))
+	            ELSE ST_ClipByBox2D((ST_Simplify("Data", (SELECT value FROM epsilon))), (SELECT geom FROM rectangle))
 	         END AS "Result"
 	     FROM "GeometryOriginals" AS b INNER JOIN "Layers" ON "LayerId" = "Layers"."Id"
 	     WHERE b."Data" && (SELECT geom FROM rectangle) AND 
@@ -161,7 +163,7 @@ public class GetGeometryIntersectionDisplay
 		FROM ""GeometryOriginals"" AS f
 		WHERE f.""Data"" @ {0}
 		UNION ALL 
-		SELECT ST_Intersection(ST_MakeValid(ST_Simplify(""Data"", {1})), {0}) AS ""Data""
+		SELECT ST_ClipByBox2D((ST_Simplify(""Data"", {1})), {0}) AS ""Data""
 		FROM ""GeometryOriginals"" AS f
 		WHERE (f.""Data"" && {0}
 			AND NOT f.""Data"" @ {0}) AND ST_Intersects(f.""Data"", {0});
